@@ -35,7 +35,7 @@ source setup.sh
 Expand-Archive minc-win-x64.zip -DestinationPath .
 cd minc-win-x64
 # Run this to add minc.exe to PATH
-.\setup.ps1
+.\setup.cmd
 ```
 
 To undo later: `source setup.sh --remove` or `.\setup.ps1 -Remove`
@@ -44,6 +44,15 @@ On macOS, `setup.sh` also strips the `com.apple.quarantine` xattr
 that browsers attach to downloaded files. Without it, Gatekeeper
 blocks the first `minc` invocation with "cannot be opened because
 the developer cannot be verified".
+
+On Windows use `setup.cmd` (double-click it or run it in a terminal).
+A `.ps1` downloaded from the internet is blocked by PowerShell's
+execution policy — `setup.cmd` is a thin wrapper that sidesteps that.
+If you prefer to run the script directly, use:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File setup.ps1
+```
 
 You can also run the compiler directly without with `./minc` or
 `.\minc.exe`. Adding to PATH on Windows allows you to run `minc` 
