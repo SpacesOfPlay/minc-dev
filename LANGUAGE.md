@@ -295,17 +295,26 @@ print("x = {}\n", x);        // prints to stdout
 eprint("error: {}\n", msg);  // prints to stderr
 
 // Float formatting note: `{}` for f32/f64 is a *display* format, not a
-// round-trip format. Output uses 6 fractional digits with trailing
+// round-trip format. It uses up to 6 fractional digits with trailing
 // zeros trimmed (keeping at least one digit so float-ness is visible):
 //   format("{}", 3.14)  -> "3.14"
 //   format("{}", 3.0)   -> "3.0"
 //   format("{}", 0.0)   -> "0.0"
 //   format("{}", -1.5)  -> "-1.5"
-// Special values print as "nan", "inf", "-inf". Magnitudes above
-// ~9.2e12 overflow the i64 staging path and should not be printed
-// with `{}`. For round-trip serialization (parse-back-to-same-bits)
-// a separate format spec will be added later — `{}` is intentionally
-// lossy in exchange for short, human-readable output.
+// Special values print as "nan", "inf", "-inf". Magnitudes of 1e12 or
+// more print in scientific notation ("1.0e13", "1.0e308"); smaller
+// values print as plain decimals.
+
+// For exact, shortest round-trip output, import the Ryu formatters:
+//   import format_f64;   string s = format_f64(0.1);  // "0.1"
+//   import format_f32;   string s = format_f32(0.1f); // "0.1"
+// Each returns the shortest decimal string that parses back to the same
+// bits (lib/format_f64.mc uses Ryu64, lib/format_f32.mc native Ryu32).
+// f32_to_str / f64_to_str write into a caller buffer instead. Output
+// rules match `{}` (decimal for 1e-4 <= |x| < 1e21, scientific outside,
+// "0.0" / "nan" / "inf" / "-inf").
+// These Ryu implementations are kept external due to their size.
+
 
 // Conversion
 str view = str_from_cstr(c_string);   // u8* → str (no copy)
@@ -1300,6 +1309,7 @@ Include with `#include` or `import`:
 | **Vec**     | `lib/vec.mc`     | Generic dynamic array `Vec<T>`                                   |
 | **String**  | `lib/str.mc`     | String operations (find, slice, trim, compare, builder)          |
 | **Math**    | `lib/math.mc`    | sin, cos, tan, exp, log, pow, floor, ceil, round + helpers       |
+| **Float fmt** | `lib/format_f64.mc` / `lib/format_f32.mc` | Ryu shortest-round-trip float-to-string (`format_f64`, `format_f32`) |
 | **File**    | `lib/file.mc`    | File read/write (whole file), file_exists                        |
 | **Memory**  | `lib/mem.mc`     | Arena allocator and pool allocator                               |
 | **Thread**  | `lib/thread.mc`  | OS threads and mutexes                                           |
