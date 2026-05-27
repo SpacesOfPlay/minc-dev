@@ -671,16 +671,22 @@ for i32 i in 0..10 { ... }              // range-based (0 to 9 inclusive)
 
 switch value {
     case 1, 2, 3: { ... }               // multi-value case
-    case 4: { ... }
+    case 4: { ...; fallthrough; }       // explicit fall-through (last stmt)
+    case 5: { ... }
     default: { ... }
 }
 
-break;
+break case;   // exits innermost switch case
+fallthrough;  // last stmt of case; falls to next
+break;        // exits nearest enclosing loop
 continue;
 return expr;
 ```
 
-No fall-through in switch. Braces required for all blocks.
+No implicit fall-through; opt in per case with `fallthrough;`. Any
+statement after `break` / `break case` / `continue` / `return` /
+`fallthrough` at the same block level is a compile error
+(unreachable statement). Braces required on every case body.
 
 ### Defer
 
@@ -870,6 +876,10 @@ i32 n = cast(i32, 3.14);      // f64 -> i32 (explicit, truncates)
 
 ### Integer promotion
 
+This section covers the promotion ranks. For the runtime value
+behavior of `+ - * / %`, division, shifts, and casts on the promoted
+types, see "Numerics" below.
+
 Arithmetic and shift binops (`+ - * / % << >>`) on two
 same-signedness narrow operands (`u8`/`u16` or `i8`/`i16`) produce a
 `u32` or `i32` result. The result can exceed the operand width, so
@@ -926,6 +936,10 @@ The same holds for overflowing addition and multiplication: `u32 a
 
 ### Mixed signed/unsigned
 
+This section consolidates the cross-sign rule. For the same rule
+broken down per operator (with runtime examples), see "Bitwise",
+"Shifts", and "Comparisons" under "Numerics" below.
+
 Mixing signed and unsigned integers in comparisons or arithmetic is an error.
 All comparisons (`==`, `!=`, `<`, `>`, `<=`, `>=`) and all arithmetic
 (`+`, `-`, `*`, `/`, `%`, `>>`) are affected:
@@ -979,6 +993,12 @@ u32 e = b >> cast(u32, a);    // OK: logical shift chosen explicitly
 ```
 
 ### Floating-point semantics
+
+This section covers compiler-side float optimizations. For the
+IEEE 754 runtime behavior (NaN, ±inf, subnormals, comparison
+semantics, float→int saturation), see "Float arithmetic",
+"Float → int cast", "Int → float", "f32 ↔ f64", and "Comparisons"
+under "Numerics" below.
 
 minc applies these floating-point optimizations by default:
 
@@ -1106,13 +1126,12 @@ Exported functions are surfaced at the platform module boundary so an
 external host can call them — primarily for **WASM**, where each
 `export`-marked function appears in the module's `exports` section and
 is callable as `instance.exports.frame_tick(...)` from JavaScript. On
-native targets (PE / ELF executable / Mach-O) the keyword is currently
-a no-op; it parses uniformly so source code stays portable, and once
-shared-library output (.so / .dll / .dylib) lands on those targets the
-same marker will drive their symbol-table exports.
+native targets (PE / ELF / Mach-O) the keyword is currently a no-op;
+it parses uniformly so source code stays portable across targets.
 
-`main` is auto-exported on WASM regardless. `export` is for *additional*
-entry points beyond `main`.
+On WASM, a `main()` function — if present — is auto-exported (no
+`export` keyword needed). A WASM module may also omit `main` entirely
+and surface its API through `export`'d functions or a `_start()`.
 
 ### Include
 
@@ -1288,7 +1307,7 @@ for i32 i = 0; i < n; i = i + 4 {
 u64 total = reduce4(acc);             // one reduction, after the loop
 ```
 
-### Threading
+### Threading (builtins)
 
 ```c
 i64 thread_create(fn(void*): void entry, void* arg)
@@ -1621,6 +1640,10 @@ text. The compiler auto-generates a `funcname_shader` global (of type `ShaderMet
 for each `@shader` function. The first field of the VS output struct is treated as
 the clip-space position (`gl_Position` / `SV_Position`).
 
+`Texture2D`, `Texture3D`, `Texture2DArray`, `TextureCube`, `RWTexture2D`, and
+`Sampler` are built-in handle types only inside `@shader` function bodies.
+Outside, those names can be used as ordinary identifiers.
+
 `ShaderMeta.uniforms` points at a flat array of `ShaderUniformDesc` (one entry per
 scalar/vector/matrix field across all uniform blocks); `ShaderMeta.uniforms_count`
 is its length. Plain `@uniform float4x4 mvp` produces one descriptor; struct
@@ -1823,11 +1846,428 @@ needs Xcode (`xcode-select --install`) and an Apple Developer account for
 on-device signing. Android needs the SDK + JDK for APK assembly, plus the
 NDK if the app pulls in C code. See `SETUP.md` for setup details.
 
+## Numerics
+
+How integer and floating-point operations behave in minc.
+
+Every rule below has the same value on every target — x64 (Windows
+and Linux), ARM64 (macOS, iOS, Linux, Android), and wasm. The same
+source produces the same bit pattern.
+
+### Integer types
+
+Signed: `i8`, `i16`, `i32`, `i64`. Two's complement.
+Unsigned: `u8`, `u16`, `u32`, `u64`.
+
+Narrow types (`i8`, `i16`, `u8`, `u16`) promote to `i32` / `u32`
+before any operation. The result carries `i32` / `u32` semantics.
+Writing it back to a narrow slot needs an explicit cast and
+truncates:
+
+```c
+i8 a = 100;
+i8 b = 100;
+i8 c = cast(i8, a + b);     // -56 (200 wraps to i8)
+```
+
+Pointers, Windows handles, array indices, and `sizeof` are 64-bit.
+
+### Integer arithmetic: + - *
+
+These wrap in two's complement at the type's width. The compiler
+does not treat overflow as undefined and never reorders or removes
+an operation by assuming overflow cannot happen.
+
+```c
+i32 a = 2147483647;
+i32 b = a + 1;          // -2147483648
+i32 c = a * 2;          // -2
+i32 d = -a - 1;         // -2147483648 (also -INT_MIN wraps)
+
+u32 e = 0;
+u32 f = e - 1;          // 4294967295
+
+i64 g = 1000000000000;
+i64 h = g * g;          // wraps in i64
+```
+
+Same wrap on every width.
+
+### Division and modulo
+
+`/` truncates toward zero. `%` carries the sign of the dividend.
+
+```c
+i32 a = -7 / 3;         // -2 (not -3)
+i32 b = -7 % 3;         // -1 (sign of dividend)
+i32 c =  7 % -3;        //  1
+```
+
+`INT_MIN / -1` and `INT_MIN % -1` are defined:
+
+```c
+i32 lo = (0 - 2147483647) - 1;     // INT32_MIN
+i32 q  = lo / (0 - 1);             // INT32_MIN (wraps)
+i32 r  = lo % (0 - 1);             // 0
+```
+
+`/ 0` and `% 0` trap. There is no recovery. Check the divisor
+before dividing if it is not a compile-time constant.
+
+```c
+if d != 0 { r = n / d; }
+```
+
+`-unchecked` does not disable the divide-by-zero trap. The trap
+comes from the hardware on x86 and from a runtime guard on ARM64.
+
+### Bitwise: & | ^ ~
+
+Operate on the bit pattern. No overflow concept. The result has the
+type of the operands.
+
+```c
+i32 a = 0xF0 & 0xFF;        // 0xF0
+u32 b = (~0) & 0xFFFF;      // 0xFFFF
+```
+
+Same-width mixed signed/unsigned operands are accepted for `&`, `|`,
+`^` (and `<<`). The result takes the type of the left operand. These
+operate on bit patterns and the sign of either operand does not
+change the bits produced. Different widths still require an explicit
+cast to make the widening direction clear.
+
+```c
+i32 s = 0xF0;
+u32 u = 0xFF;
+i32 r = s & u;              // ok: same width, result i32
+```
+
+### Shifts: << >>
+
+`<<` is the same for signed and unsigned operands.
+
+`>>` is arithmetic (sign-extending) on signed types, logical
+(zero-filling) on unsigned types. Mixed signed/unsigned operands
+to `>>` are a static error — the result would depend on which
+side's sign wins. Cast one side first.
+
+```c
+i32 a = -1 >> 1;            // -1 (arithmetic, sign-extends)
+u32 b = cast(u32, -1) >> 1; // 2147483647 (logical, zero-fills)
+```
+
+Shift amount past the type's width is defined. Result on every
+target:
+
+| Source | Shift amount | `<<` | `>>` logical (`u32`) | `>>` arithmetic (`i32`) |
+|---|---|---|---|---|
+| `i32` / `u32` | 0–31 | normal shift | normal shift | normal shift |
+| `i32` / `u32` | ≥ 32 | 0 | 0 | 0 if positive, -1 if negative |
+| `i64` / `u64` | 0–63 | normal shift | normal shift | normal shift |
+| `i64` / `u64` | ≥ 64 | 0 | 0 | 0 or -1 by sign |
+
+```c
+i32 v = 1;
+i32 a = v << 32;            // 0
+i32 b = v << 33;            // 0
+
+i32 n = -5;
+i32 c = n >> 32;            // -1 (arithmetic; sign extended)
+
+u32 u = cast(u32, -1);
+u32 d = u >> 32;            // 0 (logical; saturates)
+```
+
+If you want modular-count semantics (the count wraps mod 32 / 64
+instead of saturating to 0), mask the count explicitly. The two
+forms give different results past the width:
+
+```c
+i32 a = 1 << 32;            // 0     (default: saturates)
+i32 b = 1 << (32 & 31);     // 1     (mask: wraps to <<0)
+i32 r = x << (n & 31);      // x << (n mod 32)
+i64 s = y << (m & 63);      // y << (m mod 64)
+```
+
+### Integer literals
+
+Decimal literals are range-checked against the destination type at
+the assignment point:
+
+```c
+i32 a = 2147483647;         // ok
+i32 b = 2147483648;         // error: out of i32 range
+i32 c = -2147483648;        // ok (unary minus folded)
+u32 d = 4294967295;         // ok
+u32 e = 4294967296;         // error
+```
+
+Hex and binary literals are bit-pattern literals. They fit any type
+of matching width:
+
+```c
+i32 a = 0xFFFFFFFF;         // -1 (the bit pattern reinterpreted)
+u32 b = 0xFFFFFFFF;         // 4294967295
+u8  c = 0b11111111;         // 255
+```
+
+A hex literal wider than the destination is an error.
+
+### Casts: cast(T, expr)
+
+`cast(T, expr)` is required when the conversion:
+
+- Narrows (`i64` → `i32`, `i32` → `u8`).
+- Crosses signedness at the same width (`i32` → `u32`).
+- Crosses integer / float / pointer categories.
+- Loses information in any other way.
+
+Implicit widening is allowed when it loses no information:
+`i32` → `i64`, `u32` → `u64`, `u8` → `i32`, `i32` → `f64`.
+
+Narrowing keeps the low bits:
+
+```c
+i64 v = 12030160680303;             // fits in i64
+i32 t = cast(i32, v);               // -42715793 (low 32 bits, signed)
+u8  b = cast(u8, 300);              // 44
+```
+
+Cross-signedness keeps the bit pattern:
+
+```c
+u32 u = cast(u32, -1);              // 4294967295
+i32 s = cast(i32, 4000000000);      // -294967296
+```
+
+### Float arithmetic
+
+`f32` and `f64` follow IEEE 754 with default rounding (round to
+nearest, ties to even). `+ - * /` produce the same bit pattern on
+every target for the same inputs.
+
+```c
+f64 a = 1.0e308 * 10.0;     // +inf
+f64 b = 1.0 / 0.0;          // +inf
+f64 c = -1.0 / 0.0;         // -inf
+f64 d = 0.0 / 0.0;          // NaN
+
+f64 z = -0.0 + 0.0;         // 0.0 (positive zero)
+```
+
+NaN compares not-equal to itself. Use that to test for NaN:
+
+```c
+f64 nan = 0.0 / 0.0;
+bool is_nan = nan != nan;   // true
+```
+
+Float arithmetic does not trap. Overflow produces `±inf`, underflow
+produces subnormals or 0.
+
+`f32` literals end with `f`: `0.5f`, `1.5e-10f`. Without the
+suffix, the literal is `f64`.
+
+Float literals are parsed bit-exactly. The literal you write is
+the value you get, with no rounding beyond what IEEE 754 requires.
+
+### Float → int cast
+
+Saturating. Out-of-range and NaN produce defined values:
+
+```c
+i32 a = cast(i32, 1.0e20);          //  2147483647    (INT32_MAX)
+i32 b = cast(i32, -1.0e20);         // -2147483648    (INT32_MIN)
+i32 c = cast(i32, 0.0 / 0.0);       //  0             (NaN → 0)
+i64 d = cast(i64, 1.0e20);          //  9223372036854775807
+```
+
+In-range values truncate toward zero. Negative values truncate
+toward zero too (not toward minus-infinity):
+
+```c
+i32 a = cast(i32,  1.7);            //  1
+i32 b = cast(i32, -1.7);            // -1
+```
+
+Saturation is to the underlying conversion width — `i32` for any
+i32-or-narrower target, `i64` for `i64`. Narrower destinations
+(`i8`, `i16`, `u8`, `u16`, `u32`) take the low bits of the
+saturated value, so a huge float becomes `INT32_MAX` first and
+then truncates. If you want i16/i8-range saturation, clamp the
+float yourself before the cast.
+
+```c
+i16 a = cast(i16, 1.0e20);          // -1     (low 16 bits of INT32_MAX)
+u8  b = cast(u8,  1.0e20);          //  255   (low 8 bits)
+i16 c = cast(i16, 100000.0);        // -31072 (low 16 bits of 100000)
+```
+
+The same value on every target. The cast costs about one extra
+cycle over an unchecked cvt because of the saturating clamp.
+
+### Int → float
+
+`i32` → `f64` and `u32` → `f64` are implicit. The 53-bit mantissa
+holds every 32-bit integer exactly, so no cast is needed. Integer
+literals within i32 range coerce directly.
+
+```c
+f64 a = 12345678;                       // exact (literal coerces)
+i32 n = 12345678;
+f64 b = n;                              // exact (implicit widen)
+```
+
+`i64` → `f64` and `u64` → `f64` require an explicit cast. Integer
+literals outside i32 range fall into this category. Conversion
+rounds round-to-nearest-even when the magnitude exceeds 2^53:
+
+```c
+f64 a = cast(f64, 9007199254740992);    // exact (2^53)
+f64 b = cast(f64, 9007199254740993);    // rounds to 9007199254740992
+                                        // (next f64 above is 2^53 + 2)
+```
+
+`cast(f32, integer)` rounds to 24-bit mantissa precision.
+
+### f32 ↔ f64
+
+`cast(f64, f32_val)` is exact (every f32 has an exact f64
+representation).
+
+`cast(f32, f64_val)` rounds to nearest even. Out-of-range overflows
+to `±inf`; underflow produces an f32 subnormal or zero.
+
+```c
+f32 a = cast(f32, 1.0e100);         // +inf
+f32 b = cast(f32, 1.0e-50);         // subnormal f32
+```
+
+### Comparisons
+
+`==`, `!=`, `<`, `>`, `<=`, `>=` work on integers and floats.
+
+Mixed signed/unsigned operands are a static error. Cast one side
+explicitly:
+
+```c
+i32 a = -1;
+u32 b = 5;
+// if a < b { ... }                       // error: mixed sign
+if cast(u32, a) < b { ... }               // false (-1 → 4294967295)
+if a < cast(i32, b) { ... }               // true
+```
+
+Comparison results are always `bool`, never the operand type.
+
+Float comparisons follow IEEE 754: every ordered compare (`<`, `>`,
+`<=`, `>=`) returns `false` if either operand is NaN. `==` returns
+`false` for NaN, `!=` returns `true`.
+
+```c
+f64 nan = 0.0 / 0.0;
+nan == nan      // false
+nan != nan      // true
+nan <  1.0      // false
+1.0 <  nan      // false
+nan <= nan      // false
+```
+
+### Constant folding
+
+The compiler folds integer and float expressions whose operands are
+all literals. The folded value matches what the same expression
+produces at runtime. There is no folder-vs-runtime mismatch.
+
+```c
+i32 a = (2147483647 + 1);           // -2147483648 (folded as wrap)
+i32 b = (1 << 32);                  // 0
+i32 c = cast(i32, 1.0e20);          // 2147483647 (saturated)
+```
+
+Folded floats use the same IEEE 754 rounding as runtime ops.
+
+### What traps
+
+These are the only runtime traps from arithmetic and indexing:
+
+| Operation | Trap |
+|---|---|
+| `n / 0`, `n % 0` (any integer width) | Yes. |
+| Out-of-bounds array index | Yes. Disable with `-unchecked`. |
+| Stack overflow | Yes. |
+
+No overflow trap. No NaN trap. No shift trap. No cast trap.
+
+### Differences from C
+
+| Case | C | minc |
+|---|---|---|
+| `INT_MAX + 1` | UB | Wraps to `INT_MIN`. |
+| `INT_MIN / -1` | UB (often `#DE`) | Wraps to `INT_MIN`. |
+| `INT_MIN % -1` | UB | 0. |
+| `1 << 32` (`i32`) | UB | 0. |
+| `1 >> 33` (`i32`, signed) | UB | 0 or -1 by sign. |
+| `cast(i32, NaN)` | UB | 0. |
+| `cast(i32, 1.0e20)` | UB | INT32_MAX. |
+| `i32 x = 4294967296` | Truncates with warning | Error. |
+| `i32 x = 0xFFFFFFFF` | Implementation-defined | -1 (bit pattern). |
+| Mixed-sign compare | Promotes both to unsigned | Static error. |
+
+If you bring code from C that overflows signed integers, the
+portable fix is to use an unsigned type — that gets the same wrap
+behavior on both languages without changing the comparison
+semantics.
+
+### Practical patterns
+
+If you do modular arithmetic, declare the variable unsigned.
+
+```c
+u32 hash = seed;
+hash = hash * 31 + byte;            // wraps mod 2^32 on every target
+```
+
+If a shift amount can exceed the type's width and you want
+modular-count semantics rather than the default saturate-to-zero,
+mask the count explicitly:
+
+```c
+i32 r = x << (n & 31);      // wraps mod 32 instead of saturating
+i64 s = y << (m & 63);
+```
+
+If a divisor can be zero, guard the divide.
+
+```c
+if d != 0 { q = n / d; }
+```
+
+If a float might be NaN, test before comparing:
+
+```c
+if x != x { /* NaN */ }
+else if x < 1.0 { /* in range */ }
+```
+
+If you cast a float to a narrow integer (`i8`, `i16`, `u8`, `u16`),
+clamp the float first. Float-to-int saturation lands at i32 width,
+not at the destination width, so a large float lands at `INT32_MAX`
+as i32 and the low 16 bits become the i16. Clamping does the actual
+i16-range saturation:
+
+```c
+if x < -32768.0 { x = -32768.0; }
+if x >  32767.0 { x =  32767.0; }
+i16 i = cast(i16, x);
+```
+
 ## Design principles
 
 - **Explicit over implicit**: sizes in type names, explicit casts for lossy conversions
 - **No preprocessor**: `when` for conditionals, `enum` for constants, `#include` for files
-- **Safe by default**: bounds checking on, wrapping arithmetic (no UB)
+- **Safe by default**: bounds checking on, wrapping arithmetic (no numeric UB)
 - **Zero-cost abstractions**: generics monomorphize, `defer` compiles to inline cleanup
 - **Minimal runtime**: no GC, no exceptions, no hidden allocations
 - **Direct hardware access**: pointers, `cast()`, `extern` for FFI, inline x64/ARM64
