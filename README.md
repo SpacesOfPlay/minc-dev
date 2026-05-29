@@ -27,7 +27,8 @@ and more info is available at [minc.dev](https://minc.dev).
 # macOS / Linux
 unzip minc-macos-arm64.zip
 cd minc-macos-arm64
-# Run this to verify compiler is executable, also adds minc to PATH.
+# Run this to verify compiler is executable.
+# Adds compiler to path in current session.
 # Must be source for PATH update to work directly.
 source setup.sh
 
@@ -38,7 +39,7 @@ cd minc-win-x64
 .\setup.cmd
 ```
 
-To undo later: `source setup.sh --remove` or `.\setup.ps1 -Remove`
+To undo later: `source setup.sh --deactivate` or `.\setup.ps1 -Remove`
 
 On macOS, `setup.sh` also strips the `com.apple.quarantine` xattr
 that browsers attach to downloaded files. Without it, Gatekeeper

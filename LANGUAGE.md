@@ -1094,6 +1094,15 @@ import math = "lib/math_helper.mc";
 math.add(2, 3);
 ```
 
+**Quoted** `import "file.mc";` resolves relative to the importing file.
+**Bare** `import helpers;` searches in order (first hit wins):
+
+| # | Location | |
+|---|----------|---|
+| 1 | `helpers.mc` next to the importing file | sibling |
+| 2 | `lib/helpers.mc` from cwd, walking up ancestors | project lib |
+| 3 | compiler's bundled `lib/` | stdlib |
+
 ### Private
 
 ```c
