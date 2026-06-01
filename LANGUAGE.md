@@ -1816,16 +1816,19 @@ no `--link` or `--gui` flags required.
 minc [build|run] [debug] <input.mc> [options]
 
 -o FILE                 Output filename (default: derived from input)
+-g                      Emit debug info (DWARF); no codegen change (doesn't add -Og)
+-Og                     Debug-friendly codegen: -Os + locals/params in stack slots
+-Os                     optimize for size (skip code-expanding passes)
 --target <t>            Cross-compile (see target table below)
 --link <file>           Link external object file (also available as @link tag)
 --shared                Emit shared library (.so) instead of executable
 --gui                   Set PE subsystem to GUI (also available as @gui tag)
 --def <file.def>        Load additional .def file for DLL mapping (Windows)
--g                      Emit DWARF debug info (same as `build debug`)
--unchecked              Disable bounds checking
+--unchecked             Disable bounds checking
+--no-dce                Keep all top-level functions (disable dead code elimination)
 -DFLAG                  Define compile-time flag
 -DFLAG=value            Define with value
---check                 Type-check only
+--no-color              Disable colored diagnostics
 --list-builtins         List built-in Windows API symbols
 --version               Print compiler version
 ```
@@ -1927,7 +1930,7 @@ before dividing if it is not a compile-time constant.
 if d != 0 { r = n / d; }
 ```
 
-`-unchecked` does not disable the divide-by-zero trap. The trap
+`--unchecked` does not disable the divide-by-zero trap. The trap
 comes from the hardware on x86 and from a runtime guard on ARM64.
 
 ### Bitwise: & | ^ ~
@@ -2204,7 +2207,7 @@ These are the only runtime traps from arithmetic and indexing:
 | Operation | Trap |
 |---|---|
 | `n / 0`, `n % 0` (any integer width) | Yes. |
-| Out-of-bounds array index | Yes. Disable with `-unchecked`. |
+| Out-of-bounds array index | Yes. Disable with `--unchecked`. |
 | Stack overflow | Yes. |
 
 No overflow trap. No NaN trap. No shift trap. No cast trap.
