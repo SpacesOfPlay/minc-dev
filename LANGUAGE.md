@@ -42,6 +42,7 @@ float4 and int4/uint4 operations compile to packed 128-bit SIMD instructions.
 | `f64x2`     | 16 bytes | 2x f64 vector (SIMD)           |
 | `i64x2`     | 16 bytes | 2x i64 vector (SIMD)           |
 | `u64x2`     | 16 bytes | 2x u64 vector (SIMD)           |
+| `i8x16`     | 16 bytes | 16x i8 vector (SIMD)           |
 | `float4x4`  | 64 bytes | 4x4 f32 matrix (SIMD, column-major) |
 
 ```c
@@ -49,6 +50,18 @@ float3 pos = float3{1.0f, 2.0f, 3.0f};
 float4 color = float4{1.0f, 0.0f, 0.0f, 1.0f};
 int4 indices = int4{0, 1, 2, 3};
 ```
+
+The 256-bit wide types map to native AVX2 instructions under
+`--target windows-avx2` / `linux-avx2`. On other x64 targets they
+lower to two 128-bit halves; on ARM64 and wasm to scalar code. The
+operations on them are the `f32x8_*` / `i32x8_*` / `i8x32` SIMD
+intrinsics; these types carry no operator overloads of their own.
+
+| Type     | Size     | Description           |
+|----------|----------|-----------------------|
+| `f32x8`  | 32 bytes | 8x f32 vector         |
+| `i32x8`  | 32 bytes | 8x i32 vector         |
+| `i8x32`  | 32 bytes | 32x i8 vector         |
 
 #### Component access
 
@@ -1197,10 +1210,12 @@ i32* c = new(i32[n]);                // typed, zero-init
 ```c
 i64 stdout()
 i64 stderr()
+i64 stdin()                     // console or piped input
 i64 open(u8* path, i32 mode)    // 0=read, 1=write/create
 i32 read(i64 fd, u8* buf, i32 n)
 i32 write(i64 fd, u8* buf, i32 n)
 void close(i64 fd)
+i32 remove(u8* path)            // delete a file; 0=success, -1=error
 bool file_exists(u8* path)
 ```
 
@@ -1242,10 +1257,13 @@ f32 fabsf(f32 x)                // hardware sign-bit clear (f32)
 
 ### SIMD intrinsics
 
-Streaming load/store and lane reductions for the packed vec types
-(`int4`, `uint4`, `f64x2`, `i64x2`, `u64x2`). Each call is one
-SIMD instruction, or a small fixed sequence; codegen is the same
-shape on x64 and ARM64.
+Streaming load/store, lane reductions, and dot-products for the
+packed vec types — the 128-bit `int4` / `uint4` / `f64x2` / `i64x2` /
+`u64x2` / `i8x16`, the `float4` host intrinsics, and the 256-bit
+`f32x8` / `i32x8` / `i8x32`. Each call is one SIMD instruction, or a
+small fixed sequence; codegen is the same shape on x64 and ARM64. The
+256-bit types use native AVX2 only under `--target windows-avx2` /
+`linux-avx2` (see Wide SIMD below).
 
 #### Streaming load/store
 
@@ -1316,6 +1334,82 @@ for i32 i = 0; i < n; i = i + 4 {
 u64 total = reduce4(acc);             // one reduction, after the loop
 ```
 
+#### float4 intrinsics
+
+Host intrinsics on `float4`. They work without
+`#include "linear.mc"`; the `float2`/`float3` forms of `dot` still
+resolve to the library overloads.
+
+| Function                     | Returns  | Notes                         |
+|------------------------------|----------|-------------------------------|
+| `dot(float4, float4)`        | `f32`    | sum of the four lane products |
+| `normalize(float4)`          | `float4` | unit-length vector            |
+| `cross(float4, float4)`      | `float4` | 3D cross product, `w` is 0    |
+
+#### int8 dot-accumulate (128-bit)
+
+`i8x16` is a 16-lane signed-byte vector. `dot_acc_i8` is a widening
+dot-accumulate: each of the four i32 lanes of `acc` gets the sum of
+four i8×i8 products added in, accumulating into the first argument.
+It is exact over i8 inputs (no saturation).
+
+| Function                              | Returns  | Notes                |
+|---------------------------------------|----------|----------------------|
+| `i8x16_load(i8*)`                     | `i8x16`  | 16×i8, one 16-byte load |
+| `i8x16_store(i8*, i8x16)`             | `void`   | matching store       |
+| `dot_acc_i8(int4 acc, i8x16, i8x16)`  | `int4`   | RMW; += four i8×i8 products per lane |
+
+```c
+int4 acc;
+for i32 i = 0; i < n; i = i + 16 {
+    acc = dot_acc_i8(acc, i8x16_load(&a[i]), i8x16_load(&b[i]));
+}
+i64 total = sum4_wide(acc);
+```
+
+#### Wide SIMD (`windows-avx2` / `linux-avx2`)
+
+*** [EXPERIMENTAL] ***
+
+The 256-bit `f32x8` / `i32x8` / `i8x32` intrinsics. Under the
+`-avx2` targets each maps to one AVX2 instruction or a small fixed
+sequence; on other x64 targets they lower to two 128-bit ops, and to
+scalar code on ARM64 and wasm. `f32x8_fma` accumulates into its first
+argument.
+
+| Function                                   | Returns  | Notes                          |
+|--------------------------------------------|----------|--------------------------------|
+| `f32x8_load(f32*)`                         | `f32x8`  | 8×f32, one 32-byte load        |
+| `f32x8_store(f32*, f32x8)`                 | `void`   | matching store                 |
+| `i32x8_load(i32*)`                         | `i32x8`  | 8×i32 load                     |
+| `i32x8_store(i32*, i32x8)`                 | `void`   | matching store                 |
+| `i8x32_load(i8*)`                          | `i8x32`  | 32×i8 load                     |
+| `f32x8_add/sub/mul(f32x8, f32x8)`          | `f32x8`  | component-wise                 |
+| `f32x8_min/max(f32x8, f32x8)`              | `f32x8`  | per-lane min / max             |
+| `f32x8_div(f32x8, f32x8)`                  | `f32x8`  | per-lane divide                |
+| `f32x8_rcp(f32x8)`                         | `f32x8`  | 12-bit reciprocal approximation|
+| `f32x8_rsqrt(f32x8)`                       | `f32x8`  | 12-bit 1/sqrt approximation    |
+| `f32x8_sqrt(f32x8)`                        | `f32x8`  | full-precision per-lane sqrt   |
+| `f32x8_exp(f32x8)`                         | `f32x8`  | per-lane exp                   |
+| `f32x8_splat(f32)`                         | `f32x8`  | broadcast scalar to 8 lanes    |
+| `f32x8_pack4(f32, f32, f32, f32)`          | `f32x8`  | pack 4 scalars, duplicated across both halves |
+| `f32x8_lane4_K(f32x8)`                     | `f32x8`  | broadcast lane K (K=0..3) of each 128-bit half |
+| `i32x8_to_f32x8(i32x8)`                    | `f32x8`  | per-lane signed int→float      |
+| `f32x8_to_i32x8(f32x8)`                    | `i32x8`  | per-lane float→int, round half-to-even |
+| `f32x8_fma(f32x8 acc, f32x8, f32x8)`       | `f32x8`  | RMW; `acc + a*b` per lane      |
+| `sum8(f32x8)`                              | `f32`    | horizontal sum of 8 lanes      |
+| `sum8(i32x8)`                              | `i32`    | horizontal sum of 8 lanes      |
+| `dot_i8x32(i8x32, i8x32)`                  | `i32x8`  | widening dot; operands in [-127,127] |
+| `dot_acc_i8(i32x8 acc, i8x32, i8x32)`      | `i32x8`  | RMW; widening dot over 32 lanes|
+
+```c
+f32x8 acc = f32x8_splat(0.0f);
+for i32 i = 0; i < n; i = i + 8 {
+    acc = f32x8_fma(acc, f32x8_load(&a[i]), f32x8_load(&b[i]));
+}
+f32 total = sum8(acc);
+```
+
 ### Threading (builtins)
 
 ```c
@@ -1348,6 +1442,7 @@ Include with `#include` or `import`:
 | **Deflate** | `lib/deflate.mc` | DEFLATE compressor (RFC 1951; fixed-Huffman + LZ77)              |
 | **Zlib**    | `lib/zlib.mc`    | zlib + gzip wrappers around inflate/deflate (CRC32, Adler-32)    |
 | **PNG**     | `lib/png.mc`     | PNG image decoder (grayscale, RGB, RGBA → RGBA8)                 |
+| **JPEG**    | `lib/jpeg.mc`    | JPEG decoder (baseline + progressive, 444/422/420, restarts) + encoder (4:2:0, quality 1-100, optimized Huffman) |
 | **Sokol**   | `lib/sokol_all.mc` | Cross-platform graphics/app via sokol C bridge                 |
 | **Obj-C**   | `lib/objc_runtime.mc` | Objective-C runtime bindings for Cocoa/UIKit/Metal — *macOS / iOS only* |
 
@@ -1544,6 +1639,69 @@ extern "libm.so.6" {
 ```c
 extern "libSystem.B.dylib" f64 sin(f64 x);
 extern "libSystem.B.dylib" i64 clock_gettime_nsec_np(i32 clock_id);
+```
+
+### Data symbol imports (macOS)
+
+A declarator with no parameter list is a data symbol bound by dyld
+at load time via a `__got` slot — same shape as a function extern,
+no `(...)` after the name:
+
+```c
+extern "libSystem.B.dylib" void* environ;
+
+extern "Foundation" {
+    void* NSDefaultRunLoopMode;
+    void* NSRunLoopCommonModes;
+}
+extern "QuartzCore" void* kCAFilterNearest;
+```
+
+Reading the name yields the value stored at the symbol; `&name`
+yields the symbol's address. The dylib name also drives
+`LC_LOAD_DYLIB` so the framework is linked automatically. A bare
+framework name (or `"Foundation.framework"`) expands to its full
+system path — same rule as `@link "Foundation"`. Path-shaped
+values and explicit suffixes (`.dylib`, `.so`, `.o`) pass through
+untouched.
+
+The same shorthand works for function externs:
+
+```c
+extern "Foundation" void* objc_getClass(u8* name);
+```
+
+### Renaming an imported symbol (`from`)
+
+An extern declaration can bind a foreign dynamic symbol with a
+different minc call-name with a `from "symbol"` clause. The name 
+in the declarator is what you call; the `from` operand is the 
+imported symbol:
+
+```c
+extern "libc.so.6" void libc_free(void* ptr) from "free";
+extern "libstdc++.so.6" void cpp_delete(void* p) from "_ZdlPv";
+```
+
+The operand is a string, so it covers symbols that aren't valid
+minc identifiers (mangled C++ names, decorated names).
+
+This also exists to import foreign symbols that collide with a 
+built-in. Built-in names (`alloc`, `free`, `realloc`, …) are 
+reserved. An `extern` that declares one of them with a sign-
+equivalent signature is a compile error. A different signature 
+overload is allowed.
+
+```c
+// error: extern 'free' shadows the builtin
+// note: calling libc free on minc alloc:ed memory is invalid
+extern "libc.so.6" void free(void* ptr);
+
+// ok: libc's free, callable as libc_free; the builtin free() is untouched
+extern "libc.so.6" void libc_free(void* ptr) from "free";
+
+// ok: different signature overload
+extern "randomlib.so" void free(void* ptr, i32 generation, i32 zombies);
 ```
 
 ### Linked object imports
