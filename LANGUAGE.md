@@ -203,6 +203,9 @@ p + n                           // pointer arithmetic (advances by n * sizeof(*p
 i32[10] arr;                    // fixed-size array
 i32[4] arr = {1, 2, 3, 4};      // array with initializer
 arr[0]                          // indexing (bounds-checked by default)
+arr = {5, 6, 7, 8};             // whole-array assignment (length must match)
+i32[4] b = arr;                 // value copy
+b = arr;                        // whole-array copy assignment (lengths must match)
 ```
 
 ### Slices
@@ -256,6 +259,41 @@ string s = string("hello");
 - `move(s)` — transfers ownership, invalidates source
 - `return s` — implicit move (transfers to caller)
 - `string → str` — implicit conversion (safe borrow for function calls)
+
+Tracking follows control flow. A free on a branch that returns does
+not clear other paths. Reassigning a freed variable makes it live again. The 
+new value needs its own free.
+
+```c
+string base = format("base");
+for i32 i = 0; i < count; i++ {
+    if match(i) {
+        free(base);
+        return i;               // freed on this path
+    }
+}
+free(base);                     // freed when the loop finishes
+
+string s = format("a");
+free(s);
+s = format("b");                // live again, needs its own free
+free(s);
+```
+
+A free that can reach a later use is an error. Locals declared
+inside a loop body invalidates with each iteration:
+
+```c
+for i32 i = 0; i < count; i++ {
+    string cand = make(i);
+    if skip(cand) {
+        free(cand);
+        continue;               // ok: cand dies with the iteration
+    }
+    consume(cand);
+    free(cand);
+}
+```
 
 ```c
 // Construction
@@ -359,6 +397,15 @@ void greet() {
 }
 ```
 
+A function with a return type must return on every path. Control
+reaching the end of the body is a compile error:
+
+```c
+i32 pick(i32 x) {
+    if x > 0 { return 1; }
+}                              // error: missing return in function 'pick'
+```
+
 ### Function overloading
 
 Functions with the same name can be overloaded if their parameter types differ.
@@ -383,6 +430,7 @@ struct Point {
 
 Point p = Point{3, 4};                // positional literal
 Point p2 = Point{.y = 10, .x = 5};    // named fields
+p = {7, 8};                           // assignment RHS: type inferred from target
 var (x, y) = make_point(1, 2);        // var destructuring
 ```
 
@@ -878,13 +926,32 @@ add(3, b: 4)                  // mixed positional + named
 ### Type conversions
 
 Implicit lossless widening: `i8`->`i16`->`i32`->`i64`, `u8`->`u16`->`u32`->`u64`,
+unsigned->wider signed (`u8`->`i16`/`i32`/`i64`, `u16`->`i32`/`i64`, `u32`->`i64`),
 `i32`/`u32`->`f64`, `f32`->`f64`. All lossy conversions require explicit `cast()`.
+
+Two signed/unsigned conversions are also implicit **on assignment** (init,
+return, argument passing, store) because they change no information that
+`cast()` wouldn't change identically:
+
+- **Same-width reinterpret** (`i32`<->`u32`, `i64`<->`u64`, …): the bits are
+  unchanged; only the interpretation differs (`-1` <-> `4294967295`).
+- **Signed -> wider unsigned** (`i8`/`i16`/`i32` -> a wider `u…`): sign-extends,
+  bit-identical to `cast(u…, signed)`. A negative value becomes its
+  two's-complement value mod 2ⁿ (`i32 -1` -> `u64 0xFFFFFFFFFFFFFFFF`); a
+  non-negative value is unchanged.
+
+These apply only where there is an assignment target. **In an expression there
+is no target width to convert toward, so mixed signed/unsigned still errors** —
+`i32 + u64` is rejected; cast one side. Narrowing always needs a `cast()`.
 
 ```c
 i64 x = 42;                   // i32 -> i64 (implicit)
 i32 y = cast(i32, x);         // i64 -> i32 (explicit, narrowing)
 f64 f = y;                    // i32 -> f64 (implicit, i32 fits in f64)
 i32 n = cast(i32, 3.14);      // f64 -> i32 (explicit, truncates)
+u32 r = y;                    // i32 -> u32 (implicit, same-width reinterpret)
+u64 sz = y;                   // i32 -> u64 (implicit, sign-extends)
+u64 bad = x + sz;             // ERROR: i64 + u64 mixed sign in an expression
 ```
 
 ### Integer promotion
@@ -1063,6 +1130,12 @@ struct Triple<A, B, C> { A x; B y; C z; }
 
 // Nested generics
 Pair<Pair<i32>> nested;
+
+// Generic fields may reference other generic types, including the
+// struct's own parameters — and the struct itself
+struct Slot<V> { V val; i32 state; }
+struct Map<V>  { Slot<V>* slots; i32 cap; }
+struct Node<T> { T val; Node<T>* next; }
 ```
 
 ### Type constraints
@@ -1100,7 +1173,8 @@ import helpers;
 import "lib/helpers.mc";
 
 // Selective: only named symbols
-import { Vec, vec_push } from "lib/vec.mc";
+import { Vec, vec_push } from "lib/vec.mc";   // from a path (relative to importer)
+import { sinf, cosf } from math;              // from a library name (lib-search)
 
 // Qualified: access via prefix
 import math = "lib/math_helper.mc";
@@ -1116,6 +1190,16 @@ math.add(2, 3);
 | 2 | `lib/helpers.mc` from cwd, walking up ancestors | project lib |
 | 3 | compiler's bundled `lib/` | stdlib |
 
+The selective `from` clause takes either form: `from "path.mc"` is
+path-relative like a quoted import; `from name` uses the bare-import lib-search.
+The listed names are visible only in the importing file; the rest of the
+module stays hidden but fully compiled, so listed functions may call
+unlisted ones. A full import of the same module, from any file and in
+any order, makes all of it visible everywhere. Listing a name the module
+doesn't define, or a `private` one, is an error; so is defining a name
+that collides with a hidden name of a selectively-imported module.
+Types and enum values are not filtered.
+
 ### Private
 
 ```c
@@ -1125,11 +1209,55 @@ private i32 helper() { return 42; }
 // Block
 private {
     i32 internal_a() { ... }
-    i32 internal_b() { ... }
+    struct ScratchState { i32 pos; }
+    type OpaqueHandle = void;
 }
 ```
 
-Private declarations are hidden from `import` but still visible via `#include`.
+Private declarations are visible only within their declaring file.
+This covers functions, globals, and types (`struct`, `enum`,
+`union`, `unsafe_union`, `type` aliases), including the values of a
+private `enum` and the constructors of a private `union`. Using a
+private type from another file is a compile error ("type 'X' is
+private to <file>").
+
+A private function is also excluded from the export table of a shared
+library (`--shared`): it is still emitted and callable from other code
+in the same module, but does not become a public symbol, so `dlsym` /
+`GetProcAddress` won't find it. Non-private functions are exported as
+before.
+
+A private type never collides with a same-name type in another file.
+The private definition stays local to its file, and a local
+definition of the same name wins locally. Inside its own file, a
+private definition shadows an imported public one of the same name.
+
+The same holds for private functions, globals, consts, and enum
+values: two files may each declare `private i32 g_state` or a
+`private` helper of the same name, and each file resolves to its own.
+A public declaration keeps the plain name, so files that declare no
+private of their own still reach it; the private one shadows it inside
+its declaring file. Each private gets its own storage — the two never
+share a slot.
+
+### Type redefinition
+
+Declaring one type name twice with different definitions is a
+compile error at the later declaration: "conflicting redefinition of
+type 'X' (previously defined in <file>)". This applies within a file
+and across files. Allowed:
+
+- Identical re-declarations. Two files may declare the same
+  `struct Vec2 { f32 x; f32 y; }`.
+- `private` shadowing. A private type never conflicts with a
+  same-name type in another file. Mark a local type `private` to
+  coexist with a library's public name.
+- The C `typedef enum` idiom. An `enum X { ... }` plus an integer
+  alias `type X = i32;` is one C declaration split in two, common
+  in transpiled headers. The alias resolves the name; the enum
+  carries the value constants.
+- Forward declarations. `struct X;` is compatible with any later
+  definition.
 
 ### Export
 
@@ -1161,7 +1289,9 @@ and surface its API through `export`'d functions or a `_start()`.
 #include "path/to/file.mc"      // textual inclusion (include-once)
 ```
 
-`#include` makes all declarations visible, including `private` ones (C-style usage).
+`#include` makes the included file's declarations visible (C-style
+usage). `private` declarations stay scoped to their declaring file;
+inclusion does not lift privacy.
 
 #### API Version Tag
 
@@ -1212,12 +1342,17 @@ i64 stdout()
 i64 stderr()
 i64 stdin()                     // console or piped input
 i64 open(u8* path, i32 mode)    // 0=read, 1=write/create
-i32 read(i64 fd, u8* buf, i32 n)
-i32 write(i64 fd, u8* buf, i32 n)
-void close(i64 fd)
+i32 read(i64 handle, u8* buf, i32 n)    // bytes read; -1 on error
+i32 write(i64 handle, u8* buf, i32 n)   // bytes written; -1 on error
+void close(i64 handle)
 i32 remove(u8* path)            // delete a file; 0=success, -1=error
 bool file_exists(u8* path)
 ```
+
+`read`/`write` take an opaque handle from `stdin()`/`stdout()`/
+`stderr()`/`open()`, not a POSIX fd number — the handle's numeric
+value is platform-specific. An integer literal as the handle argument
+(`write(1, ...)`) is a compile error.
 
 ### Print
 
@@ -1245,6 +1380,20 @@ i32 clz(i32 x)                  // count leading zeros
 i32 ctz(i32 x)                  // count trailing zeros
 i32 bswap(i32 x)                // byte swap
 ```
+
+### Hardware hints
+
+```c
+void cpu_pause()                // spin-loop relax: x64 pause, arm64 yield, wasm no-op
+void prefetch(void* addr)       // software prefetch, T0 locality: x64 prefetcht0,
+                                // arm64 PRFM PLDL1KEEP, wasm no-op
+```
+
+`prefetch` hints the CPU to pull the cache line at `addr` into all
+cache levels ahead of use. It never faults — an invalid address is
+simply ignored by the hardware — and it changes no program state.
+Use it a few iterations ahead when walking index lists into large
+records (the classic pattern: `prefetch(&records[indices[i + 8]])`).
 
 ### Math (builtins)
 
@@ -1345,6 +1494,16 @@ resolve to the library overloads.
 | `dot(float4, float4)`        | `f32`    | sum of the four lane products |
 | `normalize(float4)`          | `float4` | unit-length vector            |
 | `cross(float4, float4)`      | `float4` | 3D cross product, `w` is 0    |
+| `min4(a, b)` / `max4(a, b)`  | `float4` | per lane; picks the SECOND operand on NaN, equal, and ±0 ties (x64 vminps/vmaxps semantics, identical on every target) |
+| `sqrt4(v)`                   | `float4` | per-lane square root, IEEE rounded |
+| `rsqrt4(v)`                  | `float4` | exact `1.0f / sqrt` per lane, bit-identical on every target |
+| `rsqrt4_fast(v)`             | `float4` | native reciprocal-sqrt approximation; values differ per target (x64 vrsqrtps, ARM64 FRSQRTE, wasm falls back to `rsqrt4`) |
+| `cmpeq4/cmpgt4/cmpge4/cmplt4/cmple4(a, b)` | `float4` | per-lane mask: all-ones when true, all-zeros when false; quiet ordered — NaN compares false |
+| `and4/or4/xor4(a, b)`        | `float4` | bitwise on all 128 bits       |
+| `andnot4(a, b)`              | `float4` | `(~a) & b` (SSE andnot operand order) |
+| `select4(mask, a, b)`        | `float4` | per-BIT select: `(mask & a) \| (~mask & b)` |
+| `movemask4(v)`               | `i32`    | bit i = lane i's top (sign) bit |
+| `splat4(s)`                  | `float4` | `f32` broadcast to all four lanes |
 
 #### int8 dot-accumulate (128-bit)
 
@@ -1476,7 +1635,7 @@ str trimmed = str_trim("  hi  ");
 
 // String builder
 str_buf sb;
-str_buf_init(&sb, 64);
+str_buf_init(&sb);
 str_buf_add(&sb, "hello ");
 str_buf_add(&sb, "world");
 str result = str_buf_to_str(&sb);
@@ -1641,14 +1800,15 @@ extern "libSystem.B.dylib" f64 sin(f64 x);
 extern "libSystem.B.dylib" i64 clock_gettime_nsec_np(i32 clock_id);
 ```
 
-### Data symbol imports (macOS)
+### Data symbol imports
 
-A declarator with no parameter list is a data symbol bound by dyld
-at load time via a `__got` slot — same shape as a function extern,
-no `(...)` after the name:
+A declarator with no parameter list is a data symbol bound by the
+dynamic linker at load time via a GOT slot — same shape as a
+function extern, no `(...)` after the name:
 
 ```c
 extern "libSystem.B.dylib" void* environ;
+extern "libc.so.6" u8** environ;
 
 extern "Foundation" {
     void* NSDefaultRunLoopMode;
@@ -1658,12 +1818,21 @@ extern "QuartzCore" void* kCAFilterNearest;
 ```
 
 Reading the name yields the value stored at the symbol; `&name`
-yields the symbol's address. The dylib name also drives
-`LC_LOAD_DYLIB` so the framework is linked automatically. A bare
-framework name (or `"Foundation.framework"`) expands to its full
-system path — same rule as `@link "Foundation"`. Path-shaped
-values and explicit suffixes (`.dylib`, `.so`, `.o`) pass through
-untouched.
+yields the symbol's address. The library name also drives
+`LC_LOAD_DYLIB` / `DT_NEEDED` so the library is linked
+automatically. A bare framework name (or `"Foundation.framework"`)
+expands to its full system path — same rule as `@link "Foundation"`.
+Path-shaped values and explicit suffixes (`.dylib`, `.so`, `.o`)
+pass through untouched.
+
+Supported on macOS and iOS (dyld binds the `__got` slot) and on
+Linux and Android, x64 and arm64 alike (an `R_*_GLOB_DAT` against
+the slot, valid in an executable and in a `--shared` library).
+Windows/UEFI rejects the declaration — a PE data import would need
+an `__imp_` IAT slot, which is not implemented — and `--target
+wasm` rejects it because there is no dynamic linker. Both are
+compile errors naming the symbol and the target, not silent
+miscompiles.
 
 The same shorthand works for function externs:
 
@@ -1702,6 +1871,15 @@ extern "libc.so.6" void libc_free(void* ptr) from "free";
 
 // ok: different signature overload
 extern "randomlib.so" void free(void* ptr, i32 generation, i32 zombies);
+```
+
+The same reservation applies to definitions: a function or a global
+variable named after a built-in is a compile error. A variable has no
+signature to overload with, so any built-in name is rejected:
+
+```c
+// error: global variable 'stdout' shadows the builtin of the same name
+void* stdout = null;
 ```
 
 ### Linked object imports
@@ -1766,7 +1944,8 @@ annotation.
 ## Shaders
 
 GPU shaders written in minc syntax. The compiler generates HLSL (Windows/D3D11),
-GLSL (Linux/WebGL2), or Metal MSL (macOS/iOS) for the target platform.
+GLSL (Linux/WebGL2), or Metal MSL (macOS/iOS) for the target platform, and WGSL
+for WebGPU.
 
 ### Shader functions
 
@@ -1812,8 +1991,8 @@ the clip-space position (`gl_Position` / `SV_Position`).
 Outside, those names can be used as ordinary identifiers.
 
 `ShaderMeta.uniforms` points at a flat array of `ShaderUniformDesc` (one entry per
-scalar/vector/matrix field across all uniform blocks); `ShaderMeta.uniforms_count`
-is its length. Plain `@uniform float4x4 mvp` produces one descriptor; struct
+field across all uniform blocks); `ShaderMeta.uniforms_count` is its length.
+Plain `@uniform float4x4 mvp` produces one descriptor; struct
 `@uniform(N) PerFrame frame { mat4 mvp; vec4 light_dir; }` produces one per field
 (with each field's name + offset). Each descriptor's `type_kind` is one of:
 
@@ -1836,8 +2015,13 @@ is its length. Plain `@uniform float4x4 mvp` produces one descriptor; struct
 The values are runtime-agnostic; adapters map them to their own per-uniform
 type system (sokol's `sg_uniform_type` uses the same numbers). `import shader;`
 exposes a `ShaderUType` enum with these constants for code that walks the
-descriptors. Limitation: nested structs in `@uniform` structs are rejected;
-flatten to scalar/vector/matrix fields.
+descriptors.
+
+An array field carries its element type in `type_kind` and its length in
+`array_count`, which is 1 for every other field. std140 pads array elements to
+16 bytes, so an array field must be `float4`, `int4`, `uint4`, or `float4x4`.
+Limitation: nested structs in `@uniform` structs are rejected; flatten to
+scalar, vector, matrix, or array fields.
 
 `ShaderMeta.bindings` points at a flat array of `ShaderBinding` (one entry per
 `@texture` / `@sampler` / `@storage` / `@buffer` / `@rwbuffer` parameter, in
@@ -1917,12 +2101,18 @@ The shader backend is selected automatically from `--target`:
 | Target | GPU backend | Shader language |
 |--------|-------------|-----------------|
 | Windows | D3D11 | HLSL |
-| Linux | OpenGL | GLSL 330 |
+| Linux | OpenGL | GLSL 410 |
 | WASM/Android | OpenGL ES | GLSL ES 300 |
 | macOS/iOS | Metal | MSL |
 
+Emitted versions rise where a feature needs it: GLSL 420 for storage images and
+430 for compute, GLSL ES 310 for `gather` or storage images. WebGL2 is GLSL ES
+300 only, so it cannot run the shaders that ask for 310.
+
 Override with `@gpu "target"` at file scope (before shader functions):
-`@gpu "opengl"`, `@gpu "d3d11"`, `@gpu "metal"`, `@gpu "opengles"`.
+`@gpu "opengl"`, `@gpu "d3d11"`, `@gpu "metal"`, `@gpu "opengles"`,
+`@gpu "webgpu"`. WebGPU has no `--target` of its own; the pragma is how a build
+selects WGSL.
 
 ## Build commands
 
@@ -2076,9 +2266,9 @@ i32 c =  7 % -3;        //  1
 `INT_MIN / -1` and `INT_MIN % -1` are defined:
 
 ```c
-i32 lo = (0 - 2147483647) - 1;     // INT32_MIN
-i32 q  = lo / (0 - 1);             // INT32_MIN (wraps)
-i32 r  = lo % (0 - 1);             // 0
+i32 lo = (0 - 2147483647) - 1;   // INT32_MIN
+i32 q  = lo / -1;                // INT32_MIN (wraps)
+i32 r  = lo % -1;                // 0
 ```
 
 `/ 0` and `% 0` trap. There is no recovery. Check the divisor
