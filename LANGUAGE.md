@@ -2,7 +2,7 @@
 
 minc is a minimal C replacement for building native software. It compiles directly to
 native executables for x64 Windows (PE), x64/ARM64 Linux (ELF), ARM64 macOS (Mach-O),
-ARM64 iOS, ARM64 Android (.so), and WebAssembly — no assembler, linker, or runtime required.
+ARM64 iOS, ARM64 Android (.so), and WebAssembly.
 
 ## Types
 
@@ -712,8 +712,36 @@ BinOp op = &add;           // alias for function pointer type
 struct Calc { BinOp f; }   // alias as struct field type
 ```
 
-Type aliases are defined at file scope. The alias name becomes interchangeable
-with the underlying type.
+The alias name becomes interchangeable with the underlying type.
+
+Aliases may be declared at file scope or inside a function body. A
+body-level alias is scoped to its enclosing block:
+
+```c
+i32 main() {
+    type Row = i32[3];         // local to main
+    Row[2] grid = { {1,2,3}, {4,5,6} };
+
+    {
+        type Row = f32[2];     // shadows the outer Row in this block
+        Row v = {0.5f, 1.5f};
+    }
+    // outer Row is in effect again here
+    return grid[1][2];
+}
+```
+
+Two differences from a file-scope alias:
+
+- **No forward references.** A local alias is visible only to statements
+  after it, like a local variable. A file-scope alias can be used
+  anywhere in the file, including above its declaration.
+- **Shadowing is allowed** — of a file-scope type, or of an alias from an
+  enclosing block. Redeclaring the same name twice in *one* block is an
+  error.
+
+Local aliases are a naming convenience only; they declare no storage and
+generate no code.
 
 ## Statements
 
