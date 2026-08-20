@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>minc wasm</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+  html, body { margin: 0; height: 100%; background: #000; color: #c0c8d0; font-family: ui-monospace, monospace; }
+  #wrap { display: flex; flex-direction: column; height: 100%; }
+  header { padding: 8px 16px; background: #0a0d12; border-bottom: 1px solid #2a2e36; font-size: 12px; color: #8a8a8a; }
+  main { flex: 1; min-height: 0; }
+  #canvas { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <header id="hdr">minc wasm - loading…</header>
+  <main><canvas id="canvas"></canvas></main>
+</div>
+<script src="sokol_wasm_host.js"></script>
+<script>
+const app = (new URLSearchParams(location.search)).get('app');
+const hdr = document.getElementById('hdr');
+if (!app || !/^[a-zA-Z0-9_-]+$/.test(app)) {
+    hdr.textContent = 'ERROR: missing or invalid ?app=<name> in URL';
+} else {
+    document.title = app + ' - minc wasm';
+    hdr.textContent = app + ' - minc WASM';
+    // Always preload the audio worklet. Examples with no audio
+    // leave the context suspended and idle. Audio examples find
+    // the worklet ready when saudio_setup fires; the host's
+    // click/touch/keydown resume hooks unlock audio on first input.
+    //
+    // Files the wasm side open()s at runtime are preloaded into the host
+    // VFS before run(). The list comes from an optional `assets.json` (a
+    // JSON array of paths like "resources/foo.png") that the dist's
+    // `build … wasm` step writes next to this page when the example has a
+    // resources/ dir. An asset-free example simply has no assets.json
+    // (the fetch 404s and is ignored).
+    (async () => {
+        let assets = [];
+        try {
+            const r = await fetch('assets.json');
+            if (r.ok) assets = await r.json();
+        } catch (e) { /* no manifest; fine */ }
+        try {
+            await window.sokolWasm.preloadAudioWorklet({ sampleRate: 44100 });
+            await window.sokolWasm.preloadAssets(assets);
+            // runAuto picks app.threads.wasm on an isolated page, else app.wasm
+            await window.sokolWasm.runAuto(app);
+        } catch (e) {
+            // Show the message first (the stack is usually just host-internal
+            // line numbers); log the full stack to the console for debugging.
+            hdr.textContent = 'ERROR: ' + (e.message || e);
+            console.error(e);
+        }
+    })();
+}
+</script>
+</body>
+</html>

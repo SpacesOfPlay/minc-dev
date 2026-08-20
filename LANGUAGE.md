@@ -51,6 +51,30 @@ float4 color = float4{1.0f, 0.0f, 0.0f, 1.0f};
 int4 indices = int4{0, 1, 2, 3};
 ```
 
+A vector literal takes one value or all of its components. One value
+splats across every lane; a vector-typed value contributes all of its
+own, so literals concatenate:
+
+```c
+float4 grey  = float4{0.5f};              // 0.5 in all four lanes
+float4 opaque = float4{color.xyz, 1.0f};  // 3 components + 1
+float4 pair  = float4{uv, uv};            // 2 + 2
+float4 zero  = float4{};                  // all zeros
+```
+
+A count that lands in between is an error — unlike a struct or array
+literal, a vector does not zero-fill a short list:
+
+```c
+float4 bad = float4{1.0f, 2.0f};          // error: takes one value
+                                          //        or all of its components
+```
+
+Matrices take all of their values; there is no one-value form, because
+a single value means the diagonal in the shader languages rather than a
+splat. These rules are the same inside `@shader` functions, so a vector
+literal computes the same thing on the CPU and the GPU.
+
 The 256-bit wide types map to native AVX2 instructions under
 `--target windows-avx2` / `linux-avx2`. On other x64 targets they
 lower to two 128-bit halves; on ARM64 and wasm to scalar code. The
@@ -202,8 +226,9 @@ p + n                           // pointer arithmetic (advances by n * sizeof(*p
 ```c
 i32[10] arr;                    // fixed-size array
 i32[4] arr = {1, 2, 3, 4};      // array with initializer
+i32[8] part = {1, 2};           // partial initializer; the rest zeroes
 arr[0]                          // indexing (bounds-checked by default)
-arr = {5, 6, 7, 8};             // whole-array assignment (length must match)
+arr = {5, 6, 7, 8};             // whole-array assignment
 i32[4] b = arr;                 // value copy
 b = arr;                        // whole-array copy assignment (lengths must match)
 ```
@@ -216,6 +241,29 @@ s.ptr                           // data pointer
 s.len                           // element count
 s[i]                            // indexed access
 s[1..4]                         // subslice [start, end)
+```
+
+An array, slice or pointer can be written through a slice target. This
+writes the elements given, starting at the offset, and leaves
+everything else alone:
+
+```c
+i32[6] a = {1, 2, 3, 4, 5, 6};
+a[2..]  = {7, 8};               // a is now {1, 2, 7, 8, 5, 6}
+a[1..4] = {7, 8, 9};            // a[1], a[2], a[3]; the rest untouched
+```
+
+An open range takes its length from the initializer. A range written
+with both bounds must be filled exactly; supplying more or fewer is a
+compile error, since the write length comes from the initializer and
+the end bound would otherwise be ignored. Bounds that are not literals
+are left to the runtime bounds check.
+
+That is different from whole-array assignment, which replaces the array
+and zeroes anything the initializer did not cover:
+
+```c
+a = {9};                        // a is now {9, 0, 0, 0, 0, 0}
 ```
 
 ### Strings
@@ -437,7 +485,8 @@ var (x, y) = make_point(1, 2);        // var destructuring
 A field that is itself an array or struct takes a nested `{...}`
 initializer; the inner brace-init has no type prefix and resolves
 against the field type. Nesting is arbitrary (struct in array in
-struct …):
+struct …). An array initializer may supply fewer elements than the
+array holds. The remaining elements are set to zero.
 
 ```c
 struct Row  { i32[3] v; i32 n; }
@@ -500,6 +549,33 @@ enum Bits {
 ```
 
 Enum values are `i32` constants.
+
+An enum name and an enum-typed variable convert by different rules:
+
+```c
+enum Feature { NONE, FACE, WIDE = 300 }
+
+u8 a = FACE;                  // OK:    a member is an integer literal
+u8 b = WIDE;                  // ERROR: 300 doesn't fit u8, same as any literal
+
+Feature f = WIDE;
+i32  c = f;                   // OK:    same width
+i64  d = f;                   // OK:    widens like i32
+f64  e = f;                   // OK:    widens like i32 (lossless)
+u8   g = f;                   // ERROR: narrowing, needs cast(u8, f)
+f32  h = f;                   // ERROR: i32 -> f32 loses precision, needs a cast
+
+u32 limit = 400;
+if f < limit { }              // ERROR: mixed signed/unsigned, same as i32 vs u32
+if FACE < limit { }           // OK:    a member is a literal, and literals coerce
+
+i32 raw = 1;
+Feature back = raw;           // OK:    same width
+```
+
+A member is an `i32` constant literal, so it coerces wherever a literal
+does. An enum-typed value is an `i32` value: it widens where `i32`
+widens and needs a `cast()` to narrow.
 
 ### Tagged unions
 
@@ -863,6 +939,9 @@ when arch(arm64) { ... }
 when arch(wasm32) { ... }
 when defined(DEBUG) { ... }
 
+// Shader backend (d3d11, metal, opengl, opengles, webgpu)
+when gpu(opengl) { ... }
+
 // Combine with || and && and !
 when os(linux) || os(macos) { ... }
 when os(windows) && arch(x64) { ... }
@@ -894,6 +973,19 @@ sets `1`.
 Dead branches are skipped at parse time (no runtime overhead).
 Available `os` values: `windows`, `linux`, `macos`, `wasm`, `ios`, `android`.
 Available `arch` values: `x64`, `arm64`, `wasm32`.
+
+### Compiler version
+
+```c
+@minc_min_version "0.9.11"      // refuse to compile with anything older
+
+when MINC_VERSION >= 9011 { ... }   // gate on the running compiler
+```
+
+`@minc_min_version` : the oldest compiler that can build the file.
+
+`MINC_VERSION` encoded as `major*1000000 + minor*1000 + patch`.
+0.9.11 is `9011`, 1.0.0 would be `1000000`.
 
 ## Expressions
 
@@ -2014,7 +2106,8 @@ text. The compiler auto-generates a `funcname_shader` global (of type `ShaderMet
 for each `@shader` function. The first field of the VS output struct is treated as
 the clip-space position (`gl_Position` / `SV_Position`).
 
-`Texture2D`, `Texture3D`, `Texture2DArray`, `TextureCube`, `RWTexture2D`, and
+`Texture2D`, `Texture3D`, `Texture2DArray`, `TextureCube`, `Texture2DMS`,
+`RWTexture2D`, and
 `Sampler` are built-in handle types only inside `@shader` function bodies.
 Outside, those names can be used as ordinary identifiers.
 
@@ -2055,10 +2148,11 @@ scalar, vector, matrix, or array fields.
 `@texture` / `@sampler` / `@storage` / `@buffer` / `@rwbuffer` parameter, in
 declaration order); `bindings_count` is its length. Each entry carries the
 binding's name, kind, slot, image type, storage-image format string, access
-mode, structured-buffer element size, and stage. Runtime adapters (e.g.
-`sokol_make_shader` in `lib/sokol_all.mc`) walk the array to build their
-backend-specific descriptors. `import shader;` exposes `ShaderBindingKind`,
-`ShaderImageType`, and `ShaderBindingAccess` enums.
+mode, structured-buffer element size, stage, sample kind, and sampler kind.
+Runtime adapters (e.g. `sokol_make_shader` in `lib/sokol_all.mc`) walk the
+array to build their backend-specific descriptors. `import shader;` exposes
+`ShaderBindingKind`, `ShaderImageType`, `ShaderBindingAccess`,
+`ShaderSampleKind`, and `ShaderSamplerKind` enums.
 
 ### Parameter annotations
 
@@ -2067,12 +2161,178 @@ backend-specific descriptors. `import shader;` exposes `ShaderBindingKind`,
 | `@attr(N)` | Vertex | Vertex attribute at location N |
 | `@uniform` | VS/FS | Uniform buffer variable (each gets its own block) |
 | `@storage(fmt[, slot][, rw])` | Compute | Storage image (e.g., `rgba8`); writeonly by default, readwrite with the `rw` keyword |
-| `@texture(N)` | Fragment | Read-only texture at slot N |
-| `@sampler(N)` | Fragment | Texture sampler at slot N |
+| `@texture(N[, unfilterable])` | Fragment | Read-only texture at slot N; `unfilterable` when the bound pixel format can't be filtered |
+| `@sampler(N[, nonfiltering])` | Fragment | Texture sampler at slot N; `nonfiltering` pairs with an `unfilterable` texture |
 | `@flat` | Varying | Disable interpolation (for integer varyings) |
 | `@buffer(N)` | VS/FS/Compute | Read-only structured buffer |
 | `@rwbuffer(N)` | Compute | Read-write structured buffer |
 | `@shared` | Compute | Group shared memory (local variable) |
+| `@depth` | Fragment output | Fragment depth (`f32` field on the return struct) |
+| `@point_size` | Vertex output | Rasterized point size (`f32` field on the return struct); GL / GLES / Metal only |
+| `@blend_src` | Fragment output | Second blend source for the `SRC1` blend factors (`float4`); not available on GLES |
+
+### Backend-specific shader features
+
+`@point_size` has no D3D11 or WebGPU equivalent, so writing it
+unguarded is a compile error on those backends rather than a silent
+no-op. `when gpu(...)` names the shader backend so one source can opt
+in explicitly:
+
+```c
+struct VSOut {
+    float4 pos;
+    when gpu(opengl) || gpu(opengles) || gpu(metal) { @point_size f32 psize; }
+}
+```
+
+The backend defaults from the build target and `@gpu` overrides it.
+Values: `d3d11`, `metal`, `opengl`, `opengles`, `webgpu`.
+
+### Depth and unfilterable sampling
+
+A runtime adapter needs to know whether a texture is sampled for depth
+comparison and whether its sampler compares. The compiler derives both.
+A texture read through `sample_cmp` is a depth texture, and the sampler
+in that call is a comparison sampler. The result is reported in
+`ShaderBinding.sample_kind` and `.sampler_kind`.
+
+Filterability follows from the pixel format bound at run time, so
+declare it on the parameter. A depth image read as plain data, or a
+32-bit float target, is unfilterable on backends that filter an ordinary
+color texture:
+
+```minc
+@shader fragment
+float4 debug_view(VOut inp,
+                  @texture(0, unfilterable) Texture2D depth_tex,
+                  @sampler(0, nonfiltering) Sampler depth_smp) {
+    return sample(depth_tex, depth_smp, inp.uv);
+}
+```
+
+`Texture2D<u32>` and `Texture2D<i32>` carry this in the type already.
+Read them with `tex[coord]`, which the checker enforces.
+
+Each binding takes its kind from one source. Marking a texture
+`unfilterable` while sampling it with `sample_cmp`, or tagging an
+integer texture, is a compile error.
+
+### Structs shared with a shader (`@gpu_layout`)
+
+A storage buffer is shared memory. The CPU writes elements and the
+shader reads them at the offsets its own language mandates. minc aligns
+every vector to 4, since its SIMD memory operations are unaligned. GLSL
+`std430`, MSL and WGSL align a 2-component vector to 8, and a 3- or
+4-component vector to 16.
+
+`@gpu_layout` applies the GPU rules on the CPU side, so a single memcpy
+into a buffer is correct:
+
+```minc
+@gpu_layout
+struct sb_vertex {
+    float3 pos;      // offset 0
+    float4 color;    // offset 16, or 12 without the annotation
+}                    // 32 bytes, or 28 without
+```
+
+A struct used as a `@buffer` or `@rwbuffer` element must match the GPU
+layout. A struct with every field on a 16-byte boundary, or an
+all-scalar struct, already matches; use the annotation for the rest.
+Where the layouts differ the compiler reports the field and the offset
+it expects. Resolve it with the annotation or with hand-written padding.
+
+The same rule covers `@uniform` blocks. Every shader dialect reads a
+uniform block at these offsets; HLSL's cbuffer packing and WGSL's
+uniform rules mandate them. A struct like `{f32 mode; float4x4 mvp;}` 
+needs the annotation: it puts `mvp` at 16 and `sizeof` at 80, and 
+uploading `sizeof(p)` bytes of the struct is then correct on every
+backend. A struct `@uniform` must be the only parameter in its block.
+Bare `@uniform` params sharing an explicit slot follow the same offset
+rule. Since a parameter list can't be annotated, a divergent bare
+block is a compile error.
+
+An array member strides by its element alignment, so `float3[2]`
+occupies 32 bytes and the field after it starts at 32. A pointer into
+such an array steps by the padded stride. Use `var p = &arr[0];` to keep
+that stride, or index the array directly. A bare `float3*` means a
+12-byte step and is a compile error.
+
+Every code shape that would carry elements across the stride boundary is
+a compile error: holding a pointer into the array in a bare `float3*`,
+passing the array where a `float3*` or `[]float3` parameter expects the
+packed stride, assigning a whole array to its packed twin (in either
+direction), and `memcpy` between a padded array and a packed one. Copy 
+element-wise instead (`for i { gd.a[i] = src[i]; }`), or copy between
+values of the same layout: padded to padded, or the whole `@gpu_layout`
+struct to a staging buffer.
+
+Padding costs memory. For large arrays of 3-component vectors prefer
+separate scalars: `f32 x; f32 y; f32 z;` packs to 12 bytes under both
+the GPU rules and minc's.
+
+### Multisample textures
+
+A multisample texture holds one value per sample, and is read a sample
+at a time with `load_sample(tex, coord, sample)`. Declare the parameter
+`Texture2DMS`:
+
+```minc
+@shader fragment
+float4 resolve(VOut inp, @texture(0) Texture2DMS tex) {
+    int2 uv = int2{cast(i32, inp.pos.x), cast(i32, inp.pos.y)};
+    float4 avg = (load_sample(tex, uv, 0) + load_sample(tex, uv, 1) +
+                  load_sample(tex, uv, 2) + load_sample(tex, uv, 3)) * 0.25f;
+    return avg;
+}
+```
+
+`sample_mask()` returns the rasterizer's coverage mask for the current
+fragment, one bit per sample, so a custom resolve can treat partly
+covered pixels differently. It is a fragment builtin.
+
+Reads of a multisample texture go through `load_sample`, and its size
+comes from `texture_size(tex)` with no LOD, since it has one level.
+Filtering averages neighbouring texels, which needs a single value per
+coordinate, so the `sample()` family reports a multisample argument as
+a compile error.
+
+`ShaderBinding.multisampled` is 1 for such a binding, which is how a
+runtime adapter describes the bound image.
+
+GLSL exposes multisample samplers from ES 3.1 and the coverage mask
+from ES 3.2, so a shader using either declares that version. WebGL2 is
+ES 3.0 and has neither, so `--target wasm` reports a shader that uses
+them as a compile error. WebGPU has multisample textures and takes the
+same shader unchanged; select it with `@gpu "webgpu"`.
+
+### Helper functions and out-params
+
+A shader helper is an ordinary function called from `@shader` code. A
+pointer parameter is how a helper returns more than one value. Each
+dialect spells it its own way: `inout T` in HLSL and GLSL, `thread T&`
+in MSL, and `ptr<function, T>` in WGSL.
+
+```minc
+void probe(float3 p, f32* dist, float3* normal) {
+    *dist = length(p);
+    *normal = normalize(p);
+}
+
+@shader fragment
+float4 shade(VOut inp) {
+    f32 d = 0.0f;
+    float3 n = float3{0.0f, 0.0f, 0.0f};
+    probe(inp.color.xyz, &d, &n);
+    return float4{n.x, n.y, n.z, d};
+}
+```
+
+An out-param stands for one value. Write through it with `*p = v`, read
+it with `*p`, and pass it on as `&variable` or by forwarding an
+out-param the caller already holds. Pointer arithmetic, indexing, and
+pointer locals are compile errors, as is a pointer parameter on a
+`@shader` entry point.
 
 ### Shader builtins
 
@@ -2099,12 +2359,18 @@ name).
 **Texture**:
 `sample(tex, smp, uv)`, `sample_level(tex, smp, uv, lod)`,
 `sample_cmp(tex, smp, uv, cmp)`, `sample_offset(tex, smp, uv, offset)`,
-`gather(tex, smp, uv)`, `texture_size(tex)`
+`gather(tex, smp, uv)`, `texture_size(tex[, lod])`,
+`load_sample(tex, coord, sample)`
+
+`texture_size` returns `int3` for `Texture3D` and `Texture2DArray`,
+where the third component is the depth or the layer count, and `int2`
+for the other kinds. The optional LOD selects a mip level. A storage
+image has one level and takes no LOD.
 
 **Stage builtins**:
 `thread_id()`, `group_id()`, `local_id()` (compute),
 `vertex_id()`, `instance_id()` (vertex),
-`frag_coord()`, `front_facing()` (fragment),
+`frag_coord()`, `front_facing()`, `sample_mask()` (fragment),
 `group_barrier()`, `memory_barrier()` (compute)
 
 **Atomic** (compute):
