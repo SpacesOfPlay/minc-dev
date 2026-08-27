@@ -1,24 +1,23 @@
-// process.mc — spawn child processes, capture their output, wait for exit.
+// process.mc: spawn child processes, capture their output, wait for exit.
 //
-// Built for build scripts and tooling: run a compiler, a packer, qemu,
-// gh, etc. Capture exit codes and act on output.
+// For build scripts and tooling. Run a compiler, a packer, qemu, gh.
+// Capture exit codes and act on output.
 //
 //     ProcCmd c = { .args = { "zig", "cc", "-c", src }, .capture = true };
 //     ProcResult r = proc_run(&c);
 //     if !proc_ok(&r) { print(r.out); }
 //     proc_result_free(&r);
 //
-// proc_init / proc_arg can be used for step by step setup.
+// proc_init / proc_arg build a command step by step.
 //
-// Platforms: Windows (kernel32), Linux (raw syscalls), macOS
-// (libSystem.B.dylib). On wasm or unsupported platforms proc_run
-// reports a spawn failure.
+// Platforms: Windows (kernel32), Linux (raw syscalls, no libc),
+// macOS (libSystem.B.dylib). On other platforms proc_run reports a
+// spawn failure.
 //
-// The program is looked up on PATH when it has no directory separator,
-// so "zig", "gh", etc. work without an absolute path.
+// A program name without a directory separator is looked up on PATH.
 //
-// POSIX takes an argv vector directly. Windows takes one command-line
-// string. proc_run applies MSVCRT quoting rules.
+// POSIX passes an argv vector. Windows takes one command-line string,
+// quoted with MSVCRT rules.
 //
 
 #include "str.mc"
@@ -26,9 +25,9 @@
 
 const i32 PROC_MAX_ARGS = 64;
 
-// Returned in ProcResult.exit_code when the child never ran, or ran and
-// was killed at the timeout. Both are outside the 0-255 range a POSIX
-// child can exit with, and negative, so `!= 0` still means failure.
+// Returned in ProcResult.exit_code when the child never ran, or was
+// killed at the timeout. Both are negative and outside the 0-255
+// POSIX exit range, so `!= 0` still means failure.
 const i32 PROC_ERR_SPAWN = -1;
 const i32 PROC_ERR_TIMEOUT = -2;
 
@@ -36,22 +35,17 @@ const i32 PROC_ERR_TIMEOUT = -2;
 //
 //     ProcCmd c = { .args = { "zig", "cc", "-c", src }, .capture = true };
 //
-// or build it up when the arguments are conditional:
-//
-//     ProcCmd c;
-//     proc_init(&c, "zig");
-//     proc_arg(&c, "cc");
-//
-// args[0] is the program. The list ends at the first unset slot, so no
-// count is stored; an empty string is still an argument, since only an
-// absent one has a null .data. Every option's default is its zero
-// value, so a literal never has to spell them out.
+// or build it up with proc_init / proc_arg when the arguments are
+// conditional. args[0] is the program. The list ends at the first
+// unset slot. An empty string is still an argument. Every option
+// defaults to its zero value, so a literal does not have to spell
+// them out.
 struct ProcCmd {
     str[PROC_MAX_ARGS] args;
     str cwd;             // empty: inherit the parent's directory
     i32 timeout_ms;      // 0: wait forever
     bool capture;        // collect the child's stdout into ProcResult.out
-    bool split_stderr;   // keep stderr out of the capture; default merges
+    bool split_stderr;   // keep stderr out of the capture (merged by default)
     bool overflow;       // more than PROC_MAX_ARGS args were added
 }
 
@@ -210,8 +204,8 @@ when os(linux) {
                     if n < _PROC_PATH_CAP - flen - 2 { buf[n] = *(path + i); n++; }
                     i++;
                 }
-                // An empty element means the working directory, so the name
-                // goes in bare — no separator to add.
+                // An empty element means the working directory. The
+                // name goes in bare.
                 if n > 0 && buf[n - 1] != '/' { buf[n] = '/'; n++; }
                 for i32 k = 0; k < flen; k++ { buf[n] = *(file + k); n++; }
                 buf[n] = 0;
@@ -241,7 +235,7 @@ when os(macos) {
 
 when os(linux) || os(macos) {
     private {
-        // native struct pollfd; int fd
+        // native struct pollfd
         struct _ProcPollFd {
             i32 fd;
             i16 events;
@@ -255,7 +249,7 @@ when os(linux) || os(macos) {
         const i32 _PROC_STDERR_FD = 2;
         // Exit status of a child that could not exec, by convention.
         const i32 _PROC_EXEC_FAILED = 127;
-        // wait(2) packs the exit code into bits 8-15; a signal death
+        // wait(2) packs the exit code into bits 8-15. A signal death
         // puts the signal in the low 7 bits.
         const i32 _PROC_STATUS_SHIFT = 8;
         const i32 _PROC_STATUS_MASK = 0xFF;
@@ -377,7 +371,7 @@ when os(windows) {
             return w;
         }
 
-        // argv[0] : Normalize to / for CreateProcess.
+        // argv[0]: normalize / to \ for CreateProcess.
         void _proc_win_program(str_buf* sb, str prog) {
             u8* buf = alloc<u8>(cast(i64, prog.len));
             defer free(buf);

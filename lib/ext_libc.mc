@@ -22,19 +22,17 @@ when os(windows) {
         i32 abs(i32 x);
         f64 atof(u8* s);
         i64 strtol(u8* s, u8** endptr, i32 base);
-        // fabs, sqrt: provided by the runtime.
+        void abort();
+    }
+    extern "ucrtbase.dll" {
         f64 floor(f64 x);
         f64 ceil(f64 x);
         f64 pow(f64 b, f64 e);
         f64 sin(f64 x);
         f64 cos(f64 x);
         f64 acos(f64 x);
+        f64 fmod(f64 x, f64 y);
         f64 log(f64 x);
-        void abort();
-    }
-    // C99 math (round/log2/f32 variants) is in UCRT, not msvcrt.
-    extern "ucrtbase.dll" {
-        f64 round(f64 x);
         f64 log2(f64 x);
         f32 sinf(f32 x);
         f32 cosf(f32 x);
@@ -50,7 +48,7 @@ when os(windows) {
         f32 fmodf(f32 a, f32 b);
         void qsort(void* base, u64 n, u64 sz, fn(void*, void*): i32 cmp);
         // snprintf / vsnprintf: provided by cvararg_shim.mc.
-        // memcpy, memset: provided by the runtime. memmove is not.
+        // memcpy, memset: provided by the runtime.
         void* memmove(void* dst, void* src, u64 n);
     }
     // MSVC FP-usage sentinel.
@@ -90,8 +88,7 @@ when os(linux) {
         void abort();
         void* memmove(void* dst, void* src, u64 n);
     }
-    // glibc keeps the math functions in libm.so.6, not libc.so.6; binding
-    // them here is what pulls libm into DT_NEEDED so they resolve at runtime.
+    // glibc math functions in libm.so.6
     extern "libm.so.6" {
         // fabs, sqrt, fabsf, sqrtf: provided by the runtime.
         f64 floor(f64 x);
@@ -100,9 +97,9 @@ when os(linux) {
         f64 sin(f64 x);
         f64 cos(f64 x);
         f64 acos(f64 x);
+        f64 fmod(f64 x, f64 y);
         f64 log(f64 x);
         f64 log2(f64 x);
-        f64 round(f64 x);
         // f32 math
         f32 sinf(f32 x);
         f32 cosf(f32 x);
@@ -149,9 +146,9 @@ when os(android) {
         f64 sin(f64 x);
         f64 cos(f64 x);
         f64 acos(f64 x);
+        f64 fmod(f64 x, f64 y);
         f64 log(f64 x);
         f64 log2(f64 x);
-        f64 round(f64 x);
         f32 sinf(f32 x);
         f32 cosf(f32 x);
         f32 tanf(f32 x);
@@ -200,9 +197,9 @@ when os(macos) || os(ios) {
         f64 sin(f64 x);
         f64 cos(f64 x);
         f64 acos(f64 x);
+        f64 fmod(f64 x, f64 y);
         f64 log(f64 x);
         f64 log2(f64 x);
-        f64 round(f64 x);
         // f32 math
         f32 sinf(f32 x);
         f32 cosf(f32 x);
@@ -245,9 +242,7 @@ void assert(i64 cond) {
     }
 }
 
-// POSIX <time.h>: timespec + clock_gettime. The real libc fn on
-// linux/macos; on Windows (no libc clock_gettime) a monotonic
-// implementation backed by the high-resolution performance counter.
+// POSIX <time.h>: timespec + clock_gettime.
 struct timespec { i64 tv_sec; i64 tv_nsec; }
 when os(windows) {
     i32 clock_gettime(i32 clk_id, timespec* tp) {
@@ -266,7 +261,7 @@ when os(windows) {
     extern "libSystem.B.dylib" i32 clock_gettime(i32 clk_id, void* tp);
 }
 
-// <stdio.h> file I/O. SEEK_* are the standard ANSI values.
+// <stdio.h> file I/O. SEEK_* standard ANSI values.
 const i32 SEEK_SET = 0;
 const i32 SEEK_CUR = 1;
 const i32 SEEK_END = 2;
@@ -288,8 +283,7 @@ when os(macos) || os(ios) {
 
 
 // --- wasm target ---
-// On wasm there is no system libc, so the libc subset is provided here
-// (over the builtin allocator) or as host imports.
+// libc subset for wasm.
 when os(wasm) {
     // abort delegates to the JS host (which logs + stops).
     extern "env" void __wasm_abort();
@@ -297,15 +291,6 @@ when os(wasm) {
 
     // Math comes from the math module (it defines the wasm versions).
     import math;
-
-    // --- allocator ---
-    void* malloc(u64 size)            { return alloc(cast(i64, size)); }
-    void* calloc(u64 count, u64 size) {
-        i64 total = cast(i64, count) * cast(i64, size);
-        void* p = alloc(total);
-        if p != null { memset(p, 0, total); }
-        return p;
-    }
 
     // --- memory ---
     i32 memcmp(void* a, void* b, u64 n) {

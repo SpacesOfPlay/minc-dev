@@ -2694,7 +2694,7 @@ struct ImGuiPayload {
     ImGuiID SourceId;
     ImGuiID SourceParentId;
     i32 DataFrameCount;
-    u8[33] DataType;
+    u8[32 + 1] DataType;
     bool Preview;
     bool Delivery;
 }
@@ -3079,7 +3079,7 @@ struct ImFontAtlas {
     ImVec2 TexUvWhitePixel;
     ImVector_ImFont_ptr Fonts;
     ImVector_ImFontConfig Sources;
-    ImVec4[33] TexUvLines;
+    ImVec4[32 + 1] TexUvLines;
     i32 TexNextUniqueID;
     i32 FontNextUniqueID;
     ImVector_ImDrawListSharedData_ptr DrawListSharedDatas;
@@ -3129,7 +3129,7 @@ struct ImFont {
     ImVector_ImFontConfig_ptr Sources;
     ImWchar EllipsisChar;
     ImWchar FallbackChar;
-    ImU8[1] Used8kPagesMap;
+    ImU8[(0xFFFF + 1) / 8192 / 8] Used8kPagesMap;
     bool EllipsisAutoBake;
     ImGuiStorage RemapPairs;
 }
@@ -26011,7 +26011,7 @@ u32 ImCountSetBits(u32 v) {
 }
 
 u8 ImToUpper(u8 c) {
-    return cast(u8, c >= 97 && c <= 122 ? c & ~32 : c);
+    return cast(u8, c >= 97 && c <= 122 ? cast(i32, c) & ~32 : c);
 }
 
 bool ImCharIsBlankA(u8 c) {
@@ -50495,8 +50495,6 @@ type stbtt__test_oversample_pow2 = i32[(8 & 8 - 1) == 0 ? 1 : -1];
 // TODO transminc: typedef with no declarator name
 // TODO transminc: typedef with no declarator name
 // TODO transminc: typedef with no declarator name
-type __arr_f32_2 = f32[2];
-type __arr_ImVec2_3 = ImVec2[3];
 // Assign packed locations to rectangles. The rectangles are of type
 // 'stbrp_rect' defined below, stored in the array 'rects', and there
 // are 'num_rects' many of them.
@@ -54202,8 +54200,63 @@ void stbtt_GetPackedQuad(stbtt_packedchar* chardata, i32 pw, i32 ph, i32 char_in
 //
 // sdf computation
 //
-i32 stbtt__ray_intersect_bezier(f32* orig, f32* ray, f32* q0, f32* q1, f32* q2, f32* hits) {
-    return 0;
+i32 stbtt__ray_intersect_bezier(f32* orig, f32* ray, f32* q0, f32* q1, f32* q2, f32[2]* hits) {
+    f32 q0perp = q0[1] * ray[0] - q0[0] * ray[1];
+    f32 q1perp = q1[1] * ray[0] - q1[0] * ray[1];
+    f32 q2perp = q2[1] * ray[0] - q2[0] * ray[1];
+    f32 roperp = orig[1] * ray[0] - orig[0] * ray[1];
+    f32 a = q0perp - 2.0f * q1perp + q2perp;
+    f32 b = q1perp - q0perp;
+    f32 c = q0perp - roperp;
+    var s0 = cast(f32, 0.0);
+    var s1 = cast(f32, 0.0);
+    i32 num_s = 0;
+    if a != 0.0 {
+        f32 discr = b * b - a * c;
+        if discr > 0.0 {
+            f32 rcpna = -1.0f / a;
+            var d = cast(f32, sqrt(discr));
+            s0 = (b + d) * rcpna;
+            s1 = (b - d) * rcpna;
+            if s0 >= 0.0 && s0 <= 1.0 {
+                num_s = 1;
+            }
+            if d > 0.0 && s1 >= 0.0 && s1 <= 1.0 {
+                if num_s == 0 {
+                    s0 = s1;
+                }
+                ++num_s;
+            }
+        }
+    } else {
+        s0 = c / (-2.0f * b);
+        if s0 >= 0.0 && s0 <= 1.0 {
+            num_s = 1;
+        }
+    }
+    if num_s == 0 {
+        return 0;
+    } else {
+        f32 rcp_len2 = 1.0f / (ray[0] * ray[0] + ray[1] * ray[1]);
+        f32 rayn_x = ray[0] * rcp_len2;
+        f32 rayn_y = ray[1] * rcp_len2;
+        f32 q0d = q0[0] * rayn_x + q0[1] * rayn_y;
+        f32 q1d = q1[0] * rayn_x + q1[1] * rayn_y;
+        f32 q2d = q2[0] * rayn_x + q2[1] * rayn_y;
+        f32 rod = orig[0] * rayn_x + orig[1] * rayn_y;
+        f32 q10d = q1d - q0d;
+        f32 q20d = q2d - q0d;
+        f32 q0rd = q0d - rod;
+        hits[0][0] = q0rd + s0 * (2.0f - 2.0f * s0) * q10d + s0 * s0 * q20d;
+        hits[0][1] = a * s0 + b;
+        if num_s > 1 {
+            hits[1][0] = q0rd + s1 * (2.0f - 2.0f * s1) * q10d + s1 * s1 * q20d;
+            hits[1][1] = a * s1 + b;
+            return 2;
+        } else {
+            return 1;
+        }
+    }
 }
 
 i32 equal(f32* a, f32* b) {
@@ -54211,7 +54264,81 @@ i32 equal(f32* a, f32* b) {
 }
 
 i32 stbtt__compute_crossings_x(f32 x, f32 y, i32 nverts, stbtt_vertex* verts) {
-    return 0;
+    i32 i;
+    f32[2] orig;
+    f32[2] ray = {1.0f, 0.0f};
+    f32 y_frac;
+    i32 winding = 0;
+    y_frac = cast(f32, fmod(y, 1.0f));
+    if y_frac < 0.01f {
+        y += 0.01f;
+    } else if y_frac > 0.99f {
+        y -= 0.01f;
+    }
+    orig[0] = x;
+    orig[1] = y;
+    for i = 0; i < nverts; ++i {
+        if cast(i32, verts[i].type) == STBTT_vline {
+            var x0 = cast(i32, verts[i - 1].x);
+            var y0 = cast(i32, verts[i - 1].y);
+            var x1 = cast(i32, verts[i].x);
+            var y1 = cast(i32, verts[i].y);
+            if y > cast(f32, y0 < y1 ? y0 : y1) && y < cast(f32, y0 < y1 ? y1 : y0) && x > cast(f32, x0 < x1 ? x0 : x1) {
+                f32 x_inter = (y - cast(f32, y0)) / cast(f32, y1 - y0) * cast(f32, x1 - x0) + cast(f32, x0);
+                if x_inter < x {
+                    winding += y0 < y1 ? 1 : -1;
+                }
+            }
+        }
+        if cast(i32, verts[i].type) == STBTT_vcurve {
+            var x0 = cast(i32, verts[i - 1].x);
+            var y0 = cast(i32, verts[i - 1].y);
+            var x1 = cast(i32, verts[i].cx);
+            var y1 = cast(i32, verts[i].cy);
+            var x2 = cast(i32, verts[i].x);
+            var y2 = cast(i32, verts[i].y);
+            i32 ax = x0 < (x1 < x2 ? x1 : x2) ? x0 : x1 < x2 ? x1 : x2;
+            i32 ay = y0 < (y1 < y2 ? y1 : y2) ? y0 : y1 < y2 ? y1 : y2;
+            i32 by = y0 < (y1 < y2 ? y2 : y1) ? y1 < y2 ? y2 : y1 : y0;
+            if y > cast(f32, ay) && y < cast(f32, by) && x > cast(f32, ax) {
+                f32[2] q0;
+                f32[2] q1;
+                f32[2] q2;
+                f32:[2][2] hits;
+                q0[0] = cast(f32, x0);
+                q0[1] = cast(f32, y0);
+                q1[0] = cast(f32, x1);
+                q1[1] = cast(f32, y1);
+                q2[0] = cast(f32, x2);
+                q2[1] = cast(f32, y2);
+                if equal(q0, q1) || equal(q1, q2) {
+                    x0 = cast(i32, verts[i - 1].x);
+                    y0 = cast(i32, verts[i - 1].y);
+                    x1 = cast(i32, verts[i].x);
+                    y1 = cast(i32, verts[i].y);
+                    if y > cast(f32, y0 < y1 ? y0 : y1) && y < cast(f32, y0 < y1 ? y1 : y0) && x > cast(f32, x0 < x1 ? x0 : x1) {
+                        f32 x_inter = (y - cast(f32, y0)) / cast(f32, y1 - y0) * cast(f32, x1 - x0) + cast(f32, x0);
+                        if x_inter < x {
+                            winding += y0 < y1 ? 1 : -1;
+                        }
+                    }
+                } else {
+                    i32 num_hits = stbtt__ray_intersect_bezier(orig, ray, q0, q1, q2, hits);
+                    if num_hits >= 1 {
+                        if hits[0][0] < 0.0f {
+                            winding += hits[0][1] < 0.0f ? -1 : 1;
+                        }
+                    }
+                    if num_hits >= 2 {
+                        if hits[1][0] < 0.0f {
+                            winding += hits[1][1] < 0.0f ? -1 : 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return winding;
 }
 
 f32 stbtt__cuberoot(f32 x) {
@@ -54250,7 +54377,219 @@ i32 stbtt__solve_cubic(f32 a, f32 b, f32 c, f32* r) {
 }
 
 u8* stbtt_GetGlyphSDF(stbtt_fontinfo* info, f32 scale, i32 glyph, i32 padding, u8 onedge_value, f32 pixel_dist_scale, i32* width, i32* height, i32* xoff, i32* yoff) {
-    return null;
+    f32 scale_x = scale;
+    f32 scale_y = scale;
+    i32 ix0;
+    i32 iy0;
+    i32 ix1;
+    i32 iy1;
+    i32 w;
+    i32 h;
+    u8* data;
+    if scale == 0.0f {
+        return null;
+    }
+    stbtt_GetGlyphBitmapBoxSubpixel(info, glyph, scale, scale, 0.0f, 0.0f, &ix0, &iy0, &ix1, &iy1);
+    if ix0 == ix1 || iy0 == iy1 {
+        return null;
+    }
+    ix0 -= padding;
+    iy0 -= padding;
+    ix1 += padding;
+    iy1 += padding;
+    w = ix1 - ix0;
+    h = iy1 - iy0;
+    if width != null {
+        *width = w;
+    }
+    if height != null {
+        *height = h;
+    }
+    if xoff != null {
+        *xoff = ix0;
+    }
+    if yoff != null {
+        *yoff = iy0;
+    }
+    scale_y = -scale_y;
+    {
+        i32 x;
+        i32 y;
+        i32 i;
+        i32 j;
+        f32* precompute;
+        stbtt_vertex* verts;
+        i32 num_verts = stbtt_GetGlyphShape(info, glyph, &verts);
+        ignore info.userdata;
+        data = cast(u8*, alloc(cast(i64, w * h)));
+        ignore info.userdata;
+        precompute = cast(f32*, new(f32[num_verts]));
+        {
+            i = 0;
+            for j = num_verts - 1; i < num_verts; j = i++ {
+                if cast(i32, verts[i].type) == STBTT_vline {
+                    f32 x0 = cast(f32, verts[i].x) * scale_x;
+                    f32 y0 = cast(f32, verts[i].y) * scale_y;
+                    f32 x1 = cast(f32, verts[j].x) * scale_x;
+                    f32 y1 = cast(f32, verts[j].y) * scale_y;
+                    var dist = cast(f32, sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)));
+                    precompute[i] = dist == 0.0f ? 0.0f : 1.0f / dist;
+                } else if cast(i32, verts[i].type) == STBTT_vcurve {
+                    f32 x2 = cast(f32, verts[j].x) * scale_x;
+                    f32 y2 = cast(f32, verts[j].y) * scale_y;
+                    f32 x1 = cast(f32, verts[i].cx) * scale_x;
+                    f32 y1 = cast(f32, verts[i].cy) * scale_y;
+                    f32 x0 = cast(f32, verts[i].x) * scale_x;
+                    f32 y0 = cast(f32, verts[i].y) * scale_y;
+                    f32 bx = x0 - 2.0f * x1 + x2;
+                    f32 by = y0 - 2.0f * y1 + y2;
+                    f32 len2 = bx * bx + by * by;
+                    if len2 != 0.0f {
+                        precompute[i] = 1.0f / (bx * bx + by * by);
+                    } else {
+                        precompute[i] = 0.0f;
+                    }
+                } else {
+                    precompute[i] = 0.0f;
+                }
+            }
+        }
+        for y = iy0; y < iy1; ++y {
+            for x = ix0; x < ix1; ++x {
+                f32 val;
+                f32 min_dist = 999999.0f;
+                f32 sx = cast(f32, x) + 0.5f;
+                f32 sy = cast(f32, y) + 0.5f;
+                f32 x_gspace = sx / scale_x;
+                f32 y_gspace = sy / scale_y;
+                i32 winding = stbtt__compute_crossings_x(x_gspace, y_gspace, num_verts, verts);
+                for i = 0; i < num_verts; ++i {
+                    f32 x0 = cast(f32, verts[i].x) * scale_x;
+                    f32 y0 = cast(f32, verts[i].y) * scale_y;
+                    if cast(i32, verts[i].type) == STBTT_vline && precompute[i] != 0.0f {
+                        f32 x1 = cast(f32, verts[i - 1].x) * scale_x;
+                        f32 y1 = cast(f32, verts[i - 1].y) * scale_y;
+                        f32 dist;
+                        f32 dist2 = (x0 - sx) * (x0 - sx) + (y0 - sy) * (y0 - sy);
+                        if dist2 < min_dist * min_dist {
+                            min_dist = cast(f32, sqrt(dist2));
+                        }
+                        dist = cast(f32, fabs((x1 - x0) * (y0 - sy) - (y1 - y0) * (x0 - sx))) * precompute[i];
+                        assert(i != 0);
+                        if dist < min_dist {
+                            f32 dx = x1 - x0;
+                            f32 dy = y1 - y0;
+                            f32 px = x0 - sx;
+                            f32 py = y0 - sy;
+                            f32 t = -(px * dx + py * dy) / (dx * dx + dy * dy);
+                            if t >= 0.0f && t <= 1.0f {
+                                min_dist = dist;
+                            }
+                        }
+                    } else if cast(i32, verts[i].type) == STBTT_vcurve {
+                        f32 x2 = cast(f32, verts[i - 1].x) * scale_x;
+                        f32 y2 = cast(f32, verts[i - 1].y) * scale_y;
+                        f32 x1 = cast(f32, verts[i].cx) * scale_x;
+                        f32 y1 = cast(f32, verts[i].cy) * scale_y;
+                        f32 box_x0 = (x0 < x1 ? x0 : x1) < x2 ? x0 < x1 ? x0 : x1 : x2;
+                        f32 box_y0 = (y0 < y1 ? y0 : y1) < y2 ? y0 < y1 ? y0 : y1 : y2;
+                        f32 box_x1 = (x0 < x1 ? x1 : x0) < x2 ? x2 : x0 < x1 ? x1 : x0;
+                        f32 box_y1 = (y0 < y1 ? y1 : y0) < y2 ? y2 : y0 < y1 ? y1 : y0;
+                        if sx > box_x0 - min_dist && sx < box_x1 + min_dist && sy > box_y0 - min_dist && sy < box_y1 + min_dist {
+                            i32 num = 0;
+                            f32 ax = x1 - x0;
+                            f32 ay = y1 - y0;
+                            f32 bx = x0 - 2.0f * x1 + x2;
+                            f32 by = y0 - 2.0f * y1 + y2;
+                            f32 mx = x0 - sx;
+                            f32 my = y0 - sy;
+                            f32[3] res = {0.0f, 0.0f, 0.0f};
+                            f32 px;
+                            f32 py;
+                            f32 t;
+                            f32 it;
+                            f32 dist2;
+                            f32 a_inv = precompute[i];
+                            if a_inv == 0.0 {
+                                f32 a = 3.0f * (ax * bx + ay * by);
+                                f32 b = 2.0f * (ax * ax + ay * ay) + (mx * bx + my * by);
+                                f32 c = mx * ax + my * ay;
+                                if a == 0.0 {
+                                    if b != 0.0 {
+                                        res[num++] = -c / b;
+                                    }
+                                } else {
+                                    f32 discriminant = b * b - 4.0f * a * c;
+                                    if discriminant < 0.0f {
+                                        num = 0;
+                                    } else {
+                                        var root = cast(f32, sqrt(discriminant));
+                                        res[0] = (-b - root) / (2.0f * a);
+                                        res[1] = (-b + root) / (2.0f * a);
+                                        num = 2;
+                                    }
+                                }
+                            } else {
+                                f32 b = 3.0f * (ax * bx + ay * by) * a_inv;
+                                f32 c = (2.0f * (ax * ax + ay * ay) + (mx * bx + my * by)) * a_inv;
+                                f32 d = (mx * ax + my * ay) * a_inv;
+                                num = stbtt__solve_cubic(b, c, d, res);
+                            }
+                            dist2 = (x0 - sx) * (x0 - sx) + (y0 - sy) * (y0 - sy);
+                            if dist2 < min_dist * min_dist {
+                                min_dist = cast(f32, sqrt(dist2));
+                            }
+                            if num >= 1 && res[0] >= 0.0f && res[0] <= 1.0f {
+                                t = res[0];
+                                it = 1.0f - t;
+                                px = it * it * x0 + 2.0f * t * it * x1 + t * t * x2;
+                                py = it * it * y0 + 2.0f * t * it * y1 + t * t * y2;
+                                dist2 = (px - sx) * (px - sx) + (py - sy) * (py - sy);
+                                if dist2 < min_dist * min_dist {
+                                    min_dist = cast(f32, sqrt(dist2));
+                                }
+                            }
+                            if num >= 2 && res[1] >= 0.0f && res[1] <= 1.0f {
+                                t = res[1];
+                                it = 1.0f - t;
+                                px = it * it * x0 + 2.0f * t * it * x1 + t * t * x2;
+                                py = it * it * y0 + 2.0f * t * it * y1 + t * t * y2;
+                                dist2 = (px - sx) * (px - sx) + (py - sy) * (py - sy);
+                                if dist2 < min_dist * min_dist {
+                                    min_dist = cast(f32, sqrt(dist2));
+                                }
+                            }
+                            if num >= 3 && res[2] >= 0.0f && res[2] <= 1.0f {
+                                t = res[2];
+                                it = 1.0f - t;
+                                px = it * it * x0 + 2.0f * t * it * x1 + t * t * x2;
+                                py = it * it * y0 + 2.0f * t * it * y1 + t * t * y2;
+                                dist2 = (px - sx) * (px - sx) + (py - sy) * (py - sy);
+                                if dist2 < min_dist * min_dist {
+                                    min_dist = cast(f32, sqrt(dist2));
+                                }
+                            }
+                        }
+                    }
+                }
+                if winding == 0 {
+                    min_dist = -min_dist;
+                }
+                val = cast(f32, onedge_value) + pixel_dist_scale * min_dist;
+                if val < 0.0f {
+                    val = 0.0f;
+                } else if val > 255.0f {
+                    val = 255.0f;
+                }
+                data[(y - iy0) * w + (x - ix0)] = cast(u8, val);
+            }
+        }
+        ignore info.userdata;
+        free(precompute);
+        ignore info.userdata;
+        free(verts);
+    }
+    return data;
 }
 
 u8* stbtt_GetCodepointSDF(stbtt_fontinfo* info, f32 scale, i32 codepoint, i32 padding, u8 onedge_value, f32 pixel_dist_scale, i32* width, i32* height, i32* xoff, i32* yoff) {
@@ -56797,7 +57136,7 @@ i32 FONT_ATLAS_DEFAULT_TEX_DATA_W = 122;
 i32 FONT_ATLAS_DEFAULT_TEX_DATA_H = 27;
 private {
 u8* FONT_ATLAS_DEFAULT_TEX_DATA_PIXELS = "..-         -XXXXXXX-    X    -           X           -XXXXXXX          -          XXXXXXX-     XX          - XX       XX ..-         -X.....X-   X.X   -          X.X          -X.....X          -          X.....X-    X..X         -X..X     X..X---         -XXX.XXX-  X...X  -         X...X         -X....X           -           X....X-    X..X         -X...X   X...XX           -  X.X  - X.....X -        X.....X        -X...X            -            X...X-    X..X         - X...X X...X XX          -  X.X  -X.......X-       X.......X       -X..X.X           -           X.X..X-    X..X         -  X...X...X  X.X         -  X.X  -XXXX.XXXX-       XXXX.XXXX       -X.X X.X          -          X.X X.X-    X..XXX       -   X.....X   X..X        -  X.X  -   X.X   -          X.X          -XX   X.X         -         X.X   XX-    X..X..XXX    -    X...X    X...X       -  X.X  -   X.X   -    XX    X.X    XX    -      X.X        -        X.X      -    X..X..X..XX  -     X.X     X....X      -  X.X  -   X.X   -   X.X    X.X    X.X   -       X.X       -       X.X       -    X..X..X..X.X -    X...X    X.....X     -  X.X  -   X.X   -  X..X    X.X    X..X  -        X.X      -      X.X        -XXX X..X..X..X..X-   X.....X   X......X    -  X.X  -   X.X   - X...XXXXXX.XXXXXX...X -         X.X   XX-XX   X.X         -X..XX........X..X-  X...X...X  X.......X   -  X.X  -   X.X   -X.....................X-          X.X X.X-X.X X.X          -X...X...........X- X...X X...X X........X  -  X.X  -   X.X   - X...XXXXXX.XXXXXX...X -           X.X..X-X..X.X           - X..............X-X...X   X...XX.........X -XXX.XXX-   X.X   -  X..X    X.X    X..X  -            X...X-X...X            -  X.............X-X..X     X..XX..........X-X.....X-   X.X   -   X.X    X.X    X.X   -           X....X-X....X           -  X.............X- XX       XX X......XXXXX-XXXXXXX-   X.X   -    XX    X.X    XX    -          X.....X-X.....X          -   X............X--------------X...X..X    ---------   X.X   -          X.X          -          XXXXXXX-XXXXXXX          -   X...........X -             X..X X..X   -       -XXXX.XXXX-       XXXX.XXXX       -------------------------------------    X..........X -             X.X  X..X   -       -X.......X-       X.......X       -    XX           XX    -           -    X..........X -             XX    X..X  -       - X.....X -        X.....X        -   X.X           X.X   -           -     X........X  -                   X..X  -       -  X...X  -         X...X         -  X..X           X..X  -           -     X........X  -                    XX   -       -   X.X   -          X.X          - X...XXXXXXXXXXXXX...X -           -     XXXXXXXXXX  -             -------------       -    X    -           X           -X.....................X-           -------------------                                 ----------------------------------- X...XXXXXXXXXXXXX...X -                                                                                                 -  X..X           X..X  -                                                                                                 -   X.X           X.X   -                                                                                                 -    XX           XX    -                                           ";
-__arr_ImVec2_3[11] FONT_ATLAS_DEFAULT_TEX_CURSOR_DATA = {
+ImVec2:[11][3] FONT_ATLAS_DEFAULT_TEX_CURSOR_DATA = {
     {ImVec2{0.0f, 3.0f}, ImVec2{12.0f, 19.0f}, ImVec2{0.0f, 0.0f}},
     {ImVec2{13.0f, 0.0f}, ImVec2{7.0f, 16.0f}, ImVec2{1.0f, 8.0f}},
     {ImVec2{31.0f, 0.0f}, ImVec2{23.0f, 23.0f}, ImVec2{11.0f, 11.0f}},
@@ -59257,8 +59596,8 @@ void ImTextClassifierSetCharClassFromStr(ImU32* bits, u32 codepoint_min, u32 cod
 }
 // 2-bit per character
 private {
-ImU32[8] g_CharClassifierIsSeparator_0000_007f;
-ImU32[1] g_CharClassifierIsSeparator_3000_300f;
+ImU32[128 / 16] g_CharClassifierIsSeparator_0000_007f;
+ImU32[16 / 16] g_CharClassifierIsSeparator_3000_300f;
 }
 
 void ImTextInitClassifiers() {
@@ -61210,7 +61549,6 @@ struct ImGuiTableColumnsSettings;
 struct stbrp_node;
 // TODO transminc: typedef with no declarator name
 // TODO transminc: typedef with no declarator name
-type __arr_void_4 = u8*[4];
 struct StbUndoRecord {
     i32 where;
     i32 insert_length;
@@ -69246,7 +69584,7 @@ bool ImGui_ColorPicker4(u8* label, f32* col, ImGuiColorEditFlags flags, f32* ref
     ImU32 col_black = cast(ImU32, style_alpha8) << 24 | cast(ImU32, 0) << 16 | cast(ImU32, 0) << 8 | cast(ImU32, 0) << 0;
     ImU32 col_white = cast(ImU32, style_alpha8) << 24 | cast(ImU32, 255) << 16 | cast(ImU32, 255) << 8 | cast(ImU32, 255) << 0;
     ImU32 col_midgrey = cast(ImU32, style_alpha8) << 24 | cast(ImU32, 128) << 16 | cast(ImU32, 128) << 8 | cast(ImU32, 128) << 0;
-    ImU32[7] col_hues = {
+    ImU32[6 + 1] col_hues = {
         cast(ImU32, style_alpha8) << 24 | cast(ImU32, 0) << 16 | cast(ImU32, 0) << 8 | cast(ImU32, 255) << 0,
         cast(ImU32, style_alpha8) << 24 | cast(ImU32, 0) << 16 | cast(ImU32, 255) << 8 | cast(ImU32, 255) << 0,
         cast(ImU32, style_alpha8) << 24 | cast(ImU32, 0) << 16 | cast(ImU32, 255) << 8 | cast(ImU32, 0) << 0,
@@ -74734,12 +75072,12 @@ u32[29] ImStb_ImCharIsSeparatorW__separator_list = {
     0x300C, 93, 0x300D, 124, 0xFF5C, 33, 0xFF01, 92, 0xFFE5, 47, 0x30FB, 0xFF0F, 10, 13,
 };
 u8*[4] ImGui_ColorEdit4__ids = {"##X", "##Y", "##Z", "##W"};
-__arr_void_4[3] ImGui_ColorEdit4__fmt_table_int = {
+u8*:[3][4] ImGui_ColorEdit4__fmt_table_int = {
     {"%3d", "%3d", "%3d", "%3d"},
     {"R:%3d", "G:%3d", "B:%3d", "A:%3d"},
     {"H:%3d", "S:%3d", "V:%3d", "A:%3d"},
 };
-__arr_void_4[3] ImGui_ColorEdit4__fmt_table_float = {
+u8*:[3][4] ImGui_ColorEdit4__fmt_table_float = {
     {"%0.3f", "%0.3f", "%0.3f", "%0.3f"},
     {"R:%0.3f", "G:%0.3f", "B:%0.3f", "A:%0.3f"},
     {"H:%0.3f", "S:%0.3f", "V:%0.3f", "A:%0.3f"},

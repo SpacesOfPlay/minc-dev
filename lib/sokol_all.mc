@@ -5,49 +5,79 @@
 //
 // Altered source: transpiled to minc.
 // =====================================================================
-// sokol: app + gfx + glue. Per-OS backend: Windows D3D11 (default) or
-// GLCORE (-D SOKOL_GLCORE), macOS/iOS Metal, Linux GLCORE, web GLES3/WebGPU.
+// sokol: app + gfx + glue.
+//
+// The sokol backend and the @shader GPU target need to match. Select backend
+// with -D SOKOL_GLCORE and the shaders follow. Write @gpu "opengl" above the
+// import and the backend follows. If neither is defined, both default to
+// build target: Windows d3d11, macOS/iOS metal, Linux opengl,
+// wasm/Android opengles.
 
 @gui    // windowed app, no console window
+
+// Backend define -> shader dialect.
+when defined(SOKOL_D3D11)  { @gpu "d3d11" }
+when defined(SOKOL_METAL)  { @gpu "metal" }
+when defined(SOKOL_GLCORE) { @gpu "opengl" }
+when defined(SOKOL_GLES3)  { @gpu "opengles" }
+when defined(SOKOL_WGPU)   { @gpu "webgpu" }
+
+// Shader dialect -> backend define.
+when gpu(d3d11)    { @define "SOKOL_D3D11" }
+when gpu(metal)    { @define "SOKOL_METAL" }
+when gpu(opengl)   { @define "SOKOL_GLCORE" }
+when gpu(opengles) { @define "SOKOL_GLES3" }
+when gpu(webgpu)   { @define "SOKOL_WGPU" }
+
+// Invalid setups.
+when os(windows) && !defined(SOKOL_D3D11) && !defined(SOKOL_GLCORE) {
+    SOKOL_ERROR_windows_wants_gpu_d3d11_or_opengl _sokol_backend;
+}
+when os(windows) && defined(SOKOL_D3D11) && defined(SOKOL_GLCORE) {
+    SOKOL_ERROR_pick_gpu_d3d11_or_opengl_not_both _sokol_backend_pair;
+}
+when os(macos) && !defined(SOKOL_METAL) && !defined(SOKOL_GLCORE) {
+    SOKOL_ERROR_macos_wants_gpu_metal_or_opengl _sokol_backend;
+}
+when os(macos) && defined(SOKOL_METAL) && defined(SOKOL_GLCORE) {
+    SOKOL_ERROR_pick_gpu_metal_or_opengl_not_both _sokol_backend_pair;
+}
+when os(ios) && !defined(SOKOL_METAL) {
+    SOKOL_ERROR_ios_wants_gpu_metal _sokol_backend;
+}
+when os(linux) && !defined(SOKOL_GLCORE) {
+    SOKOL_ERROR_linux_wants_gpu_opengl _sokol_backend;
+}
+when os(android) && !defined(SOKOL_GLES3) {
+    SOKOL_ERROR_android_wants_gpu_opengles _sokol_backend;
+}
+when os(wasm) && !defined(SOKOL_GLES3) && !defined(SOKOL_WGPU) {
+    SOKOL_ERROR_wasm_wants_gpu_opengles_or_webgpu _sokol_backend;
+}
+when os(wasm) && defined(SOKOL_GLES3) && defined(SOKOL_WGPU) {
+    SOKOL_ERROR_pick_gpu_opengles_or_webgpu_not_both _sokol_backend_pair;
+}
 
 import ext_libc;
 when os(windows) {
     import ext_gl;
     import ext_d3d11;
-    // Default backend on Windows: D3D11 (override with -D SOKOL_GLCORE).
-    when !defined(SOKOL_GLCORE) && !defined(SOKOL_D3D11) {
-        @define "SOKOL_D3D11"
-    }
 }
 when os(macos) || os(ios) {
     import objc_runtime;
     import ext_macos;
-    // Metal is the default backend here. Named for the same reason the
-    // other arms name theirs: a module concatenated into the same unit
-    // (sokol_gl, sokol_debugtext, ...) picks its shader sources off it.
-    // On macOS -D SOKOL_GLCORE selects NSOpenGL windowing + the
-    // sokol_gfx GL backend instead (pair with @gpu "opengl" so the
-    // @shader functions emit GLSL to match); iOS is always Metal.
+    // On macOS the GL backend also swaps the windowing path to NSOpenGL.
+    // iOS is Metal only.
     when os(macos) && defined(SOKOL_GLCORE) {
         import ext_gl;
-    }
-    when os(ios) || !defined(SOKOL_GLCORE) {
-        when !defined(SOKOL_METAL) {
-            @define "SOKOL_METAL"
-        }
     }
 }
 when os(linux) {
     import ext_gl;
-    when !defined(SOKOL_GLCORE) {
-        @define "SOKOL_GLCORE"
-    }
 }
 when os(wasm) {
-    // WebGPU backend with @gpu "webgpu"; WebGL2/GLES3 otherwise.
     when !defined(SOKOL_WGPU) {
         import ext_wasm_gl;
-        when !defined(SOKOL_GLES3) { @define "SOKOL_GLES3" }
     }
 }
 when os(android) {
@@ -54024,7 +54054,6 @@ type _sg_wgpu_pipeline_t = _sg_pipeline_s;
 type _sg_pipeline_t = _sg_wgpu_pipeline_t;
 type _sg_wgpu_view_t = _sg_view_s;
 type _sg_view_t = _sg_wgpu_view_t;
-type __arr_WGPUVertexAttribute_16 = WGPUVertexAttribute[16];
 struct WGPUStringView {
     u8* data;
     u64 length;
@@ -57665,7 +57694,7 @@ sg_resource_state _sg_wgpu_create_pipeline(_sg_pipeline_t* pip, sg_pipeline_desc
         }
     } else {
         WGPUVertexBufferLayout[8] wgpu_vb_layouts;
-        __arr_WGPUVertexAttribute_16[8] wgpu_vtx_attrs;
+        WGPUVertexAttribute:[8][16] wgpu_vtx_attrs;
         i32 wgpu_vb_num = 0;
         for i32 vb_idx = 0; vb_idx < SG_MAX_VERTEXBUFFER_BINDSLOTS; vb_idx++ {
             sg_vertex_buffer_layout_state* vbl_state = &desc.layout.buffers[vb_idx];

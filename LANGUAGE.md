@@ -62,7 +62,7 @@ float4 pair  = float4{uv, uv};            // 2 + 2
 float4 zero  = float4{};                  // all zeros
 ```
 
-A count that lands in between is an error — unlike a struct or array
+A count that lands in between is an error; unlike a struct or array
 literal, a vector does not zero-fill a short list:
 
 ```c
@@ -70,10 +70,9 @@ float4 bad = float4{1.0f, 2.0f};          // error: takes one value
                                           //        or all of its components
 ```
 
-Matrices take all of their values; there is no one-value form, because
-a single value means the diagonal in the shader languages rather than a
-splat. These rules are the same inside `@shader` functions, so a vector
-literal computes the same thing on the CPU and the GPU.
+Matrices require all of their values. These rules are the same inside
+`@shader` functions, so a vector literal is identical on the CPU
+and the GPU.
 
 The 256-bit wide types map to native AVX2 instructions under
 `--target windows-avx2` / `linux-avx2`. On other x64 targets they
@@ -132,11 +131,9 @@ int4 w = (v & 6) | (v << 2);   // pand / pslld / por
 int4 n = ~v;                   // bitwise NOT
 ```
 
-Integer-vector division is not SIMD. SSE2 and NEON have no packed
-integer divide, so `int4 / x` and `uint4 / x` scalarize to one
-divide per lane. The result follows scalar integer rules; signed
-division truncates toward zero. It is correct but slower than the
-other operators. For an unsigned power-of-two divisor use `>>`.
+Integer-vector division scalarizes (SSE2/NEON have no packed integer
+divide): one divide per lane, following scalar integer rules. For an
+unsigned power-of-two divisor use `>>`.
 
 
 #### SIMD Vectors (f64x2, i64x2, u64x2)
@@ -145,14 +142,11 @@ The 2-wide 64-bit SIMD vectors. `f64x2` supports component-wise
 `+`, `-`, `*`, `/`, and the same operators against a scalar `f64`
 (broadcast, either order). Components are `.x` and `.y`.
 
-`i64x2` / `u64x2` are 2-wide 64-bit integer SIMD vectors. They
-support only the operators that map to packed SIMD: `+ - & | ^ ~`
-and unary `-` (vector with same-type vector), and `<< >>` by a
-uniform scalar count (`>>` is logical for `u64x2`, arithmetic for
-`i64x2`). `* / %` are rejected — SSE2/NEON have no 64-bit packed
-multiply or divide; scalarize those explicitly. Every permitted op
-is a single SIMD instruction per target, except `i64x2 >>`
-(arithmetic) which expands to a few vector ops on x64.
+`i64x2` / `u64x2` support the operators that map to packed SIMD:
+`+ - & | ^ ~`, unary `-`, and `<< >>` by a uniform scalar count
+(`>>` is logical for `u64x2`, arithmetic for `i64x2`). `* / %` are
+rejected (no 64-bit packed multiply or divide); scalarize those
+explicitly.
 
 ```c
 i64x2 v = i64x2{5000000000, -3000000000};
@@ -188,14 +182,16 @@ functions.
 '\u{1F389}'                     // Unicode escape in char literal
 true, false                     // bool
 null                            // null pointer
+__line__                        // line number of the token (integer literal)
+__file__                        // basename of the current file (string literal)
 ```
 
 #### UTF-8 in source
 
 Source files are byte-transparent UTF-8. Raw multi-byte characters
 pass through unchanged in string literals, comments, and character
-literals. Identifiers are restricted to ASCII (`[A-Za-z_][A-Za-z_0-9]*`)
-— by design.
+literals. Identifiers are restricted to ASCII
+(`[A-Za-z_][A-Za-z_0-9]*`), by design.
 
 - String escapes: `\n \t \r \0 \\ \' \" \xNN \u{HEX}` where `\u{HEX}`
   is 1-6 hex digits naming a Unicode codepoint; the string literal
@@ -204,7 +200,7 @@ literals. Identifiers are restricted to ASCII (`[A-Za-z_][A-Za-z_0-9]*`)
   are rejected.
 - Char literals carry a Unicode codepoint in an integer-literal
   node, so `u32 c = '🎉';` is a clean assign. Narrowing to a type
-  that can't hold the codepoint is a compile error —
+  that can't hold the codepoint is a compile error:
   `u8 c = '🎉';` rejects with `character literal value 127881
   does not fit in u8`.
 - A UTF-8 BOM (`EF BB BF`) at the start of a source or included
@@ -253,11 +249,9 @@ a[2..]  = {7, 8};               // a is now {1, 2, 7, 8, 5, 6}
 a[1..4] = {7, 8, 9};            // a[1], a[2], a[3]; the rest untouched
 ```
 
-An open range takes its length from the initializer. A range written
-with both bounds must be filled exactly; supplying more or fewer is a
-compile error, since the write length comes from the initializer and
-the end bound would otherwise be ignored. Bounds that are not literals
-are left to the runtime bounds check.
+An open range takes its length from the initializer. A range with
+both bounds must be filled exactly. Non-literal bounds are left to
+the runtime bounds check.
 
 That is different from whole-array assignment, which replaces the array
 and zeroes anything the initializer did not cover:
@@ -265,6 +259,42 @@ and zeroes anything the initializer did not cover:
 ```c
 a = {9};                        // a is now {9, 0, 0, 0, 0, 0}
 ```
+
+### Multi-dimensional arrays
+
+A shape after a colon declares a multi-dimensional array. The leftmost
+dimension is the outermost, the same order the subscripts read:
+
+```c
+i32:[2][3] m = { {1, 2, 3}, {4, 5, 6} };  // 2 rows of 3
+i32 v = m[1][2];                // row 1, column 2 (C order)
+u8:[16][32][32] vox;            // 3-D
+type Grid = f32:[64][64];       // shapes work anywhere a type does
+i32[3] row = m[1];              // partial index: copy a row out
+m[0] = row;                     // copy a row in
+```
+
+The layout is one contiguous row-major block: the last dimension
+varies fastest and `sizeof` is the product of all dimensions. Each
+dimension is bounds-checked independently. Nested brace init,
+whole-array copy, and row copy work per level.
+
+A shape needs at least two dimensions. `f32:[4]` is an error; a
+one-dimensional array is `f32[4]`. The C-style `f32[2][3]` is also an
+error.
+
+A trailing `*` makes a pointer to an array or shape type:
+
+```c
+f32 corner(f32:[2][3]* a) { return a[0][1][2]; }
+corner(&m);                     // pointer to the whole shape
+void scale(f32[3]* row) { }     // pointer to one row
+scale(m);                       // a shape value decays to its first row
+scale(&m[1]);
+```
+
+`float4x4` is a distinct type, not `f32:[4][4]`: it is column-major
+and SIMD-backed, with no implicit conversion between the two.
 
 ### Strings
 
@@ -278,7 +308,7 @@ s.len                           // byte length (5)
 s.data                          // raw u8 pointer
 ```
 
-`str` is a built-in struct `{ u8* data; i32 len }` — a non-owning view (pointer + length).
+`str` is a built-in struct `{ u8* data; i32 len }`, a non-owning view.
 String literals are type `str`. Not null-terminated by default.
 
 Copying a `str` copies the pointer and length (16 bytes), not the underlying data.
@@ -328,8 +358,8 @@ s = format("b");                // live again, needs its own free
 free(s);
 ```
 
-A free that can reach a later use is an error. Locals declared
-inside a loop body invalidates with each iteration:
+A free that can reach a later use is an error. A local declared
+inside a loop body dies with each iteration:
 
 ```c
 for i32 i = 0; i < count; i++ {
@@ -348,20 +378,10 @@ for i32 i = 0; i < count; i++ {
 string s = string("literal");   // from string literal
 string s2 = string(some_str);   // from str view (copies)
 string s3 = str_concat(a, b);   // functions that allocate return string
-
-// Transfer
-string greeting = make_greeting();  // caller owns returned string
-widget.name = move(s);              // transfer ownership, s is invalidated
-
-// Compile-time safety
-string s = string("hello");
-free(s);
-print("{}\n", s);               // error: use of freed string
-
-string s = string("hello");
-move(s);
-print("{}\n", s);               // error: use of moved string
 ```
+
+Using a string after `free(s)` or `move(s)` is a compile error
+("use of freed string" / "use of moved string").
 
 #### String utilities (lib/str.mc)
 
@@ -393,26 +413,17 @@ defer free(line);
 print("x = {}\n", x);        // prints to stdout
 eprint("error: {}\n", msg);  // prints to stderr
 
-// Float formatting note: `{}` for f32/f64 is a *display* format, not a
-// round-trip format. It uses up to 6 fractional digits with trailing
-// zeros trimmed (keeping at least one digit so float-ness is visible):
-//   format("{}", 3.14)  -> "3.14"
-//   format("{}", 3.0)   -> "3.0"
-//   format("{}", 0.0)   -> "0.0"
-//   format("{}", -1.5)  -> "-1.5"
-// Special values print as "nan", "inf", "-inf". Magnitudes of 1e12 or
-// more print in scientific notation ("1.0e13", "1.0e308"); smaller
-// values print as plain decimals.
+// Float formatting note: `{}` for f32/f64 is a *display* format, not
+// a round-trip format: up to 6 fractional digits, trailing zeros
+// trimmed (at least one digit kept: "3.0"), "nan"/"inf"/"-inf" for
+// specials, scientific notation from 1e12 up ("1.0e13").
 
 // For exact, shortest round-trip output, import the Ryu formatters:
 //   import format_f64;   string s = format_f64(0.1);  // "0.1"
 //   import format_f32;   string s = format_f32(0.1f); // "0.1"
-// Each returns the shortest decimal string that parses back to the same
-// bits (lib/format_f64.mc uses Ryu64, lib/format_f32.mc native Ryu32).
-// f32_to_str / f64_to_str write into a caller buffer instead. Output
-// rules match `{}` (decimal for 1e-4 <= |x| < 1e21, scientific outside,
-// "0.0" / "nan" / "inf" / "-inf").
-// These Ryu implementations are kept external due to their size.
+// Each returns the shortest decimal string that parses back to the
+// same bits. f32_to_str / f64_to_str write into a caller buffer
+// instead (decimal for 1e-4 <= |x| < 1e21, scientific outside).
 
 
 // Conversion
@@ -608,7 +619,7 @@ Token t = Number(123);
 Token t2 = Plus;
 ```
 
-Switch with pattern matching (exhaustive — all variants must be covered):
+Switch with pattern matching (every variant must be covered):
 
 ```c
 switch x {
@@ -641,29 +652,8 @@ i32 main() {
 }
 ```
 
-**Example: a simple token type**
-
-```c
-union Token {
-    Number(i32),
-    Ident(str),
-    Plus,
-    Eof,
-}
-
-str token_name(Token t) {
-    switch t {
-        case Number(n): { return format("Number({})", n); }
-        case Ident(s):  { return format("Ident({})", s); }
-        case Plus:      { return "Plus"; }
-        case Eof:       { return "Eof"; }
-    }
-}
-```
-
-Unions can be passed to and returned from functions, stored in arrays and structs,
-and used with generics. The compiler enforces exhaustive matching — omitting a
-variant in `switch` is a compile error.
+Unions are ordinary values: they can be passed, returned, stored in
+arrays and structs, and used with generics.
 
 ### Unsafe unions
 
@@ -740,20 +730,13 @@ Color d = Color{ .r = 1, .g = 2, .b = 3, .a = 4 };
 Color e = Color{ .rgba = 0xAABBCCDD };
 ```
 
-`&c.r` and `&c.rgba` address overlapping storage — same rule as
+`&c.r` and `&c.rgba` address overlapping storage, the same rule as
 a plain `unsafe_union`.
 
-Rejected at the type's declaration:
-
-- The aggregate must be anonymous — `struct Inner { … } x;` at the
-  member position is a stray nested type declaration.
-- Only `struct` and `unsafe_union` are allowed as transparent
-  members. Tagged `union` requires `match` for access.
-- Promoted names may not collide with each other or with the
-  parent's direct fields. Rename one side.
-- Types with transparent members require named-field initializer
-  syntax (`Color{ .r = 1, … }`); positional `Color{ 1, 2, 3, 4 }`
-  is rejected — the transparent slot has no unambiguous position.
+Rules: the inline aggregate must be anonymous, and only `struct` and
+`unsafe_union` can be transparent members. Promoted names may not
+collide with each other or with the parent's direct fields. A type
+with transparent members takes named-field initializers only.
 
 ### Function pointers
 
@@ -875,7 +858,7 @@ Statements inside `defer { ... }` run in source order at scope exit.
 The block as a whole follows the same LIFO order as single-statement
 `defer`s relative to its siblings.
 
-`return`, `break`, and `continue` are rejected inside `defer { }` —
+`return`, `break`, and `continue` are rejected inside `defer { }`:
 they would skip later defers. Loops nested inside the deferred body
 can still `break` / `continue` against their own loop.
 
@@ -906,10 +889,6 @@ i32 main() {
 discards the value. It silences `@must_use` at one call site. The
 warning is also suppressed inside `defer { ... }` (the deferred call
 has no caller to assign to).
-
-`ignore` is unrelated to the fragment-shader `discard;` intrinsic
-(which aborts the current fragment); the keywords were chosen so
-they don't collide.
 
 ### Bare blocks
 
@@ -948,7 +927,7 @@ when os(windows) && arch(x64) { ... }
 when !os(wasm) { ... }
 
 // Integer expressions over -D / @define values: a C-#if-style
-// grammar — integer literals, config names, the predicates above,
+// grammar of integer literals, config names, the predicates above,
 // and  ! ~ - (unary)  then (low→high)  || && | ^ &  == !=  < <= > >=
 //  << >>  + -  * / %  with parentheses. Non-zero is truthy.
 @define "API_VERSION" 3
@@ -961,7 +940,7 @@ when (NCHANNELS * 4) > MAX_STRIDE { ... }
 `&&` / `||` short-circuit: the dead operand is parsed but not
 evaluated, so `when defined(X) && X >= 3` is legal even when `X` is
 undefined. A bare config name that was never `@define`d / `-D`'d,
-outside a dead branch, is an error — use `defined(NAME)` to test
+outside a dead branch, is an error; use `defined(NAME)` to test
 presence. Unlike C, an undefined identifier is not implicitly zero.
 Division / modulo by zero is an error.
 
@@ -977,7 +956,7 @@ Available `arch` values: `x64`, `arm64`, `wasm32`.
 ### Compiler version
 
 ```c
-@minc_min_version "0.9.11"      // refuse to compile with anything older
+@minc_min_version "0.9.12"      // refuse to compile with anything older
 
 when MINC_VERSION >= 9011 { ... }   // gate on the running compiler
 ```
@@ -985,7 +964,7 @@ when MINC_VERSION >= 9011 { ... }   // gate on the running compiler
 `@minc_min_version` : the oldest compiler that can build the file.
 
 `MINC_VERSION` encoded as `major*1000000 + minor*1000 + patch`.
-0.9.11 is `9011`, 1.0.0 would be `1000000`.
+0.9.12 is `9012`, 1.0.0 would be `1000000`.
 
 ## Expressions
 
@@ -1045,24 +1024,19 @@ add(3, b: 4)                  // mixed positional + named
 
 ### Type conversions
 
-Implicit lossless widening: `i8`->`i16`->`i32`->`i64`, `u8`->`u16`->`u32`->`u64`,
-unsigned->wider signed (`u8`->`i16`/`i32`/`i64`, `u16`->`i32`/`i64`, `u32`->`i64`),
-`i32`/`u32`->`f64`, `f32`->`f64`. All lossy conversions require explicit `cast()`.
+| Conversion | Rule |
+|---|---|
+| Widening within a signedness: `i8`→`i16`→`i32`→`i64`, `u8`→`u16`→`u32`→`u64` | Implicit |
+| Unsigned → wider signed: `u8`→`i16`/`i32`/`i64`, `u16`→`i32`/`i64`, `u32`→`i64` | Implicit |
+| `i32`/`u32` → `f64`, `f32` → `f64` | Implicit |
+| Same-width reinterpret: `i32`↔`u32`, `i64`↔`u64`, … | Implicit on assignment only; bits unchanged (`-1` ↔ `4294967295`) |
+| Signed → wider unsigned: `i8`/`i16`/`i32` → a wider `u…` | Implicit on assignment only; sign-extends, bit-identical to `cast()` |
+| Anything lossy: narrowing, `i64`→`f64`, float→int, ptr↔int | Explicit `cast()` required |
 
-Two signed/unsigned conversions are also implicit **on assignment** (init,
-return, argument passing, store) because they change no information that
-`cast()` wouldn't change identically:
-
-- **Same-width reinterpret** (`i32`<->`u32`, `i64`<->`u64`, …): the bits are
-  unchanged; only the interpretation differs (`-1` <-> `4294967295`).
-- **Signed -> wider unsigned** (`i8`/`i16`/`i32` -> a wider `u…`): sign-extends,
-  bit-identical to `cast(u…, signed)`. A negative value becomes its
-  two's-complement value mod 2ⁿ (`i32 -1` -> `u64 0xFFFFFFFFFFFFFFFF`); a
-  non-negative value is unchanged.
-
-These apply only where there is an assignment target. **In an expression there
-is no target width to convert toward, so mixed signed/unsigned still errors** —
-`i32 + u64` is rejected; cast one side. Narrowing always needs a `cast()`.
+"On assignment" means places with a target type: init, return,
+argument passing, store. **In an expression there is no target width
+to convert toward, so mixed signed/unsigned still errors**:
+`i32 + u64` is rejected; cast one side.
 
 ```c
 i64 x = 42;                   // i32 -> i64 (implicit)
@@ -1076,137 +1050,87 @@ u64 bad = x + sz;             // ERROR: i64 + u64 mixed sign in an expression
 
 ### Integer promotion
 
-This section covers the promotion ranks. For the runtime value
-behavior of `+ - * / %`, division, shifts, and casts on the promoted
-types, see "Numerics" below.
+(Runtime value behavior of the promoted types is under "Numerics"
+below.)
 
-Arithmetic and shift binops (`+ - * / % << >>`) on two
-same-signedness narrow operands (`u8`/`u16` or `i8`/`i16`) produce a
-`u32` or `i32` result. The result can exceed the operand width, so
-it widens. Byte-assembly works without per-byte casts:
+Binops on two same-signedness narrow operands (`u8`/`u16` or
+`i8`/`i16`):
+
+| Operators | Result type |
+|---|---|
+| `+  -  *  /  %  <<  >>` | `i32` / `u32` (the result can exceed the operand width) |
+| `&  \|  ^` | operand width (`u8 ^ u8` is `u8`) |
+| compound assignment (`+=`, `<<=`, …) | lvalue width; no cast needed, the store wraps |
+
+Byte-assembly works without per-byte casts:
 
 ```c
 u32 v = b[0] | (b[1] << 8) | (b[2] << 16) | (b[3] << 24);
 u32 sum = u8_a + u8_b;        // 255 + 16 = 271
-u32 r = u8_a * u8_b;          // 16 * 16 = 256
-```
-
-Bitwise `& | ^` do not promote. The result keeps the operand width
-(`u8 ^ u8` is `u8`, `u16 & u16` is `u16`), since it cannot exceed
-that width. No cast is needed:
-
-```c
-u8  g  = a ^ b;
-gfx[i] = gfx[i] ^ 1;
-h      = h ^ byte;
-u16 m  = lo & 0x0FFF;
 ```
 
 Storing a promoted result into a narrower location is narrowing and
-requires `cast()`:
+requires `cast()`; compound assignment is exempt:
 
 ```c
 u8 bits = 0x80;
 bits = bits << 1;             // error: u32 -> u8 needs a cast
 bits = cast(u8, bits << 1);   // wraps to 0 at u8 width
+bits <<= 1;                   // OK: wraps at u8 width, no cast
 ```
 
-Compound assignment to a narrow lvalue is exempt. `x += y`,
-`bits <<= 1`, and the other `op=` forms compile without a cast even
-when the operation promotes; the store wraps the result back to the
-lvalue width. Plain `x = x + y` still needs the cast.
-
-```c
-u8 bits = 0x80;
-bits <<= 1;                   // wraps to 0 at u8 width
-```
-
-Promotion stops at 32 bits. `u32 op u32` stays `u32` and wraps at
-u32 width. Assigning to a `u64` zero-extends the truncated 32-bit
-value, so bits above 32 are lost. Widen before the operation to
-keep them:
+Promotion stops at 32 bits: `u32 op u32` stays `u32` and wraps, and
+assigning the result to a `u64` cannot recover the lost bits. Widen
+before the operation to keep them:
 
 ```c
 u64 hi = u32_val << 32;            // 0 — shifted at u32 width
 u64 hi = cast(u64, u32_val) << 32; // operates at u64 width
 ```
 
-The same holds for overflowing addition and multiplication: `u32 a
-+ u32 b` is a u32 result. Cast to `u64` first for the wider sum.
-
 ### Mixed signed/unsigned
 
-This section consolidates the cross-sign rule. For the same rule
-broken down per operator (with runtime examples), see "Bitwise",
-"Shifts", and "Comparisons" under "Numerics" below.
+(Per-operator runtime details are under "Numerics" below.)
 
-Mixing signed and unsigned integers in comparisons or arithmetic is an error.
-All comparisons (`==`, `!=`, `<`, `>`, `<=`, `>=`) and all arithmetic
-(`+`, `-`, `*`, `/`, `%`, `>>`) are affected:
+Mixing signed and unsigned integer operands:
+
+| Operators | Mixed-sign operands |
+|---|---|
+| `==  !=  <  >  <=  >=` | Error |
+| `+  -  *  /  %` | Error |
+| `>>` | Error (sign-sensitive: arithmetic vs logical shift) |
+| `&  \|  ^  <<`, same width | OK; the result takes the left operand's type |
+| Any operator vs an integer literal or enum member | OK; the literal coerces |
 
 ```c
 i32 a = -1;
 u32 b = 100;
 if a < b { }                  // ERROR: mixed signed/unsigned comparison
-if a == b { }                 // ERROR: mixed signed/unsigned comparison
 i32 c = a + b;                // ERROR: mixed signed/unsigned arithmetic
-i32 d = a >> b;               // ERROR: >> is sign-sensitive (SAR vs SHR)
-i32 e = a >> 5;               // OK:    integer literal coerces to a's type
+i32 d = a >> b;               // ERROR: >> is sign-sensitive
+if b == 0 { }                 // OK: literal coerces
+if b < SG_INVALID_ID { }      // OK: enum member coerces
+u32 out = b | a;              // OK: same-width bitwise → u32
+i32 e = a >> 5;               // OK: literal coerces to a's type
 ```
-
-**Exception 1: integer literals and enum members** — these coerce to the target type:
-
-```c
-u32 x = 5;
-if x == 0 { }                 // OK: literal coerces
-if x < SG_INVALID_ID { }      // OK: enum member coerces
-```
-
-**Exception 2: same-width bitwise ops (`&`, `|`, `^`, `<<`)** — these produce
-the same bit pattern regardless of how either operand is signed, so cross-sign
-is allowed when both operands have the same width. The left operand's type
-becomes the result type:
-
-```c
-u64 state = ...;
-i64 seed  = ...;
-state = state ^ seed;         // OK: u64 ^ i64 → u64 (bitwise, sign-agnostic)
-u32 mask  = ...;
-i32 bits  = ...;
-u32 out = mask | bits;        // OK: u32 | i32 → u32
-u64 shifted = state << seed;  // OK: << is bit-agnostic
-```
-
-`>>` is intentionally excluded — it's sign-sensitive (SAR vs SHR are
-different instructions with different results for high-bit-set values),
-so the LHS must be explicitly cast to the desired signedness.
 
 Use explicit `cast()` to resolve mixed-sign errors:
 
 ```c
-i32 a = -1;
-u32 b = 100;
 if cast(u32, a) < b { }       // OK: explicit cast
-if a < cast(i32, b) { }       // OK: explicit cast
 i32 d = cast(i32, b) >> 4;    // OK: arithmetic shift chosen explicitly
-u32 e = b >> cast(u32, a);    // OK: logical shift chosen explicitly
 ```
 
 ### Floating-point semantics
 
-This section covers compiler-side float optimizations. For the
-IEEE 754 runtime behavior (NaN, ±inf, subnormals, comparison
-semantics, float→int saturation), see "Float arithmetic",
-"Float → int cast", "Int → float", "f32 ↔ f64", and "Comparisons"
-under "Numerics" below.
+(IEEE 754 runtime behavior is under "Numerics" below.)
 
 minc applies these floating-point optimizations by default:
 
-- **FMA contraction**: `a * b + c` may be fused into a single fused multiply-add
-  instruction (FMA). FMA uses one rounding step instead of two, producing
-  results that differ by at most 1 ULP from the unfused form. This is more
-  accurate but not IEEE 754 conformant (the standard requires two roundings
-  unless `fma()` is used explicitly). Matches MSVC `/fp:fast` default behavior.
+- **FMA contraction**: `a * b + c` may fuse into one FMA instruction.
+  FMA rounds once instead of twice, so results can differ by at most
+  1 ULP from the unfused form. This is the same contraction license
+  as MSVC `/fp:contract` and clang's default `-ffp-contract=on`.
 
 - **Float strength reduction**: `x * 2.0` may be replaced with `x + x`.
 
@@ -1219,8 +1143,8 @@ transformations. There is no flag to disable FP contraction.
 
 ## Generics
 
-Monomorphized generics with `<T>` syntax. Zero runtime overhead — each instantiation
-generates specialized code at compile time.
+Monomorphized generics with `<T>` syntax. Zero runtime overhead: each
+instantiation generates specialized code at compile time.
 
 ### Generic functions
 
@@ -1342,23 +1266,27 @@ private type from another file is a compile error ("type 'X' is
 private to <file>").
 
 A private function is also excluded from the export table of a shared
-library (`--shared`): it is still emitted and callable from other code
-in the same module, but does not become a public symbol, so `dlsym` /
-`GetProcAddress` won't find it. Non-private functions are exported as
-before.
+library (`--shared`): still emitted and callable within the module,
+but not visible to `dlsym` / `GetProcAddress`.
 
-A private type never collides with a same-name type in another file.
-The private definition stays local to its file, and a local
-definition of the same name wins locally. Inside its own file, a
-private definition shadows an imported public one of the same name.
+A private declaration never collides with a same-name declaration in
+another file: two files may each declare a `private i32 g_state` or
+a private helper, and each resolves to its own, with its own storage.
+Inside its declaring file a private definition shadows an imported
+public one of the same name; other files still reach the public name.
+This holds uniformly for types, functions, globals, consts, enum
+values, and generic templates (instantiable only from their file,
+with separate instantiations per file).
 
-The same holds for private functions, globals, consts, and enum
-values: two files may each declare `private i32 g_state` or a
-`private` helper of the same name, and each file resolves to its own.
-A public declaration keeps the plain name, so files that declare no
-private of their own still reach it; the private one shadows it inside
-its declaring file. Each private gets its own storage — the two never
-share a slot.
+`extern` DLL imports follow the same rule, and a private extern's
+signature may differ from another file's declaration of the same
+import; both bind the same symbol through one import-table entry.
+Public externs for one name must match: same library, same symbol,
+and the same signature up to integer signedness and void* versus
+typed pointers; a mismatch is a compile error at the second
+declaration. Dll-less `extern { ... }` forward declarations are
+exempt; they pair with a definition by name and stay visible
+program-wide.
 
 ### Type redefinition
 
@@ -1393,13 +1321,12 @@ export {
 ```
 
 Exported functions are surfaced at the platform module boundary so an
-external host can call them — primarily for **WASM**, where each
-`export`-marked function appears in the module's `exports` section and
-is callable as `instance.exports.frame_tick(...)` from JavaScript. On
-native targets (PE / ELF / Mach-O) the keyword is currently a no-op;
-it parses uniformly so source code stays portable across targets.
+external host can call them. On **WASM**, each `export`-marked
+function appears in the module's `exports` section and is callable as
+`instance.exports.frame_tick(...)` from JavaScript. On native targets
+(PE / ELF / Mach-O) the keyword parses but is a no-op.
 
-On WASM, a `main()` function — if present — is auto-exported (no
+On WASM, a `main()` function, if present, is auto-exported (no
 `export` keyword needed). A WASM module may also omit `main` entirely
 and surface its API through `export`'d functions or a `_start()`.
 
@@ -1470,7 +1397,7 @@ bool file_exists(u8* path)
 ```
 
 `read`/`write` take an opaque handle from `stdin()`/`stdout()`/
-`stderr()`/`open()`, not a POSIX fd number — the handle's numeric
+`stderr()`/`open()`, not a POSIX fd number; the handle's numeric
 value is platform-specific. An integer literal as the handle argument
 (`write(1, ...)`) is a compile error.
 
@@ -1510,8 +1437,8 @@ void prefetch(void* addr)       // software prefetch, T0 locality: x64 prefetcht
 ```
 
 `prefetch` hints the CPU to pull the cache line at `addr` into all
-cache levels ahead of use. It never faults — an invalid address is
-simply ignored by the hardware — and it changes no program state.
+cache levels ahead of use. It never faults (an invalid address is
+simply ignored by the hardware) and it changes no program state.
 Use it a few iterations ahead when walking index lists into large
 records (the classic pattern: `prefetch(&records[indices[i + 8]])`).
 
@@ -1527,7 +1454,7 @@ f32 fabsf(f32 x)                // hardware sign-bit clear (f32)
 ### SIMD intrinsics
 
 Streaming load/store, lane reductions, and dot-products for the
-packed vec types — the 128-bit `int4` / `uint4` / `f64x2` / `i64x2` /
+packed vec types: the 128-bit `int4` / `uint4` / `f64x2` / `i64x2` /
 `u64x2` / `i8x16`, the `float4` host intrinsics, and the 256-bit
 `f32x8` / `i32x8` / `i8x32`. Each call is one SIMD instruction, or a
 small fixed sequence; codegen is the same shape on x64 and ARM64. The
@@ -1567,7 +1494,7 @@ uint4_store(&a[i], v);
 
 `sum4` adds the four lanes with 32-bit wrap: `int4` gives `i32`,
 `uint4` gives `u32`. `sum4_wide` widens each lane first, then adds
-in 64 bits — `int4` sign-extends to `i64`, `uint4` zero-extends to
+in 64 bits: `int4` sign-extends to `i64`, `uint4` zero-extends to
 `u64`. Use `sum4_wide` when the lane total can exceed 32 bits.
 
 `accum4` carries a deferred 2x64 sum across a loop; `reduce4`
@@ -1618,7 +1545,7 @@ resolve to the library overloads.
 | `sqrt4(v)`                   | `float4` | per-lane square root, IEEE rounded |
 | `rsqrt4(v)`                  | `float4` | exact `1.0f / sqrt` per lane, bit-identical on every target |
 | `rsqrt4_fast(v)`             | `float4` | native reciprocal-sqrt approximation; values differ per target (x64 vrsqrtps, ARM64 FRSQRTE, wasm falls back to `rsqrt4`) |
-| `cmpeq4/cmpgt4/cmpge4/cmplt4/cmple4(a, b)` | `float4` | per-lane mask: all-ones when true, all-zeros when false; quiet ordered — NaN compares false |
+| `cmpeq4/cmpgt4/cmpge4/cmplt4/cmple4(a, b)` | `float4` | per-lane mask: all-ones when true, all-zeros when false; quiet ordered (NaN compares false) |
 | `and4/or4/xor4(a, b)`        | `float4` | bitwise on all 128 bits       |
 | `andnot4(a, b)`              | `float4` | `(~a) & b` (SSE andnot operand order) |
 | `select4(mask, a, b)`        | `float4` | per-BIT select: `(mask & a) \| (~mask & b)` |
@@ -1722,8 +1649,8 @@ Include with `#include` or `import`:
 | **Zlib**    | `lib/zlib.mc`    | zlib + gzip wrappers around inflate/deflate (CRC32, Adler-32)    |
 | **PNG**     | `lib/png.mc`     | PNG image decoder (grayscale, RGB, RGBA → RGBA8)                 |
 | **JPEG**    | `lib/jpeg.mc`    | JPEG decoder (baseline + progressive, 444/422/420, restarts) + encoder (4:2:0, quality 1-100, optimized Huffman) |
-| **Sokol**   | `lib/sokol_all.mc` | Cross-platform graphics/app via sokol C bridge                 |
-| **Obj-C**   | `lib/objc_runtime.mc` | Objective-C runtime bindings for Cocoa/UIKit/Metal — *macOS / iOS only* |
+| **Sokol**   | `lib/sokol_all.mc` | Cross-platform windowing + GPU (sokol_app / sokol_gfx)           |
+| **Obj-C**   | `lib/objc_runtime.mc` | Objective-C runtime bindings for Cocoa/UIKit/Metal (*macOS / iOS only*) |
 
 ### Vec<T>
 
@@ -1922,9 +1849,8 @@ extern "libSystem.B.dylib" i64 clock_gettime_nsec_np(i32 clock_id);
 
 ### Data symbol imports
 
-A declarator with no parameter list is a data symbol bound by the
-dynamic linker at load time via a GOT slot — same shape as a
-function extern, no `(...)` after the name:
+A declarator with no parameter list imports a data symbol, bound by
+the dynamic linker at load time:
 
 ```c
 extern "libSystem.B.dylib" void* environ;
@@ -1938,21 +1864,24 @@ extern "QuartzCore" void* kCAFilterNearest;
 ```
 
 Reading the name yields the value stored at the symbol; `&name`
-yields the symbol's address. The library name also drives
-`LC_LOAD_DYLIB` / `DT_NEEDED` so the library is linked
+yields the symbol's address. The named library is linked
 automatically. A bare framework name (or `"Foundation.framework"`)
-expands to its full system path — same rule as `@link "Foundation"`.
+expands to its full system path, same rule as `@link "Foundation"`.
 Path-shaped values and explicit suffixes (`.dylib`, `.so`, `.o`)
 pass through untouched.
 
-Supported on macOS and iOS (dyld binds the `__got` slot) and on
-Linux and Android, x64 and arm64 alike (an `R_*_GLOB_DAT` against
-the slot, valid in an executable and in a `--shared` library).
-Windows/UEFI rejects the declaration — a PE data import would need
-an `__imp_` IAT slot, which is not implemented — and `--target
-wasm` rejects it because there is no dynamic linker. Both are
-compile errors naming the symbol and the target, not silent
-miscompiles.
+A `from "symbol"` clause binds the data symbol under a different
+minc name, same as for function externs. This is the way to import
+a data symbol whose real name is a reserved built-in:
+
+```c
+extern "libc.so.6" void* c_stdout from "stdout";
+extern "libSystem.B.dylib" void* c_stdout from "__stdoutp";
+```
+
+Supported on macOS, iOS, Linux, and Android (executables and
+`--shared` libraries alike). Windows and `--target wasm` reject the
+declaration with a compile error naming the symbol and the target.
 
 The same shorthand works for function externs:
 
@@ -1976,10 +1905,9 @@ The operand is a string, so it covers symbols that aren't valid
 minc identifiers (mangled C++ names, decorated names).
 
 This also exists to import foreign symbols that collide with a 
-built-in. Built-in names (`alloc`, `free`, `realloc`, …) are 
-reserved. An `extern` that declares one of them with a sign-
-equivalent signature is a compile error. A different signature 
-overload is allowed.
+built-in. Built-in names (`alloc`, `free`, `realloc`, `write`, …) 
+are reserved: an `extern` that declares one of them is a compile 
+error. Use `from` syntax to rename the extern.
 
 ```c
 // error: extern 'free' shadows the builtin
@@ -1988,19 +1916,16 @@ extern "libc.so.6" void free(void* ptr);
 
 // ok: libc's free, callable as libc_free; the builtin free() is untouched
 extern "libc.so.6" void libc_free(void* ptr) from "free";
-
-// ok: different signature overload
-extern "randomlib.so" void free(void* ptr, i32 generation, i32 zombies);
 ```
 
-The same reservation applies to definitions: a function or a global
-variable named after a built-in is a compile error. A variable has no
-signature to overload with, so any built-in name is rejected:
-
-```c
-// error: global variable 'stdout' shadows the builtin of the same name
-void* stdout = null;
-```
+The same reservation applies to every other declaration in the value
+namespace: a function (generic templates included), a global
+variable, an enum value, a union variant, or a data extern
+(`extern "dll" T name;`) named after a built-in is a compile error.
+The rule holds regardless of visibility — `private` declarations are
+rejected the same way, in any file of the program. Data externs take
+the same `from` rename as function externs, so a foreign data symbol
+with a reserved name is imported under a distinct minc name.
 
 ### Linked object imports
 
@@ -2044,9 +1969,9 @@ into a C-shaped destination:
 - `&fn` passed as an argument whose corresponding parameter is `void*`
 - `&fn` passed to an `extern` function
 
-For indirect chains the compiler can't track — for example, `&fn` stored
+For indirect chains the compiler can't track (for example, `&fn` stored
 in a same-typed minc fn-ptr field that is later copied into a `void*`
-field — use the explicit `@c_abi` annotation on the function declaration:
+field), use the explicit `@c_abi` annotation on the function declaration:
 
 ```c
 @c_abi
@@ -2101,7 +2026,7 @@ void my_compute(@storage(rgba8) RWTexture2D img, @uniform f32 scale) {
 }
 ```
 
-Shader functions don't generate native code — they compile to GPU shader source
+Shader functions don't generate native code; they compile to GPU shader source
 text. The compiler auto-generates a `funcname_shader` global (of type `ShaderMeta`)
 for each `@shader` function. The first field of the VS output struct is treated as
 the clip-space position (`gl_Position` / `SV_Position`).
@@ -2220,10 +2145,18 @@ integer texture, is a compile error.
 ### Structs shared with a shader (`@gpu_layout`)
 
 A storage buffer is shared memory. The CPU writes elements and the
-shader reads them at the offsets its own language mandates. minc aligns
-every vector to 4, since its SIMD memory operations are unaligned. GLSL
-`std430`, MSL and WGSL align a 2-component vector to 8, and a 3- or
-4-component vector to 16.
+shader reads them at the offsets its own language mandates, and the
+two disagree on vector alignment:
+
+| Field type | minc | GPU (std430 / MSL / WGSL) |
+|---|---|---|
+| scalars (`f32`, `i32`, `u32`) | 4 | 4 |
+| `float2` / `int2` / `uint2`   | 4 | 8 |
+| `float3` / `int3` / `uint3`   | 4 | 16 |
+| `float4` / `int4` / `uint4`   | 4 | 16 |
+
+minc packs vectors to 4 since its SIMD memory operations are
+unaligned; the shader languages mandate the wider alignments.
 
 `@gpu_layout` applies the GPU rules on the CPU side, so a single memcpy
 into a buffer is correct:
@@ -2258,14 +2191,11 @@ such an array steps by the padded stride. Use `var p = &arr[0];` to keep
 that stride, or index the array directly. A bare `float3*` means a
 12-byte step and is a compile error.
 
-Every code shape that would carry elements across the stride boundary is
-a compile error: holding a pointer into the array in a bare `float3*`,
-passing the array where a `float3*` or `[]float3` parameter expects the
-packed stride, assigning a whole array to its packed twin (in either
-direction), and `memcpy` between a padded array and a packed one. Copy 
-element-wise instead (`for i { gd.a[i] = src[i]; }`), or copy between
-values of the same layout: padded to padded, or the whole `@gpu_layout`
-struct to a staging buffer.
+Every code shape that would mix the two strides is a compile error:
+bare `float3*` pointers into the array, passing it to a packed-stride
+parameter, and whole-array assignment or `memcpy` between a padded
+array and a packed one. Copy element-wise instead, or copy between
+values of the same layout.
 
 Padding costs memory. For large arrays of 3-component vectors prefer
 separate scalars: `f32 x; f32 y; f32 z;` packs to 12 bytes under both
@@ -2291,11 +2221,10 @@ float4 resolve(VOut inp, @texture(0) Texture2DMS tex) {
 fragment, one bit per sample, so a custom resolve can treat partly
 covered pixels differently. It is a fragment builtin.
 
-Reads of a multisample texture go through `load_sample`, and its size
-comes from `texture_size(tex)` with no LOD, since it has one level.
-Filtering averages neighbouring texels, which needs a single value per
-coordinate, so the `sample()` family reports a multisample argument as
-a compile error.
+Reads of a multisample texture go through `load_sample`;
+`texture_size(tex)` takes no LOD, since it has one level. The
+`sample()` family rejects a multisample texture at compile time
+(filtering needs a single value per coordinate).
 
 `ShaderBinding.multisampled` is 1 for such a binding, which is how a
 runtime adapter describes the bound image.
@@ -2337,8 +2266,7 @@ pointer locals are compile errors, as is a pointer parameter on a
 ### Shader builtins
 
 These functions are available inside `@shader` functions. Use GPU-standard
-names (not C-style `sinf` / `cosf` — the checker errors with the expected
-name).
+names (not C-style `sinf` / `cosf`).
 
 **Math**:
 `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `sqrt`, `rsqrt`, `abs`,
@@ -2370,7 +2298,8 @@ image has one level and takes no LOD.
 **Stage builtins**:
 `thread_id()`, `group_id()`, `local_id()` (compute),
 `vertex_id()`, `instance_id()` (vertex),
-`frag_coord()`, `front_facing()`, `sample_mask()` (fragment),
+`frag_coord()`, `front_facing()`, `sample_mask()`,
+`discard;` (fragment; aborts the current fragment),
 `group_barrier()`, `memory_barrier()` (compute)
 
 **Atomic** (compute):
@@ -2385,7 +2314,7 @@ Create a sokol shader from a vertex + fragment pair:
 sg_shader shd = sokol_make_shader(&cube_vs_shader, &cube_fs_shader);
 ```
 
-Pass uniforms via `sg_apply_uniforms()` — each `@uniform` parameter becomes a
+Pass uniforms via `sg_apply_uniforms()`; each `@uniform` parameter becomes a
 separate uniform block (block 0 for the first, block 1 for the second, etc.).
 
 ### Cross-platform GPU targets
@@ -2426,7 +2355,7 @@ Use `-o` to override.
 ## Source tags
 
 Build options can be specified in source files using `@` directives.
-Tags propagate transitively through `#include` — if a library has `@link`,
+Tags propagate transitively through `#include`: if a library has `@link`,
 any program that includes it automatically links the specified file.
 
 ```c
@@ -2449,8 +2378,33 @@ when os(linux) {
 }
 ```
 
-With this, `minc app.mc` is all that's needed to compile a linked app —
-no `--link` or `--gui` flags required.
+With this, `minc app.mc` is all that's needed to compile a linked app.
+
+## Source location: `__line__` and `__file__`
+
+`__line__` and `__file__` fold at compile time to ordinary literals:
+`__line__` is the 1-based line number of the token itself, as an
+integer literal; `__file__` is the basename of the file being
+compiled (`main.mc`, never a full path), as a string literal.
+
+```c
+void check(bool ok, str file, i32 line) {
+    if !ok {
+        print("check failed at {}:{}\n", file, line);
+        exit(1);
+    }
+}
+
+check(x > 0, __file__, __line__);
+```
+
+The fold happens at parse time, so they are usable anywhere the
+equivalent written literal is: function bodies, global initializers,
+shader code (`__line__`; `__file__` fails where any string does).
+Each token reports its own position: in an included file, they name
+the included file's coordinates, not the includer's.
+
+Both are reserved words: `i32 __line__;` is a compile error.
 
 ## Compiler flags
 
@@ -2476,7 +2430,7 @@ minc [build|run] [debug] <input.mc> [options]
 ```
 
 Standard Windows API symbols (kernel32, user32, gdi32, ucrtbase, d3d11, ole32,
-shell32) are built into the compiler — no `--def` flags needed for common APIs.
+shell32) are built into the compiler; no `--def` flags needed for common APIs.
 Run `minc --list-builtins` to see all 263 available symbols.
 
 ### Cross-compilation targets
@@ -2504,7 +2458,7 @@ NDK if the app pulls in C code. See `SETUP.md` for setup details.
 
 How integer and floating-point operations behave in minc.
 
-Every rule below has the same value on every target — x64 (Windows
+Every rule below has the same value on every target: x64 (Windows
 and Linux), ARM64 (macOS, iOS, Linux, Android), and wasm. The same
 source produces the same bit pattern.
 
@@ -2544,8 +2498,6 @@ u32 f = e - 1;          // 4294967295
 i64 g = 1000000000000;
 i64 h = g * g;          // wraps in i64
 ```
-
-Same wrap on every width.
 
 ### Division and modulo
 
@@ -2603,7 +2555,7 @@ i32 r = s & u;              // ok: same width, result i32
 
 `>>` is arithmetic (sign-extending) on signed types, logical
 (zero-filling) on unsigned types. Mixed signed/unsigned operands
-to `>>` are a static error — the result would depend on which
+to `>>` are a static error; the result would depend on which
 side's sign wins. Cast one side first.
 
 ```c
@@ -2634,14 +2586,11 @@ u32 d = u >> 32;            // 0 (logical; saturates)
 ```
 
 If you want modular-count semantics (the count wraps mod 32 / 64
-instead of saturating to 0), mask the count explicitly. The two
-forms give different results past the width:
+instead of saturating to 0), mask the count explicitly:
 
 ```c
 i32 a = 1 << 32;            // 0     (default: saturates)
 i32 b = 1 << (32 & 31);     // 1     (mask: wraps to <<0)
-i32 r = x << (n & 31);      // x << (n mod 32)
-i64 s = y << (m & 63);      // y << (m mod 64)
 ```
 
 ### Integer literals
@@ -2745,7 +2694,7 @@ i32 a = cast(i32,  1.7);            //  1
 i32 b = cast(i32, -1.7);            // -1
 ```
 
-Saturation is to the underlying conversion width — `i32` for any
+Saturation is to the underlying conversion width: `i32` for any
 i32-or-narrower target, `i64` for `i64`. Narrower destinations
 (`i8`, `i16`, `u8`, `u16`, `u32`) take the low bits of the
 saturated value, so a huge float becomes `INT32_MAX` first and
@@ -2757,9 +2706,6 @@ i16 a = cast(i16, 1.0e20);          // -1     (low 16 bits of INT32_MAX)
 u8  b = cast(u8,  1.0e20);          //  255   (low 8 bits)
 i16 c = cast(i16, 100000.0);        // -31072 (low 16 bits of 100000)
 ```
-
-The same value on every target. The cast costs about one extra
-cycle over an unchecked cvt because of the saturating clamp.
 
 ### Int → float
 
@@ -2870,58 +2816,13 @@ No overflow trap. No NaN trap. No shift trap. No cast trap.
 | Mixed-sign compare | Promotes both to unsigned | Static error. |
 
 If you bring code from C that overflows signed integers, the
-portable fix is to use an unsigned type — that gets the same wrap
+portable fix is to use an unsigned type, which gets the same wrap
 behavior on both languages without changing the comparison
 semantics.
 
-### Practical patterns
-
-If you do modular arithmetic, declare the variable unsigned.
-
-```c
-u32 hash = seed;
-hash = hash * 31 + byte;            // wraps mod 2^32 on every target
-```
-
-If a shift amount can exceed the type's width and you want
-modular-count semantics rather than the default saturate-to-zero,
-mask the count explicitly:
-
-```c
-i32 r = x << (n & 31);      // wraps mod 32 instead of saturating
-i64 s = y << (m & 63);
-```
-
-If a divisor can be zero, guard the divide.
-
-```c
-if d != 0 { q = n / d; }
-```
-
-If a float might be NaN, test before comparing:
-
-```c
-if x != x { /* NaN */ }
-else if x < 1.0 { /* in range */ }
-```
-
-If you cast a float to a narrow integer (`i8`, `i16`, `u8`, `u16`),
-clamp the float first. Float-to-int saturation lands at i32 width,
-not at the destination width, so a large float lands at `INT32_MAX`
-as i32 and the low 16 bits become the i16. Clamping does the actual
-i16-range saturation:
-
-```c
-if x < -32768.0 { x = -32768.0; }
-if x >  32767.0 { x =  32767.0; }
-i16 i = cast(i16, x);
-```
-
 ## Design principles
 
-- **Explicit over implicit**: sizes in type names, explicit casts for lossy conversions
-- **No preprocessor**: `when` for conditionals, `enum` for constants, `#include` for files
-- **Safe by default**: bounds checking on, wrapping arithmetic (no numeric UB)
-- **Zero-cost abstractions**: generics monomorphize, `defer` compiles to inline cleanup
-- **Minimal runtime**: no GC, no exceptions, no hidden allocations
-- **Direct hardware access**: pointers, `cast()`, `extern` for FFI, inline x64/ARM64
+- **Explicit over implicit**: sizes in type names, explicit casts, no magic
+- **Minimal runtime**: no default runtime, import what you use
+- **Cross-platform numerics**: same code, same results everywhere
+- **Direct hardware access**: C ABI, extern to call .dll/.so, syscalls, kernel intrinsics

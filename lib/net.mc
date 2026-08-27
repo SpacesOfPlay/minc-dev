@@ -89,6 +89,8 @@ when os(windows) {
 // sendto/recvfrom with a null address. close() is likewise a builtin.
 
 when os(macos) || os(ios) {
+    const i32 _NET_SO_NOSIGPIPE = 0x1022;
+
     extern "libSystem.B.dylib" {
         i32 socket(i32 domain, i32 type, i32 protocol);
         i32 bind(i32 sockfd, void* addr, i32 addrlen);
@@ -147,6 +149,17 @@ void net_shutdown() {
 // Bind a TCP socket to `bind_addr`:port and listen. Backlog is 16.
 // `bind_addr` must be in network byte order. Returns an invalid
 // socket on any failure.
+// A send to a peer that has already closed must return an error. On
+// posix the default is a SIGPIPE that kills the process instead.
+// Linux asks per send, macOS and iOS once per socket.
+private void _net_no_sigpipe(i64 fd) {
+    when os(macos) || os(ios) {
+        i32 one = 1;
+        ignore setsockopt(cast(i32, fd), _NET_SOL_SOCKET, _NET_SO_NOSIGPIPE, &one, 4);
+    }
+    return;
+}
+
 Socket _net_listen_tcp_at(u16 port, u32 bind_addr, bool reuse) {
     Socket result = _net_invalid();
     i64 fd;
@@ -278,6 +291,7 @@ Socket net_accept(Socket server) {
         c = c_i32;
     }
 
+    _net_no_sigpipe(c);
     result.fd = c;
     result.valid = true;
     return result;
@@ -303,7 +317,7 @@ i32 net_send(Socket s, u8* buf, i32 len) {
     when os(windows) {
         return send(s.fd, buf, len, 0);
     } else when os(linux) {
-        return cast(i32, sys_sendto(cast(i32, s.fd), buf, len, 0, null, 0));
+        return cast(i32, sys_sendto(cast(i32, s.fd), buf, len, _NET_MSG_NOSIGNAL, null, 0));
     } else when os(macos) || os(ios) {
         return cast(i32, send(cast(i32, s.fd), buf, len, 0));
     } else {
@@ -369,6 +383,7 @@ Socket net_connect(u32 ip_be, u16 port) {
         if connect(cast(i32, fd), &addr, 16) != 0 { close(fd); return result; }
     }
 
+    _net_no_sigpipe(fd);
     result.fd = fd;
     result.valid = true;
     return result;
@@ -466,7 +481,6 @@ when os(windows) {
 
 when os(macos) {
     const i32 _NET_SO_ERROR = 0x1007;
-    const i32 _NET_SO_NOSIGPIPE = 0x1022;
     const i32 _NET_O_NONBLOCK = 0x0004;
     const i32 _NET_EWOULDBLOCK = 35;
     const i32 _NET_EINPROGRESS = 36;

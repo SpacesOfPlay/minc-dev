@@ -163,10 +163,11 @@ float4x4 quat_to_mat4(float4 q) {
     f32 yy = y * y2; f32 yz = y * z2; f32 zz = z * z2;
     f32 wx = w * x2; f32 wy = w * y2; f32 wz = w * z2;
 
+    // Literal order is column-fill: each source row below is one column.
     return float4x4{
-        1.0f - (yy + zz), xy - wz         , xz + wy         , 0.0f,
-        xy + wz         , 1.0f - (xx + zz), yz - wx         , 0.0f,
-        xz - wy         , yz + wx         , 1.0f - (xx + yy), 0.0f,
+        1.0f - (yy + zz), xy + wz         , xz - wy         , 0.0f,
+        xy - wz         , 1.0f - (xx + zz), yz + wx         , 0.0f,
+        xz + wy         , yz - wx         , 1.0f - (xx + yy), 0.0f,
         0.0f            , 0.0f            , 0.0f            , 1.0f
     };
 }
