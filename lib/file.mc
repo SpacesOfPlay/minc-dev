@@ -80,7 +80,28 @@ bool path_is_abs(str p) {
 
 struct FileData {
     u8* data;
-    i32 len;
+    i64 len;
+}
+
+private const i64 _FILE_IO_CHUNK = 4194304;   // 4 MB per read/write call
+
+when os(wasm) {
+    // Host VFS byte count. Returns -1 when the path is unknown.
+    private extern "env" i64 __minc_file_size(u8* path);
+}
+
+// Size of the file in bytes, or -1 if it cannot be determined.
+i64 file_size(str path) {
+    when os(wasm) {
+        u8* wp = str_to_cstr(path);
+        defer free(wp);
+        return __minc_file_size(wp);
+    }
+    else {
+        FileStamp st = file_stamp(path);
+        if st.ok { return st.size; }
+        return -1;
+    }
 }
 
 // Read entire file as raw bytes. Returns {null, 0} on error.
@@ -91,22 +112,31 @@ FileData file_read(str path) {
     u8* cpath = str_to_cstr(path);
     defer free(cpath);
     i64 fd = open(cpath, 0);
-    if fd == cast(i64, 0) - 1 {
+    if fd == -1 {
         return result;
     }
-    i32 cap = 4096;
-    i32 len = 0;
-    u8* buf = cast(u8*, alloc(cast(i64, cap)));
+    // One byte past the reported size, so a single extra read sees EOF
+    // instead of a growth round-trip. An unknown size just grows.
+    i64 cap = 4096;
+    when !os(wasm) {
+        i64 known = file_size(path);
+        if known >= 0 { cap = known + 1; }
+        if cap < 4096 { cap = 4096; }
+    }
+    u8* buf = alloc<u8>(cap);
+    i64 len = 0;
     while true {
-        if len + 1024 > cap {
-            i32 new_cap = cap * 2;
-            u8* new_buf = cast(u8*, alloc(cast(i64, new_cap)));
-            memcpy(new_buf, buf, cast(i64, len));
+        if len >= cap {
+            i64 new_cap = cap * 2;
+            u8* new_buf = alloc<u8>(new_cap);
+            memcpy(new_buf, buf, len);
             free(buf);
             buf = new_buf;
             cap = new_cap;
         }
-        i32 n = read(fd, buf + len, 1024);
+        i64 want = cap - len;
+        if want > _FILE_IO_CHUNK { want = _FILE_IO_CHUNK; }
+        i32 n = read(fd, buf + len, cast(i32, want));
         if n <= 0 { break; }
         len = len + n;
     }
@@ -117,10 +147,16 @@ FileData file_read(str path) {
 }
 
 // Read entire file as owned string. Returns empty string on error.
+// A file larger than 2 GB is an error.
 @must_use
 string file_read_str(str path) {
     FileData fd = file_read(path);
-    string s = { .data = fd.data, .len = fd.len };
+    if fd.len > 2147483647 {
+        free(fd.data);
+        string empty = { .data = null, .len = 0 };
+        return empty;
+    }
+    string s = { .data = fd.data, .len = cast(i32, fd.len) };
     return s;
 }
 
@@ -129,11 +165,18 @@ bool file_write(str path, FileData data) {
     u8* cpath = str_to_cstr(path);
     defer free(cpath);
     i64 fd = open(cpath, 1);
-    if fd == cast(i64, 0) - 1 { return false; }
-    i32 r = write(fd, data.data, data.len);
+    if fd == -1 { return false; }
+    i64 done = 0;
+    while done < data.len {
+        i64 want = data.len - done;
+        if want > _FILE_IO_CHUNK { want = _FILE_IO_CHUNK; }
+        i32 n = write(fd, data.data + done, cast(i32, want));
+        if n <= 0 { break; }
+        done = done + n;
+    }
     close(fd);
     // == len : empty write is a success
-    return r == data.len;
+    return done == data.len;
 }
 
 // Write str to file. Returns true on success.

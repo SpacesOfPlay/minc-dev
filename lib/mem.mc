@@ -96,3 +96,23 @@ void pool_destroy(Pool* p) {
     p.cap = 0;
     return;
 }
+
+// --- Aligned heap allocation ---
+//
+// Over-allocates and stashes the base pointer below the aligned
+// block; release with free_aligned, not free. align must be a power
+// of two.
+
+void* alloc_aligned(i64 size, i64 align) {
+    u8* raw = alloc<u8>(size + align + 8);
+    if raw == null { return null; }
+    u64 a = cast(u64, align);
+    u64 aligned = (cast(u64, raw) + 8 + a - 1) & ~(a - 1);
+    *cast(u64*, aligned - 8) = cast(u64, raw);
+    return cast(void*, aligned);
+}
+
+void free_aligned(void* p) {
+    if p == null { return; }
+    free(cast(void*, *cast(u64*, cast(u64, p) - 8)));
+}

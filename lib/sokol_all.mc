@@ -8638,7 +8638,7 @@ void _sg_validate_begin() {
 
 bool _sg_validate_end() {
     if _sg.validate_error != SG_LOGITEM_OK {
-        _sg_log(SG_LOGITEM_VALIDATION_FAILED, 0, null, 7221);
+        _sg_log(SG_LOGITEM_VALIDATION_FAILED, 0, null, __line__);
         return false;
     } else {
         return true;
@@ -8787,7 +8787,7 @@ void sg_dealloc_buffer(sg_buffer buf_id) {
         if buf.slot.state == SG_RESOURCESTATE_ALLOC {
             _sg_dealloc_buffer(buf);
         } else {
-            _sg_log(SG_LOGITEM_DEALLOC_BUFFER_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_DEALLOC_BUFFER_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -8803,7 +8803,7 @@ void sg_dealloc_image(sg_image img_id) {
         if img.slot.state == SG_RESOURCESTATE_ALLOC {
             _sg_dealloc_image(img);
         } else {
-            _sg_log(SG_LOGITEM_DEALLOC_IMAGE_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_DEALLOC_IMAGE_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -8819,7 +8819,7 @@ void sg_dealloc_sampler(sg_sampler smp_id) {
         if smp.slot.state == SG_RESOURCESTATE_ALLOC {
             _sg_dealloc_sampler(smp);
         } else {
-            _sg_log(SG_LOGITEM_DEALLOC_SAMPLER_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_DEALLOC_SAMPLER_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -8835,7 +8835,7 @@ void sg_dealloc_shader(sg_shader shd_id) {
         if shd.slot.state == SG_RESOURCESTATE_ALLOC {
             _sg_dealloc_shader(shd);
         } else {
-            _sg_log(SG_LOGITEM_DEALLOC_SHADER_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_DEALLOC_SHADER_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -8851,7 +8851,7 @@ void sg_dealloc_pipeline(sg_pipeline pip_id) {
         if pip.slot.state == SG_RESOURCESTATE_ALLOC {
             _sg_dealloc_pipeline(pip);
         } else {
-            _sg_log(SG_LOGITEM_DEALLOC_PIPELINE_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_DEALLOC_PIPELINE_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -8867,7 +8867,7 @@ void sg_dealloc_view(sg_view view_id) {
         if view.slot.state == SG_RESOURCESTATE_ALLOC {
             _sg_dealloc_view(view);
         } else {
-            _sg_log(SG_LOGITEM_DEALLOC_VIEW_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_DEALLOC_VIEW_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -8886,7 +8886,7 @@ void sg_init_buffer(sg_buffer buf_id, sg_buffer_desc* desc) {
             _sg_init_buffer(buf, &desc_def);
             assert(cast(i64, _sg_resource_state_valid_failed_unsealed(buf.slot.state)));
         } else {
-            _sg_log(SG_LOGITEM_INIT_BUFFER_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_INIT_BUFFER_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -8905,7 +8905,7 @@ void sg_init_image(sg_image img_id, sg_image_desc* desc) {
             _sg_init_image(img, &desc_def);
             assert(cast(i64, _sg_resource_state_valid_failed_unsealed(img.slot.state)));
         } else {
-            _sg_log(SG_LOGITEM_INIT_IMAGE_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_INIT_IMAGE_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -8924,7 +8924,7 @@ void sg_init_sampler(sg_sampler smp_id, sg_sampler_desc* desc) {
             _sg_init_sampler(smp, &desc_def);
             assert(cast(i64, _sg_resource_state_valid_failed(smp.slot.state)));
         } else {
-            _sg_log(SG_LOGITEM_INIT_SAMPLER_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_INIT_SAMPLER_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -8943,7 +8943,7 @@ void sg_init_shader(sg_shader shd_id, sg_shader_desc* desc) {
             _sg_init_shader(shd, &desc_def);
             assert(cast(i64, _sg_resource_state_valid_failed(shd.slot.state)));
         } else {
-            _sg_log(SG_LOGITEM_INIT_SHADER_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_INIT_SHADER_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -8962,7 +8962,7 @@ void sg_init_pipeline(sg_pipeline pip_id, sg_pipeline_desc* desc) {
             _sg_init_pipeline(pip, &desc_def);
             assert(cast(i64, _sg_resource_state_valid_failed(pip.slot.state)));
         } else {
-            _sg_log(SG_LOGITEM_INIT_PIPELINE_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_INIT_PIPELINE_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -8981,7 +8981,7 @@ void sg_init_view(sg_view view_id, sg_view_desc* desc) {
             _sg_init_view(view, &desc_def);
             assert(cast(i64, _sg_resource_state_valid_failed(view.slot.state)));
         } else {
-            _sg_log(SG_LOGITEM_INIT_VIEW_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_INIT_VIEW_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -8998,7 +8998,7 @@ void sg_uninit_buffer(sg_buffer buf_id) {
             _sg_uninit_buffer(buf);
             assert(buf.slot.state == SG_RESOURCESTATE_ALLOC);
         } else if buf.slot.state != SG_RESOURCESTATE_ALLOC {
-            _sg_log(SG_LOGITEM_UNINIT_BUFFER_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_UNINIT_BUFFER_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -9015,7 +9015,7 @@ void sg_uninit_image(sg_image img_id) {
             _sg_uninit_image(img);
             assert(img.slot.state == SG_RESOURCESTATE_ALLOC);
         } else if img.slot.state != SG_RESOURCESTATE_ALLOC {
-            _sg_log(SG_LOGITEM_UNINIT_IMAGE_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_UNINIT_IMAGE_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -9032,7 +9032,7 @@ void sg_uninit_sampler(sg_sampler smp_id) {
             _sg_uninit_sampler(smp);
             assert(smp.slot.state == SG_RESOURCESTATE_ALLOC);
         } else if smp.slot.state != SG_RESOURCESTATE_ALLOC {
-            _sg_log(SG_LOGITEM_UNINIT_SAMPLER_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_UNINIT_SAMPLER_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -9049,7 +9049,7 @@ void sg_uninit_shader(sg_shader shd_id) {
             _sg_uninit_shader(shd);
             assert(shd.slot.state == SG_RESOURCESTATE_ALLOC);
         } else if shd.slot.state != SG_RESOURCESTATE_ALLOC {
-            _sg_log(SG_LOGITEM_UNINIT_SHADER_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_UNINIT_SHADER_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -9066,7 +9066,7 @@ void sg_uninit_pipeline(sg_pipeline pip_id) {
             _sg_uninit_pipeline(pip);
             assert(pip.slot.state == SG_RESOURCESTATE_ALLOC);
         } else if pip.slot.state != SG_RESOURCESTATE_ALLOC {
-            _sg_log(SG_LOGITEM_UNINIT_PIPELINE_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_UNINIT_PIPELINE_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -9083,7 +9083,7 @@ void sg_uninit_view(sg_view view_id) {
             _sg_uninit_view(view);
             assert(view.slot.state == SG_RESOURCESTATE_ALLOC);
         } else if view.slot.state != SG_RESOURCESTATE_ALLOC {
-            _sg_log(SG_LOGITEM_UNINIT_VIEW_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_UNINIT_VIEW_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -9099,7 +9099,7 @@ void sg_fail_buffer(sg_buffer buf_id) {
         if buf.slot.state == SG_RESOURCESTATE_ALLOC {
             buf.slot.state = SG_RESOURCESTATE_FAILED;
         } else {
-            _sg_log(SG_LOGITEM_FAIL_BUFFER_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_FAIL_BUFFER_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -9115,7 +9115,7 @@ void sg_fail_image(sg_image img_id) {
         if img.slot.state == SG_RESOURCESTATE_ALLOC {
             img.slot.state = SG_RESOURCESTATE_FAILED;
         } else {
-            _sg_log(SG_LOGITEM_FAIL_IMAGE_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_FAIL_IMAGE_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -9131,7 +9131,7 @@ void sg_fail_sampler(sg_sampler smp_id) {
         if smp.slot.state == SG_RESOURCESTATE_ALLOC {
             smp.slot.state = SG_RESOURCESTATE_FAILED;
         } else {
-            _sg_log(SG_LOGITEM_FAIL_SAMPLER_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_FAIL_SAMPLER_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -9147,7 +9147,7 @@ void sg_fail_shader(sg_shader shd_id) {
         if shd.slot.state == SG_RESOURCESTATE_ALLOC {
             shd.slot.state = SG_RESOURCESTATE_FAILED;
         } else {
-            _sg_log(SG_LOGITEM_FAIL_SHADER_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_FAIL_SHADER_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -9163,7 +9163,7 @@ void sg_fail_pipeline(sg_pipeline pip_id) {
         if pip.slot.state == SG_RESOURCESTATE_ALLOC {
             pip.slot.state = SG_RESOURCESTATE_FAILED;
         } else {
-            _sg_log(SG_LOGITEM_FAIL_PIPELINE_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_FAIL_PIPELINE_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -9179,7 +9179,7 @@ void sg_fail_view(sg_view view_id) {
         if view.slot.state == SG_RESOURCESTATE_ALLOC {
             view.slot.state = SG_RESOURCESTATE_FAILED;
         } else {
-            _sg_log(SG_LOGITEM_FAIL_VIEW_INVALID_STATE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_FAIL_VIEW_INVALID_STATE, 1, null, __line__);
         }
     }
     when defined(SOKOL_TRACE_HOOKS) {
@@ -9469,7 +9469,7 @@ void sg_begin_pass(sg_pass* pass) {
     _sg_attachments_ptrs_t atts_ptrs = _sg_attachments_ptrs(&pass_def.attachments);
     if atts_ptrs.empty == 0 {
         if _sg_attachments_alive(&atts_ptrs) == 0 {
-            _sg_log(SG_LOGITEM_BEGINPASS_ATTACHMENTS_ALIVE, 1, null, 7222);
+            _sg_log(SG_LOGITEM_BEGINPASS_ATTACHMENTS_ALIVE, 1, null, __line__);
             return;
         }
         _sg.cur_pass.atts = pass.attachments;
@@ -9934,7 +9934,7 @@ void sg_write_buffer_unsealed(sg_write_buffer_desc* desc) {
             _sg_write_buffer_unsealed(buf, &desc_def);
         }
     } else {
-        _sg_log(SG_LOGITEM_WRITE_BUFFER_UNSEALED_BUFFER_ALIVE, 1, null, 7222);
+        _sg_log(SG_LOGITEM_WRITE_BUFFER_UNSEALED_BUFFER_ALIVE, 1, null, __line__);
     }
     when defined(SOKOL_TRACE_HOOKS) {
         if _sg.hooks.write_buffer_unsealed != null {
@@ -9957,7 +9957,7 @@ void sg_write_image_unsealed(sg_write_image_desc* desc) {
             _sg_write_image_unsealed(img, &desc_def);
         }
     } else {
-        _sg_log(SG_LOGITEM_WRITE_IMAGE_UNSEALED_IMAGE_ALIVE, 1, null, 7222);
+        _sg_log(SG_LOGITEM_WRITE_IMAGE_UNSEALED_IMAGE_ALIVE, 1, null, __line__);
     }
     when defined(SOKOL_TRACE_HOOKS) {
         if _sg.hooks.write_image_unsealed != null {
@@ -9979,7 +9979,7 @@ void sg_seal_buffer(sg_buffer buf_id) {
             buf.slot.state = SG_RESOURCESTATE_VALID;
         }
     } else {
-        _sg_log(SG_LOGITEM_SEAL_BUFFER_ALIVE, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SEAL_BUFFER_ALIVE, 1, null, __line__);
     }
     when defined(SOKOL_TRACE_HOOKS) {
         if _sg.hooks.seal_buffer != null {
@@ -10001,7 +10001,7 @@ void sg_seal_image(sg_image img_id) {
             img.slot.state = SG_RESOURCESTATE_VALID;
         }
     } else {
-        _sg_log(SG_LOGITEM_SEAL_IMAGE_ALIVE, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SEAL_IMAGE_ALIVE, 1, null, __line__);
     }
     when defined(SOKOL_TRACE_HOOKS) {
         if _sg.hooks.seal_image != null {
@@ -10572,7 +10572,7 @@ void _sapp_log(sapp_log_item log_item, u32 log_level, u8* msg, u32 line_nr) {
     if _sapp.desc.logger.func != null {
         u8* filename = null;
         when defined(SOKOL_DEBUG) {
-            filename = "sokol_app.h";
+            filename = __file__;
             if null == msg {
                 msg = _sapp_log_messages[log_item];
             }
@@ -10604,7 +10604,7 @@ void* _sapp_malloc(u64 size) {
         ptr = alloc(cast(i64, size));
     }
     if null == ptr {
-        _sapp_log(SAPP_LOGITEM_MALLOC_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_MALLOC_FAILED, 0, null, __line__);
     }
     return ptr;
 }
@@ -10629,7 +10629,7 @@ void _sapp_free(void* ptr) {
 // >>helpers
 // round float to int and at least 1
 i32 _sapp_roundf_gzero(f32 f) {
-    var val = cast(i32, roundf(f));
+    var val = cast(i32, round(f));
     if val <= 0 {
         val = 1;
     }
@@ -10725,7 +10725,7 @@ void _sapp_assert_desc(sapp_desc* desc) {
         case SAPP_PIXELFORMAT_NONE, SAPP_PIXELFORMAT_DEPTH, SAPP_PIXELFORMAT_DEPTH_STENCIL: {
         }
         default: {
-            _sapp_log(SAPP_LOGITEM_SWAPCHAIN_DEPTHFORMAT_INVALID, 0, null, 3246);
+            _sapp_log(SAPP_LOGITEM_SWAPCHAIN_DEPTHFORMAT_INVALID, 0, null, __line__);
         }
     }
 }
@@ -10774,7 +10774,7 @@ bool _sapp_image_validate(sapp_image_desc* desc) {
     assert(desc.pixels.size > 0);
     u64 wh_size = cast(u64, desc.width * desc.height) * cast(u64, sizeof(u32));
     if wh_size != desc.pixels.size {
-        _sapp_log(SAPP_LOGITEM_IMAGE_DATA_SIZE_MISMATCH, 1, null, 3247);
+        _sapp_log(SAPP_LOGITEM_IMAGE_DATA_SIZE_MISMATCH, 1, null, __line__);
         return false;
     }
     return true;
@@ -10913,7 +10913,7 @@ void _sg_log(sg_log_item log_item, u32 log_level, u8* msg, u32 line_nr) {
     if _sg.desc.logger.func != null {
         u8* filename = null;
         when defined(SOKOL_DEBUG) {
-            filename = "sokol_gfx.h";
+            filename = __file__;
             if null == msg {
                 msg = _sg_log_messages[log_item];
             }
@@ -10956,7 +10956,7 @@ void* _sg_malloc(u64 size) {
         ptr = alloc(cast(i64, size));
     }
     if null == ptr {
-        _sg_log(SG_LOGITEM_MALLOC_FAILED, 0, null, 7221);
+        _sg_log(SG_LOGITEM_MALLOC_FAILED, 0, null, __line__);
     }
     return ptr;
 }
@@ -12363,30 +12363,30 @@ bool _sg_validate_buffer_desc(sg_buffer_desc* desc) {
         _sg_validate_begin();
         if desc._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BUFFERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_CANARY, 1, null, __line__);
         }
         if desc._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BUFFERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_CANARY, 1, null, __line__);
         }
         if desc.size > 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_NONZERO_SIZE;
-            _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_NONZERO_SIZE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_NONZERO_SIZE, 1, null, __line__);
         }
         if _sg_one(desc.usage.immutable, desc.usage.dynamic_update, desc.usage.stream_update) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BUFFERDESC_IMMUTABLE_DYNAMIC_STREAM;
-            _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_IMMUTABLE_DYNAMIC_STREAM, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_IMMUTABLE_DYNAMIC_STREAM, 1, null, __line__);
         }
         if _sg.features.separate_buffer_types != 0 {
             if _sg_one(desc.usage.vertex_buffer, desc.usage.index_buffer, desc.usage.storage_buffer) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BUFFERDESC_SEPARATE_BUFFER_TYPES;
-                _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_SEPARATE_BUFFER_TYPES, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_SEPARATE_BUFFER_TYPES, 1, null, __line__);
             }
         }
         if desc.usage.write_unsealed != 0 {
             if desc.usage.immutable == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BUFFERDESC_UNSEALED_VS_IMMUTABLE;
-                _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_UNSEALED_VS_IMMUTABLE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_UNSEALED_VS_IMMUTABLE, 1, null, __line__);
             }
         }
         bool injected = 0 != desc.gl_buffers[0] || null != desc.mtl_buffers[0] || null != desc.d3d11_buffer || null != desc.wgpu_buffer;
@@ -12394,36 +12394,36 @@ bool _sg_validate_buffer_desc(sg_buffer_desc* desc) {
             if desc.data.ptr != null {
                 if desc.size == desc.data.size == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_MATCHING_DATA_SIZE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_MATCHING_DATA_SIZE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_MATCHING_DATA_SIZE, 1, null, __line__);
                 }
             } else {
                 if desc.usage.storage_buffer == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_DATA;
-                    _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_DATA, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_DATA, 1, null, __line__);
                 }
                 if desc.data.size == 0 == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_ZERO_DATA_SIZE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_ZERO_DATA_SIZE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_ZERO_DATA_SIZE, 1, null, __line__);
                 }
             }
         } else {
             if null == desc.data.ptr == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_NO_DATA;
-                _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_NO_DATA, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_NO_DATA, 1, null, __line__);
             }
             if desc.data.size == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_ZERO_DATA_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_ZERO_DATA_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_EXPECT_ZERO_DATA_SIZE, 1, null, __line__);
             }
         }
         if desc.usage.storage_buffer != 0 {
             if _sg.features.compute == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BUFFERDESC_STORAGEBUFFER_SUPPORTED;
-                _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_STORAGEBUFFER_SUPPORTED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_STORAGEBUFFER_SUPPORTED, 1, null, __line__);
             }
             if _sg_multiple_u64(desc.size, 4) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BUFFERDESC_STORAGEBUFFER_SIZE_MULTIPLE_4;
-                _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_STORAGEBUFFER_SIZE_MULTIPLE_4, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BUFFERDESC_STORAGEBUFFER_SIZE_MULTIPLE_4, 1, null, __line__);
             }
         }
         return _sg_validate_end();
@@ -12443,7 +12443,7 @@ void _sg_validate_image_data(sg_image_data* data, sg_pixel_format fmt, i32 width
             bool has_size = data.mip_levels[mip_index].size > 0;
             if (has_data && has_size) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDATA_NODATA;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDATA_NODATA, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDATA_NODATA, 1, null, __line__);
             }
             i32 mip_width = _sg_miplevel_dim(width, mip_index);
             i32 mip_height = _sg_miplevel_dim(height, mip_index);
@@ -12451,7 +12451,7 @@ void _sg_validate_image_data(sg_image_data* data, sg_pixel_format fmt, i32 width
             i32 expected_size = bytes_per_slice * num_slices;
             if expected_size == cast(i32, data.mip_levels[mip_index].size) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDATA_DATA_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDATA_DATA_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDATA_DATA_SIZE, 1, null, __line__);
             }
         }
     }
@@ -12470,43 +12470,43 @@ bool _sg_validate_image_desc(sg_image_desc* desc) {
         _sg_validate_begin();
         if desc._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_CANARY, 1, null, __line__);
         }
         if desc._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_CANARY, 1, null, __line__);
         }
         if _sg_one(usg.immutable, usg.dynamic_update, usg.stream_update) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_IMMUTABLE_DYNAMIC_STREAM;
-            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_IMMUTABLE_DYNAMIC_STREAM, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_IMMUTABLE_DYNAMIC_STREAM, 1, null, __line__);
         }
         if !(usg.color_attachment && usg.depth_stencil_attachment) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_COLOR_DEPTH_STENCIL;
-            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_COLOR_DEPTH_STENCIL, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_COLOR_DEPTH_STENCIL, 1, null, __line__);
         }
         switch desc.type {
             case SG_IMAGETYPE_2D: {
                 if desc.num_slices == 1 == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_IMAGETYPE_2D_NUMSLICES;
-                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_IMAGETYPE_2D_NUMSLICES, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_IMAGETYPE_2D_NUMSLICES, 1, null, __line__);
                 }
             }
             case SG_IMAGETYPE_CUBE: {
                 if desc.num_slices == 6 == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_IMAGETYPE_CUBE_NUMSLICES;
-                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_IMAGETYPE_CUBE_NUMSLICES, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_IMAGETYPE_CUBE_NUMSLICES, 1, null, __line__);
                 }
             }
             case SG_IMAGETYPE_ARRAY: {
                 if (desc.num_slices >= 1 && desc.num_slices <= _sg.limits.max_image_array_layers) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_IMAGETYPE_ARRAY_NUMSLICES;
-                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_IMAGETYPE_ARRAY_NUMSLICES, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_IMAGETYPE_ARRAY_NUMSLICES, 1, null, __line__);
                 }
             }
             case SG_IMAGETYPE_3D: {
                 if (desc.num_slices >= 1 && desc.num_slices <= _sg.limits.max_image_size_3d) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_IMAGETYPE_3D_NUMSLICES;
-                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_IMAGETYPE_3D_NUMSLICES, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_IMAGETYPE_3D_NUMSLICES, 1, null, __line__);
                 }
             }
             default: {
@@ -12515,106 +12515,106 @@ bool _sg_validate_image_desc(sg_image_desc* desc) {
         }
         if desc.width > 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_WIDTH;
-            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_WIDTH, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_WIDTH, 1, null, __line__);
         }
         if desc.height > 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_HEIGHT;
-            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_HEIGHT, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_HEIGHT, 1, null, __line__);
         }
         sg_pixel_format fmt = desc.pixel_format;
         bool injected = 0 != desc.gl_textures[0] || null != desc.mtl_textures[0] || null != desc.d3d11_texture || null != desc.wgpu_texture;
         if _sg_is_depth_or_depth_stencil_format(fmt) != 0 {
             if desc.type != SG_IMAGETYPE_3D == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_DEPTH_3D_IMAGE;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_DEPTH_3D_IMAGE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_DEPTH_3D_IMAGE, 1, null, __line__);
             }
         }
         if any_attachment != 0 {
             assert(cast(i32, fmt) >= 0 && cast(i32, fmt) < _SG_PIXELFORMAT_NUM);
             if usg.immutable == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_EXPECT_IMMUTABLE;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_EXPECT_IMMUTABLE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_EXPECT_IMMUTABLE, 1, null, __line__);
             }
             if desc.data.mip_levels[0].ptr == null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_EXPECT_NO_DATA;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_EXPECT_NO_DATA, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_EXPECT_NO_DATA, 1, null, __line__);
             }
             if _sg.formats[fmt].render == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_PIXELFORMAT;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_PIXELFORMAT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_PIXELFORMAT, 1, null, __line__);
             }
             if usg.resolve_attachment != 0 {
                 if desc.sample_count == 1 == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_RESOLVE_EXPECT_NO_MSAA;
-                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_RESOLVE_EXPECT_NO_MSAA, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_RESOLVE_EXPECT_NO_MSAA, 1, null, __line__);
                 }
             }
             if desc.sample_count > 1 {
                 if _sg.formats[fmt].msaa == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_NO_MSAA_SUPPORT;
-                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_NO_MSAA_SUPPORT, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_NO_MSAA_SUPPORT, 1, null, __line__);
                 }
                 if desc.num_mipmaps == 1 == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_NUM_MIPMAPS;
-                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_NUM_MIPMAPS, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_NUM_MIPMAPS, 1, null, __line__);
                 }
                 if desc.type != SG_IMAGETYPE_ARRAY == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_ARRAY_IMAGE;
-                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_ARRAY_IMAGE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_ARRAY_IMAGE, 1, null, __line__);
                 }
                 if desc.type != SG_IMAGETYPE_3D == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_3D_IMAGE;
-                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_3D_IMAGE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_3D_IMAGE, 1, null, __line__);
                 }
                 if desc.type != SG_IMAGETYPE_CUBE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_CUBE_IMAGE;
-                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_CUBE_IMAGE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_ATTACHMENT_MSAA_CUBE_IMAGE, 1, null, __line__);
                 }
             }
         }
         if usg.storage_image != 0 {
             if usg.immutable == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_STORAGEIMAGE_EXPECT_IMMUTABLE;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_STORAGEIMAGE_EXPECT_IMMUTABLE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_STORAGEIMAGE_EXPECT_IMMUTABLE, 1, null, __line__);
             }
             if desc.data.mip_levels[0].ptr == null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_STORAGEIMAGE_EXPECT_NO_DATA;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_STORAGEIMAGE_EXPECT_NO_DATA, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_STORAGEIMAGE_EXPECT_NO_DATA, 1, null, __line__);
             }
             if _sg_is_valid_storage_image_format(fmt) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_STORAGEIMAGE_PIXELFORMAT;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_STORAGEIMAGE_PIXELFORMAT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_STORAGEIMAGE_PIXELFORMAT, 1, null, __line__);
             }
             if desc.sample_count == 1 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_STORAGEIMAGE_EXPECT_NO_MSAA;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_STORAGEIMAGE_EXPECT_NO_MSAA, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_STORAGEIMAGE_EXPECT_NO_MSAA, 1, null, __line__);
             }
         }
         if usg.write_unsealed != 0 {
             if usg.immutable == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_UNSEALED_VS_IMMUTABLE;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_UNSEALED_VS_IMMUTABLE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_UNSEALED_VS_IMMUTABLE, 1, null, __line__);
             }
             if !any_attachment == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_UNSEALED_VS_ATTACHMENT;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_UNSEALED_VS_ATTACHMENT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_UNSEALED_VS_ATTACHMENT, 1, null, __line__);
             }
         }
         if !any_attachment && !usg.storage_image {
             if desc.sample_count == 1 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_MSAA_BUT_NO_ATTACHMENT;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_MSAA_BUT_NO_ATTACHMENT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_MSAA_BUT_NO_ATTACHMENT, 1, null, __line__);
             }
             bool valid_nonrt_fmt = !_sg_is_valid_attachment_depth_format(fmt);
             if valid_nonrt_fmt == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_NONRT_PIXELFORMAT;
-                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_NONRT_PIXELFORMAT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_NONRT_PIXELFORMAT, 1, null, __line__);
             }
             bool is_compressed = _sg_is_compressed_pixel_format(desc.pixel_format);
             if is_compressed != 0 {
                 if usg.immutable == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_COMPRESSED_IMMUTABLE;
-                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_COMPRESSED_IMMUTABLE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_COMPRESSED_IMMUTABLE, 1, null, __line__);
                 }
             }
             if !injected && !usg.write_unsealed && usg.immutable {
@@ -12626,19 +12626,19 @@ bool _sg_validate_image_desc(sg_image_desc* desc) {
                     if injected != 0 {
                         if (no_data && no_size) == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_INJECTED_NO_DATA;
-                            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_INJECTED_NO_DATA, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_INJECTED_NO_DATA, 1, null, __line__);
                         }
                     }
                     if usg.write_unsealed != 0 {
                         if (no_data && no_size) == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_UNSEALED_NO_DATA;
-                            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_UNSEALED_NO_DATA, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_UNSEALED_NO_DATA, 1, null, __line__);
                         }
                     }
                     if usg.immutable == 0 {
                         if (no_data && no_size) == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_IMAGEDESC_DYNAMIC_NO_DATA;
-                            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_DYNAMIC_NO_DATA, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_IMAGEDESC_DYNAMIC_NO_DATA, 1, null, __line__);
                         }
                     }
                 }
@@ -12659,16 +12659,16 @@ bool _sg_validate_sampler_desc(sg_sampler_desc* desc) {
         _sg_validate_begin();
         if desc._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SAMPLERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SAMPLERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SAMPLERDESC_CANARY, 1, null, __line__);
         }
         if desc._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SAMPLERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SAMPLERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SAMPLERDESC_CANARY, 1, null, __line__);
         }
         if desc.max_anisotropy > 1 {
             if (desc.min_filter == SG_FILTER_LINEAR && desc.mag_filter == SG_FILTER_LINEAR && desc.mipmap_filter == SG_FILTER_LINEAR) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SAMPLERDESC_ANISTROPIC_REQUIRES_LINEAR_FILTERING;
-                _sg_log(SG_LOGITEM_VALIDATE_SAMPLERDESC_ANISTROPIC_REQUIRES_LINEAR_FILTERING, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SAMPLERDESC_ANISTROPIC_REQUIRES_LINEAR_FILTERING, 1, null, __line__);
             }
         }
         return _sg_validate_end();
@@ -12747,11 +12747,11 @@ bool _sg_validate_view_desc(sg_view_desc* desc) {
         _sg_validate_begin();
         if desc._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_CANARY, 1, null, __line__);
         }
         if desc._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_CANARY, 1, null, __line__);
         }
         sg_view_type view_type = SG_VIEWTYPE_INVALID;
         sg_image_view_desc* img_desc = null;
@@ -12764,7 +12764,7 @@ bool _sg_validate_view_desc(sg_view_desc* desc) {
         if desc.storage_buffer.buffer.id != cast(u32, SG_INVALID_ID) {
             if SG_VIEWTYPE_INVALID == view_type == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE;
-                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE, 1, null, __line__);
             }
             view_type = SG_VIEWTYPE_STORAGEBUFFER;
             buf_desc = &desc.storage_buffer;
@@ -12772,7 +12772,7 @@ bool _sg_validate_view_desc(sg_view_desc* desc) {
         if desc.storage_image.image.id != cast(u32, SG_INVALID_ID) {
             if SG_VIEWTYPE_INVALID == view_type == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE;
-                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE, 1, null, __line__);
             }
             view_type = SG_VIEWTYPE_STORAGEIMAGE;
             img_desc = &desc.storage_image;
@@ -12780,7 +12780,7 @@ bool _sg_validate_view_desc(sg_view_desc* desc) {
         if desc.color_attachment.image.id != cast(u32, SG_INVALID_ID) {
             if SG_VIEWTYPE_INVALID == view_type == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE;
-                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE, 1, null, __line__);
             }
             view_type = SG_VIEWTYPE_COLORATTACHMENT;
             img_desc = &desc.color_attachment;
@@ -12788,7 +12788,7 @@ bool _sg_validate_view_desc(sg_view_desc* desc) {
         if desc.resolve_attachment.image.id != cast(u32, SG_INVALID_ID) {
             if SG_VIEWTYPE_INVALID == view_type == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE;
-                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE, 1, null, __line__);
             }
             view_type = SG_VIEWTYPE_RESOLVEATTACHMENT;
             img_desc = &desc.resolve_attachment;
@@ -12796,14 +12796,14 @@ bool _sg_validate_view_desc(sg_view_desc* desc) {
         if desc.depth_stencil_attachment.image.id != cast(u32, SG_INVALID_ID) {
             if SG_VIEWTYPE_INVALID == view_type == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE;
-                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_UNIQUE_VIEWTYPE, 1, null, __line__);
             }
             view_type = SG_VIEWTYPE_DEPTHSTENCILATTACHMENT;
             img_desc = &desc.depth_stencil_attachment;
         }
         if SG_VIEWTYPE_INVALID != view_type == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_ANY_VIEWTYPE;
-            _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_ANY_VIEWTYPE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_ANY_VIEWTYPE, 1, null, __line__);
         }
         _sg_buffer_t* buf = null;
         _sg_image_t* img = null;
@@ -12813,12 +12813,12 @@ bool _sg_validate_view_desc(sg_view_desc* desc) {
             buf = _sg_lookup_buffer(buf_desc.buffer.id);
             if buf == null {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_ALIVE;
-                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_ALIVE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_ALIVE, 1, null, __line__);
             }
             if buf != null {
                 if buf.slot.state == SG_RESOURCESTATE_VALID == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_VALID;
-                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_VALID, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_VALID, 1, null, __line__);
                 }
                 res_valid = buf.slot.state == SG_RESOURCESTATE_VALID;
             }
@@ -12827,12 +12827,12 @@ bool _sg_validate_view_desc(sg_view_desc* desc) {
             img = _sg_lookup_image(img_desc.image.id);
             if img == null {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_ALIVE;
-                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_ALIVE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_ALIVE, 1, null, __line__);
             }
             if img != null {
                 if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_VALID;
-                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_VALID, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_VALID, 1, null, __line__);
                 }
                 res_valid = img.slot.state == SG_RESOURCESTATE_VALID;
             }
@@ -12841,13 +12841,13 @@ bool _sg_validate_view_desc(sg_view_desc* desc) {
             img = _sg_lookup_image(tex_desc.image.id);
             if img == null {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_ALIVE;
-                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_ALIVE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOURCE_ALIVE, 1, null, __line__);
             }
             if img != null {
                 bool img_valid_or_unsealed = _sg_resource_state_valid_unsealed(img.slot.state);
                 if img_valid_or_unsealed == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_VALID_UNSEALED;
-                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_VALID_UNSEALED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_VALID_UNSEALED, 1, null, __line__);
                 }
                 res_valid = img_valid_or_unsealed;
             }
@@ -12858,25 +12858,25 @@ bool _sg_validate_view_desc(sg_view_desc* desc) {
                     assert(cast(i64, buf));
                     if buf.cmn.usage.storage_buffer == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEBUFFER_USAGE;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEBUFFER_USAGE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEBUFFER_USAGE, 1, null, __line__);
                     }
                 }
                 case SG_VIEWTYPE_STORAGEIMAGE: {
                     assert(cast(i64, img));
                     if img.cmn.usage.storage_image == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEIMAGE_USAGE;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEIMAGE_USAGE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEIMAGE_USAGE, 1, null, __line__);
                     }
                     if _sg_is_valid_storage_image_format(img.cmn.pixel_format) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEIMAGE_PIXELFORMAT;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEIMAGE_PIXELFORMAT, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEIMAGE_PIXELFORMAT, 1, null, __line__);
                     }
                 }
                 case SG_VIEWTYPE_TEXTURE: {
                     if _sg.features.msaa_texture_bindings == 0 {
                         if img.cmn.sample_count == 1 == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_EXPECT_NO_MSAA;
-                            _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_EXPECT_NO_MSAA, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_EXPECT_NO_MSAA, 1, null, __line__);
                         }
                     }
                 }
@@ -12884,33 +12884,33 @@ bool _sg_validate_view_desc(sg_view_desc* desc) {
                     assert(cast(i64, img));
                     if img.cmn.usage.color_attachment == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_COLORATTACHMENT_USAGE;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_COLORATTACHMENT_USAGE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_COLORATTACHMENT_USAGE, 1, null, __line__);
                     }
                     if _sg_is_valid_attachment_color_format(img.cmn.pixel_format) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_COLORATTACHMENT_PIXELFORMAT;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_COLORATTACHMENT_PIXELFORMAT, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_COLORATTACHMENT_PIXELFORMAT, 1, null, __line__);
                     }
                 }
                 case SG_VIEWTYPE_RESOLVEATTACHMENT: {
                     assert(cast(i64, img));
                     if img.cmn.usage.resolve_attachment == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_RESOLVEATTACHMENT_USAGE;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOLVEATTACHMENT_USAGE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOLVEATTACHMENT_USAGE, 1, null, __line__);
                     }
                     if img.cmn.sample_count == 1 == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_RESOLVEATTACHMENT_SAMPLECOUNT;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOLVEATTACHMENT_SAMPLECOUNT, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_RESOLVEATTACHMENT_SAMPLECOUNT, 1, null, __line__);
                     }
                 }
                 case SG_VIEWTYPE_DEPTHSTENCILATTACHMENT: {
                     assert(cast(i64, img));
                     if img.cmn.usage.depth_stencil_attachment == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_DEPTHSTENCILATTACHMENT_USAGE;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_DEPTHSTENCILATTACHMENT_USAGE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_DEPTHSTENCILATTACHMENT_USAGE, 1, null, __line__);
                     }
                     if _sg_is_valid_attachment_depth_format(img.cmn.pixel_format) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_DEPTHSTENCILATTACHMENT_PIXELFORMAT;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_DEPTHSTENCILATTACHMENT_PIXELFORMAT, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_DEPTHSTENCILATTACHMENT_PIXELFORMAT, 1, null, __line__);
                     }
                 }
                 default: {
@@ -12921,37 +12921,37 @@ bool _sg_validate_view_desc(sg_view_desc* desc) {
                 assert(cast(i64, buf));
                 if buf_desc.offset < buf.cmn.size == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEBUFFER_OFFSET_VS_BUFFER_SIZE;
-                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEBUFFER_OFFSET_VS_BUFFER_SIZE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEBUFFER_OFFSET_VS_BUFFER_SIZE, 1, null, __line__);
                 }
                 if _sg_multiple_u64(cast(u64, buf_desc.offset), 256) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEBUFFER_OFFSET_MULTIPLE_256;
-                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEBUFFER_OFFSET_MULTIPLE_256, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_STORAGEBUFFER_OFFSET_MULTIPLE_256, 1, null, __line__);
                 }
             } else if img_desc != null {
                 assert(cast(i64, img));
                 if (img_desc.mip_level >= 0 && img_desc.mip_level < img.cmn.num_mipmaps) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_MIPLEVEL;
-                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_MIPLEVEL, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_MIPLEVEL, 1, null, __line__);
                 }
                 if img.cmn.type == SG_IMAGETYPE_2D {
                     if img_desc.slice == 0 == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_2D_SLICE;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_2D_SLICE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_2D_SLICE, 1, null, __line__);
                     }
                 } else if img.cmn.type == SG_IMAGETYPE_CUBE {
                     if (img_desc.slice >= 0 && img_desc.slice < 6) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_CUBEMAP_SLICE;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_CUBEMAP_SLICE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_CUBEMAP_SLICE, 1, null, __line__);
                     }
                 } else if img.cmn.type == SG_IMAGETYPE_ARRAY {
                     if (img_desc.slice >= 0 && img_desc.slice < img.cmn.num_slices) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_ARRAY_SLICE;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_ARRAY_SLICE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_ARRAY_SLICE, 1, null, __line__);
                     }
                 } else if img.cmn.type == SG_IMAGETYPE_3D {
                     if img_desc.slice == 0 == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_3D_SLICE;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_3D_SLICE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_IMAGE_3D_SLICE, 1, null, __line__);
                     }
                 }
             } else if tex_desc != null {
@@ -12960,27 +12960,27 @@ bool _sg_validate_view_desc(sg_view_desc* desc) {
                 i32 max_slice = tex_desc.slices.base + tex_desc.slices.count;
                 if (tex_desc.mip_levels.base >= 0 && max_mip_level <= img.cmn.num_mipmaps) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_MIPLEVELS;
-                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_MIPLEVELS, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_MIPLEVELS, 1, null, __line__);
                 }
                 if img.cmn.type == SG_IMAGETYPE_2D {
                     if (tex_desc.slices.base == 0 && max_slice <= 1) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_2D_SLICES;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_2D_SLICES, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_2D_SLICES, 1, null, __line__);
                     }
                 } else if img.cmn.type == SG_IMAGETYPE_CUBE {
                     if (tex_desc.slices.base == 0 && max_slice <= 1) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_CUBEMAP_SLICES;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_CUBEMAP_SLICES, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_CUBEMAP_SLICES, 1, null, __line__);
                     }
                 } else if img.cmn.type == SG_IMAGETYPE_ARRAY {
                     if (tex_desc.slices.base >= 0 && max_slice <= img.cmn.num_slices) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_ARRAY_SLICES;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_ARRAY_SLICES, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_ARRAY_SLICES, 1, null, __line__);
                     }
                 } else if img.cmn.type == SG_IMAGETYPE_3D {
                     if (tex_desc.slices.base == 0 && max_slice <= 1) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_3D_SLICES;
-                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_3D_SLICES, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_VIEWDESC_TEXTURE_3D_SLICES, 1, null, __line__);
                     }
                 }
             }
@@ -13003,7 +13003,7 @@ bool _sg_validate_apply_viewport(i32 x, i32 y, i32 width, i32 height, bool origi
         _sg_validate_begin();
         if (_sg.cur_pass.in_pass && !_sg.cur_pass.is_compute) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_AVP_RENDERPASS_EXPECTED;
-            _sg_log(SG_LOGITEM_VALIDATE_AVP_RENDERPASS_EXPECTED, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_AVP_RENDERPASS_EXPECTED, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -13023,7 +13023,7 @@ bool _sg_validate_apply_scissor_rect(i32 x, i32 y, i32 width, i32 height, bool o
         _sg_validate_begin();
         if (_sg.cur_pass.in_pass && !_sg.cur_pass.is_compute) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_ASR_RENDERPASS_EXPECTED;
-            _sg_log(SG_LOGITEM_VALIDATE_ASR_RENDERPASS_EXPECTED, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_ASR_RENDERPASS_EXPECTED, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -13039,34 +13039,34 @@ bool _sg_validate_apply_pipeline(sg_pipeline pip_id) {
         _sg_validate_begin();
         if pip_id.id != cast(u32, SG_INVALID_ID) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_PIPELINE_VALID_ID;
-            _sg_log(SG_LOGITEM_VALIDATE_APIP_PIPELINE_VALID_ID, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_APIP_PIPELINE_VALID_ID, 1, null, __line__);
         }
         _sg_pipeline_t* pip = _sg_lookup_pipeline(pip_id.id);
         if pip != null == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_PIPELINE_EXISTS;
-            _sg_log(SG_LOGITEM_VALIDATE_APIP_PIPELINE_EXISTS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_APIP_PIPELINE_EXISTS, 1, null, __line__);
         }
         if pip == null {
             return _sg_validate_end();
         }
         if pip.slot.state == SG_RESOURCESTATE_VALID == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_PIPELINE_VALID;
-            _sg_log(SG_LOGITEM_VALIDATE_APIP_PIPELINE_VALID, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_APIP_PIPELINE_VALID, 1, null, __line__);
         }
         if _sg.cur_pass.in_pass == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_PASS_EXPECTED;
-            _sg_log(SG_LOGITEM_VALIDATE_APIP_PASS_EXPECTED, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_APIP_PASS_EXPECTED, 1, null, __line__);
         }
         bool shd_alive = _sg_shader_ref_alive(&pip.cmn.shader);
         _sg_shader_t* shd = shd_alive != 0 ? _sg_shader_ref_ptr(&pip.cmn.shader) : null;
         if shd_alive == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_PIPELINE_SHADER_ALIVE;
-            _sg_log(SG_LOGITEM_VALIDATE_APIP_PIPELINE_SHADER_ALIVE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_APIP_PIPELINE_SHADER_ALIVE, 1, null, __line__);
         }
         if shd_alive != 0 {
             if shd.slot.state == SG_RESOURCESTATE_VALID == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_PIPELINE_SHADER_VALID;
-                _sg_log(SG_LOGITEM_VALIDATE_APIP_PIPELINE_SHADER_VALID, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_APIP_PIPELINE_SHADER_VALID, 1, null, __line__);
             }
         } else {
             return _sg_validate_end();
@@ -13074,88 +13074,88 @@ bool _sg_validate_apply_pipeline(sg_pipeline pip_id) {
         if pip.cmn.is_compute != 0 {
             if _sg.cur_pass.is_compute == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_COMPUTEPASS_EXPECTED;
-                _sg_log(SG_LOGITEM_VALIDATE_APIP_COMPUTEPASS_EXPECTED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_APIP_COMPUTEPASS_EXPECTED, 1, null, __line__);
             }
         } else {
             if !_sg.cur_pass.is_compute == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_RENDERPASS_EXPECTED;
-                _sg_log(SG_LOGITEM_VALIDATE_APIP_RENDERPASS_EXPECTED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_APIP_RENDERPASS_EXPECTED, 1, null, __line__);
             }
             if _sg_attachments_empty(&_sg.cur_pass.atts) != 0 {
                 if pip.cmn.color_count == 1 == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_SWAPCHAIN_COLOR_COUNT;
-                    _sg_log(SG_LOGITEM_VALIDATE_APIP_SWAPCHAIN_COLOR_COUNT, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_APIP_SWAPCHAIN_COLOR_COUNT, 1, null, __line__);
                 }
                 if pip.cmn.colors[0].pixel_format == _sg.cur_pass.swapchain.color_fmt == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_SWAPCHAIN_COLOR_FORMAT;
-                    _sg_log(SG_LOGITEM_VALIDATE_APIP_SWAPCHAIN_COLOR_FORMAT, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_APIP_SWAPCHAIN_COLOR_FORMAT, 1, null, __line__);
                 }
                 if pip.cmn.depth.pixel_format == _sg.cur_pass.swapchain.depth_fmt == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_SWAPCHAIN_DEPTH_FORMAT;
-                    _sg_log(SG_LOGITEM_VALIDATE_APIP_SWAPCHAIN_DEPTH_FORMAT, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_APIP_SWAPCHAIN_DEPTH_FORMAT, 1, null, __line__);
                 }
                 if pip.cmn.sample_count == _sg.cur_pass.swapchain.sample_count == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_SWAPCHAIN_SAMPLE_COUNT;
-                    _sg_log(SG_LOGITEM_VALIDATE_APIP_SWAPCHAIN_SAMPLE_COUNT, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_APIP_SWAPCHAIN_SAMPLE_COUNT, 1, null, __line__);
                 }
             } else {
                 _sg_attachments_ptrs_t atts_ptrs = _sg_attachments_ptrs(&_sg.cur_pass.atts);
                 bool alive = _sg_attachments_alive(&atts_ptrs);
                 if alive == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_ATTACHMENTS_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_APIP_ATTACHMENTS_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_APIP_ATTACHMENTS_ALIVE, 1, null, __line__);
                 }
                 if alive != 0 {
                     if pip.cmn.color_count == atts_ptrs.num_color_views == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_COLORATTACHMENTS_COUNT;
-                        _sg_log(SG_LOGITEM_VALIDATE_APIP_COLORATTACHMENTS_COUNT, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_APIP_COLORATTACHMENTS_COUNT, 1, null, __line__);
                     }
                     for i32 i = 0; i < pip.cmn.color_count; i++ {
                         _sg_view_t* clr_view = atts_ptrs.color_views[i];
                         assert(cast(i64, clr_view));
                         if clr_view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_COLORATTACHMENTS_VIEW_VALID;
-                            _sg_log(SG_LOGITEM_VALIDATE_APIP_COLORATTACHMENTS_VIEW_VALID, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_APIP_COLORATTACHMENTS_VIEW_VALID, 1, null, __line__);
                         }
                         _sg_image_t* clr_img = _sg_image_ref_ptr(&clr_view.cmn.img.ref);
                         assert(cast(i64, clr_img));
                         if clr_img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_COLORATTACHMENTS_IMAGE_VALID;
-                            _sg_log(SG_LOGITEM_VALIDATE_APIP_COLORATTACHMENTS_IMAGE_VALID, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_APIP_COLORATTACHMENTS_IMAGE_VALID, 1, null, __line__);
                         }
                         if pip.cmn.colors[i].pixel_format == clr_img.cmn.pixel_format == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_COLORATTACHMENTS_FORMAT;
-                            _sg_log(SG_LOGITEM_VALIDATE_APIP_COLORATTACHMENTS_FORMAT, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_APIP_COLORATTACHMENTS_FORMAT, 1, null, __line__);
                         }
                         if pip.cmn.sample_count == clr_img.cmn.sample_count == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_ATTACHMENT_SAMPLE_COUNT;
-                            _sg_log(SG_LOGITEM_VALIDATE_APIP_ATTACHMENT_SAMPLE_COUNT, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_APIP_ATTACHMENT_SAMPLE_COUNT, 1, null, __line__);
                         }
                     }
                     _sg_view_t* ds_view = atts_ptrs.ds_view;
                     if ds_view != null {
                         if ds_view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_DEPTHSTENCILATTACHMENT_VIEW_VALID;
-                            _sg_log(SG_LOGITEM_VALIDATE_APIP_DEPTHSTENCILATTACHMENT_VIEW_VALID, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_APIP_DEPTHSTENCILATTACHMENT_VIEW_VALID, 1, null, __line__);
                         }
                         _sg_image_t* ds_img = _sg_image_ref_ptr(&ds_view.cmn.img.ref);
                         assert(cast(i64, ds_img));
                         if ds_img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_DEPTHSTENCILATTACHMENT_IMAGE_VALID;
-                            _sg_log(SG_LOGITEM_VALIDATE_APIP_DEPTHSTENCILATTACHMENT_IMAGE_VALID, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_APIP_DEPTHSTENCILATTACHMENT_IMAGE_VALID, 1, null, __line__);
                         }
                         if pip.cmn.depth.pixel_format == ds_img.cmn.pixel_format == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_DEPTHSTENCILATTACHMENT_FORMAT;
-                            _sg_log(SG_LOGITEM_VALIDATE_APIP_DEPTHSTENCILATTACHMENT_FORMAT, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_APIP_DEPTHSTENCILATTACHMENT_FORMAT, 1, null, __line__);
                         }
                         if pip.cmn.sample_count == ds_img.cmn.sample_count == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_ATTACHMENT_SAMPLE_COUNT;
-                            _sg_log(SG_LOGITEM_VALIDATE_APIP_ATTACHMENT_SAMPLE_COUNT, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_APIP_ATTACHMENT_SAMPLE_COUNT, 1, null, __line__);
                         }
                     } else {
                         if pip.cmn.depth.pixel_format == SG_PIXELFORMAT_NONE == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_APIP_DEPTHSTENCILATTACHMENT_FORMAT;
-                            _sg_log(SG_LOGITEM_VALIDATE_APIP_DEPTHSTENCILATTACHMENT_FORMAT, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_APIP_DEPTHSTENCILATTACHMENT_FORMAT, 1, null, __line__);
                         }
                     }
                 }
@@ -13175,7 +13175,7 @@ bool _sg_validate_apply_bindings(sg_bindings* bindings) {
         _sg_validate_begin();
         if _sg.cur_pass.in_pass == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_PASS_EXPECTED;
-            _sg_log(SG_LOGITEM_VALIDATE_ABND_PASS_EXPECTED, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_ABND_PASS_EXPECTED, 1, null, __line__);
         }
         bool has_any_bindings = bindings.index_buffer.id != cast(u32, SG_INVALID_ID);
         if has_any_bindings == 0 {
@@ -13195,17 +13195,17 @@ bool _sg_validate_apply_bindings(sg_bindings* bindings) {
         }
         if has_any_bindings == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_EMPTY_BINDINGS;
-            _sg_log(SG_LOGITEM_VALIDATE_ABND_EMPTY_BINDINGS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_ABND_EMPTY_BINDINGS, 1, null, __line__);
         }
         bool pip_null = _sg_pipeline_ref_null(&_sg.cur_pip);
         bool pip_alive = _sg_pipeline_ref_alive(&_sg.cur_pip);
         if !pip_null == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_NO_PIPELINE;
-            _sg_log(SG_LOGITEM_VALIDATE_ABND_NO_PIPELINE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_ABND_NO_PIPELINE, 1, null, __line__);
         }
         if pip_alive == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_PIPELINE_ALIVE;
-            _sg_log(SG_LOGITEM_VALIDATE_ABND_PIPELINE_ALIVE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_ABND_PIPELINE_ALIVE, 1, null, __line__);
         }
         if pip_alive == 0 {
             return _sg_validate_end();
@@ -13213,12 +13213,12 @@ bool _sg_validate_apply_bindings(sg_bindings* bindings) {
         _sg_pipeline_t* pip = _sg_pipeline_ref_ptr(&_sg.cur_pip);
         if pip.slot.state == SG_RESOURCESTATE_VALID == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_PIPELINE_VALID;
-            _sg_log(SG_LOGITEM_VALIDATE_ABND_PIPELINE_VALID, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_ABND_PIPELINE_VALID, 1, null, __line__);
         }
         bool shd_alive = _sg_shader_ref_alive(&pip.cmn.shader);
         if shd_alive == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_PIPELINE_SHADER_ALIVE;
-            _sg_log(SG_LOGITEM_VALIDATE_ABND_PIPELINE_SHADER_ALIVE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_ABND_PIPELINE_SHADER_ALIVE, 1, null, __line__);
         }
         if shd_alive == 0 {
             return _sg_validate_end();
@@ -13226,13 +13226,13 @@ bool _sg_validate_apply_bindings(sg_bindings* bindings) {
         _sg_shader_t* shd = _sg_shader_ref_ptr(&pip.cmn.shader);
         if shd.slot.state == SG_RESOURCESTATE_VALID == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_PIPELINE_SHADER_VALID;
-            _sg_log(SG_LOGITEM_VALIDATE_ABND_PIPELINE_SHADER_VALID, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_ABND_PIPELINE_SHADER_VALID, 1, null, __line__);
         }
         if _sg.cur_pass.is_compute != 0 {
             for u64 i = 0; i < cast(u64, SG_MAX_VERTEXBUFFER_BINDSLOTS); i++ {
                 if bindings.vertex_buffers[i].id == cast(u32, SG_INVALID_ID) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_COMPUTE_EXPECTED_NO_VBUFS;
-                    _sg_log(SG_LOGITEM_VALIDATE_ABND_COMPUTE_EXPECTED_NO_VBUFS, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_ABND_COMPUTE_EXPECTED_NO_VBUFS, 1, null, __line__);
                 }
             }
         } else {
@@ -13240,22 +13240,22 @@ bool _sg_validate_apply_bindings(sg_bindings* bindings) {
                 if pip.cmn.vertex_buffer_layout_active[i] != 0 {
                     if bindings.vertex_buffers[i].id != cast(u32, SG_INVALID_ID) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_EXPECTED_VBUF;
-                        _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_VBUF, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_VBUF, 1, null, __line__);
                     }
                     if bindings.vertex_buffers[i].id != cast(u32, SG_INVALID_ID) {
                         _sg_buffer_t* buf = _sg_lookup_buffer(bindings.vertex_buffers[i].id);
                         if buf != null == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_VBUF_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_ABND_VBUF_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_ABND_VBUF_ALIVE, 1, null, __line__);
                         }
                         if buf && buf.slot.state == SG_RESOURCESTATE_VALID {
                             if buf.cmn.usage.vertex_buffer == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_VBUF_USAGE;
-                                _sg_log(SG_LOGITEM_VALIDATE_ABND_VBUF_USAGE, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_ABND_VBUF_USAGE, 1, null, __line__);
                             }
                             if !buf.cmn.append_overflow == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_VBUF_OVERFLOW;
-                                _sg_log(SG_LOGITEM_VALIDATE_ABND_VBUF_OVERFLOW, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_ABND_VBUF_OVERFLOW, 1, null, __line__);
                             }
                         }
                     }
@@ -13265,34 +13265,34 @@ bool _sg_validate_apply_bindings(sg_bindings* bindings) {
         if _sg.cur_pass.is_compute != 0 {
             if bindings.index_buffer.id == cast(u32, SG_INVALID_ID) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_COMPUTE_EXPECTED_NO_IBUF;
-                _sg_log(SG_LOGITEM_VALIDATE_ABND_COMPUTE_EXPECTED_NO_IBUF, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_ABND_COMPUTE_EXPECTED_NO_IBUF, 1, null, __line__);
             }
         } else {
             if pip.cmn.index_type == SG_INDEXTYPE_NONE {
                 if bindings.index_buffer.id == cast(u32, SG_INVALID_ID) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_EXPECTED_NO_IBUF;
-                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_NO_IBUF, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_NO_IBUF, 1, null, __line__);
                 }
             } else {
                 if bindings.index_buffer.id != cast(u32, SG_INVALID_ID) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_EXPECTED_IBUF;
-                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_IBUF, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_IBUF, 1, null, __line__);
                 }
             }
             if bindings.index_buffer.id != cast(u32, SG_INVALID_ID) {
                 _sg_buffer_t* buf = _sg_lookup_buffer(bindings.index_buffer.id);
                 if buf != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_IBUF_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_ABND_IBUF_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_ABND_IBUF_ALIVE, 1, null, __line__);
                 }
                 if buf && buf.slot.state == SG_RESOURCESTATE_VALID {
                     if buf.cmn.usage.index_buffer == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_IBUF_USAGE;
-                        _sg_log(SG_LOGITEM_VALIDATE_ABND_IBUF_USAGE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_ABND_IBUF_USAGE, 1, null, __line__);
                     }
                     if !buf.cmn.append_overflow == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_IBUF_OVERFLOW;
-                        _sg_log(SG_LOGITEM_VALIDATE_ABND_IBUF_OVERFLOW, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_ABND_IBUF_OVERFLOW, 1, null, __line__);
                     }
                 }
             }
@@ -13301,36 +13301,36 @@ bool _sg_validate_apply_bindings(sg_bindings* bindings) {
             if shd.cmn.views[i].view_type != SG_VIEWTYPE_INVALID {
                 if bindings.views[i].id != cast(u32, SG_INVALID_ID) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_EXPECTED_VIEW_BINDING;
-                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_VIEW_BINDING, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_VIEW_BINDING, 1, null, __line__);
                 }
                 if bindings.views[i].id != cast(u32, SG_INVALID_ID) {
                     _sg_view_t* view = _sg_lookup_view(bindings.views[i].id);
                     if view != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_VIEW_ALIVE;
-                        _sg_log(SG_LOGITEM_VALIDATE_ABND_VIEW_ALIVE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_ABND_VIEW_ALIVE, 1, null, __line__);
                     }
                     if view != null {
                         if view.slot.state == SG_RESOURCESTATE_VALID {
                             if shd.cmn.views[i].view_type == SG_VIEWTYPE_TEXTURE {
                                 if view.cmn.type == SG_VIEWTYPE_TEXTURE == 0 {
                                     _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_EXPECT_TEXVIEW;
-                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECT_TEXVIEW, 1, null, 7226);
+                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECT_TEXVIEW, 1, null, __line__);
                                 }
                                 if _sg_image_ref_valid(&view.cmn.img.ref) != 0 {
                                     _sg_image_t* img = _sg_image_ref_ptr(&view.cmn.img.ref);
                                     if img.cmn.type == shd.cmn.views[i].image_type == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_TEXVIEW_IMAGETYPE_MISMATCH;
-                                        _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXVIEW_IMAGETYPE_MISMATCH, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXVIEW_IMAGETYPE_MISMATCH, 1, null, __line__);
                                     }
                                     if shd.cmn.views[i].multisampled != 0 {
                                         if img.cmn.sample_count > 1 == 0 {
                                             _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_TEXVIEW_EXPECTED_MULTISAMPLED_IMAGE;
-                                            _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXVIEW_EXPECTED_MULTISAMPLED_IMAGE, 1, null, 7226);
+                                            _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXVIEW_EXPECTED_MULTISAMPLED_IMAGE, 1, null, __line__);
                                         }
                                     } else {
                                         if img.cmn.sample_count == 1 == 0 {
                                             _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_TEXVIEW_EXPECTED_NON_MULTISAMPLED_IMAGE;
-                                            _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXVIEW_EXPECTED_NON_MULTISAMPLED_IMAGE, 1, null, 7226);
+                                            _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXVIEW_EXPECTED_NON_MULTISAMPLED_IMAGE, 1, null, __line__);
                                         }
                                     }
                                     _sg_pixelformat_info_t* info = &_sg.formats[img.cmn.pixel_format];
@@ -13338,13 +13338,13 @@ bool _sg_validate_apply_bindings(sg_bindings* bindings) {
                                         case SG_IMAGESAMPLETYPE_FLOAT: {
                                             if info.filter == 0 {
                                                 _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_TEXVIEW_EXPECTED_FILTERABLE_IMAGE;
-                                                _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXVIEW_EXPECTED_FILTERABLE_IMAGE, 1, null, 7226);
+                                                _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXVIEW_EXPECTED_FILTERABLE_IMAGE, 1, null, __line__);
                                             }
                                         }
                                         case SG_IMAGESAMPLETYPE_DEPTH: {
                                             if info.depth == 0 {
                                                 _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_TEXVIEW_EXPECTED_DEPTH_IMAGE;
-                                                _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXVIEW_EXPECTED_DEPTH_IMAGE, 1, null, 7226);
+                                                _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXVIEW_EXPECTED_DEPTH_IMAGE, 1, null, __line__);
                                             }
                                         }
                                         default: {
@@ -13354,35 +13354,35 @@ bool _sg_validate_apply_bindings(sg_bindings* bindings) {
                             } else if shd.cmn.views[i].view_type == SG_VIEWTYPE_STORAGEBUFFER {
                                 if view.cmn.type == SG_VIEWTYPE_STORAGEBUFFER == 0 {
                                     _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_EXPECT_SBVIEW;
-                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECT_SBVIEW, 1, null, 7226);
+                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECT_SBVIEW, 1, null, __line__);
                                 }
                                 if _sg_buffer_ref_valid(&view.cmn.buf.ref) != 0 {
                                     _sg_buffer_t* buf = _sg_buffer_ref_ptr(&view.cmn.buf.ref);
                                     if shd.cmn.views[i].sbuf_readonly == 0 {
                                         if buf.cmn.usage.immutable == 0 {
                                             _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_SBVIEW_READWRITE_IMMUTABLE;
-                                            _sg_log(SG_LOGITEM_VALIDATE_ABND_SBVIEW_READWRITE_IMMUTABLE, 1, null, 7226);
+                                            _sg_log(SG_LOGITEM_VALIDATE_ABND_SBVIEW_READWRITE_IMMUTABLE, 1, null, __line__);
                                         }
                                     }
                                 }
                             } else if shd.cmn.views[i].view_type == SG_VIEWTYPE_STORAGEIMAGE {
                                 if view.cmn.type == SG_VIEWTYPE_STORAGEIMAGE == 0 {
                                     _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_EXPECT_SIMGVIEW;
-                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECT_SIMGVIEW, 1, null, 7226);
+                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECT_SIMGVIEW, 1, null, __line__);
                                 }
                                 if _sg.cur_pass.is_compute == 0 {
                                     _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_SIMGVIEW_COMPUTE_PASS_EXPECTED;
-                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_SIMGVIEW_COMPUTE_PASS_EXPECTED, 1, null, 7226);
+                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_SIMGVIEW_COMPUTE_PASS_EXPECTED, 1, null, __line__);
                                 }
                                 if _sg_image_ref_valid(&view.cmn.img.ref) != 0 {
                                     _sg_image_t* img = _sg_image_ref_ptr(&view.cmn.img.ref);
                                     if img.cmn.type == shd.cmn.views[i].image_type == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_SIMGVIEW_IMAGETYPE_MISMATCH;
-                                        _sg_log(SG_LOGITEM_VALIDATE_ABND_SIMGVIEW_IMAGETYPE_MISMATCH, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_ABND_SIMGVIEW_IMAGETYPE_MISMATCH, 1, null, __line__);
                                     }
                                     if img.cmn.pixel_format == shd.cmn.views[i].access_format == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_SIMGVIEW_ACCESSFORMAT;
-                                        _sg_log(SG_LOGITEM_VALIDATE_ABND_SIMGVIEW_ACCESSFORMAT, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_ABND_SIMGVIEW_ACCESSFORMAT, 1, null, __line__);
                                     }
                                 }
                             }
@@ -13395,35 +13395,35 @@ bool _sg_validate_apply_bindings(sg_bindings* bindings) {
             if shd.cmn.samplers[i].stage != SG_SHADERSTAGE_NONE {
                 if bindings.samplers[i].id != cast(u32, SG_INVALID_ID) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_EXPECTED_SAMPLER_BINDING;
-                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_SAMPLER_BINDING, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_SAMPLER_BINDING, 1, null, __line__);
                 }
                 if bindings.samplers[i].id != cast(u32, SG_INVALID_ID) {
                     _sg_sampler_t* smp = _sg_lookup_sampler(bindings.samplers[i].id);
                     if smp != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_SAMPLER_ALIVE;
-                        _sg_log(SG_LOGITEM_VALIDATE_ABND_SAMPLER_ALIVE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_ABND_SAMPLER_ALIVE, 1, null, __line__);
                     }
                     if smp != null {
                         if smp.slot.state == SG_RESOURCESTATE_VALID == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_SAMPLER_VALID;
-                            _sg_log(SG_LOGITEM_VALIDATE_ABND_SAMPLER_VALID, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_ABND_SAMPLER_VALID, 1, null, __line__);
                         }
                         if shd.cmn.samplers[i].sampler_type == SG_SAMPLERTYPE_COMPARISON {
                             if smp.cmn.compare != SG_COMPAREFUNC_NEVER == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_UNEXPECTED_SAMPLER_COMPARE_NEVER;
-                                _sg_log(SG_LOGITEM_VALIDATE_ABND_UNEXPECTED_SAMPLER_COMPARE_NEVER, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_ABND_UNEXPECTED_SAMPLER_COMPARE_NEVER, 1, null, __line__);
                             }
                         } else {
                             if smp.cmn.compare == SG_COMPAREFUNC_NEVER == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_EXPECTED_SAMPLER_COMPARE_NEVER;
-                                _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_SAMPLER_COMPARE_NEVER, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_SAMPLER_COMPARE_NEVER, 1, null, __line__);
                             }
                         }
                         if shd.cmn.samplers[i].sampler_type == SG_SAMPLERTYPE_NONFILTERING {
                             bool nonfiltering = smp.cmn.min_filter != SG_FILTER_LINEAR && smp.cmn.mag_filter != SG_FILTER_LINEAR && smp.cmn.mipmap_filter != SG_FILTER_LINEAR;
                             if nonfiltering == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_EXPECTED_NONFILTERING_SAMPLER;
-                                _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_NONFILTERING_SAMPLER, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_ABND_EXPECTED_NONFILTERING_SAMPLER, 1, null, __line__);
                             }
                         }
                     }
@@ -13443,7 +13443,7 @@ bool _sg_validate_apply_bindings(sg_bindings* bindings) {
                         if ds_view != null {
                             if img_id != ds_view.cmn.img.ref.sref.id == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_TEXTURE_BINDING_VS_DEPTHSTENCIL_ATTACHMENT;
-                                _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXTURE_BINDING_VS_DEPTHSTENCIL_ATTACHMENT, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXTURE_BINDING_VS_DEPTHSTENCIL_ATTACHMENT, 1, null, __line__);
                             }
                         }
                         for u64 att_idx = 0; att_idx < cast(u64, SG_MAX_COLOR_ATTACHMENTS); att_idx++ {
@@ -13451,14 +13451,14 @@ bool _sg_validate_apply_bindings(sg_bindings* bindings) {
                             if color_view != null {
                                 if img_id != color_view.cmn.img.ref.sref.id == 0 {
                                     _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_TEXTURE_BINDING_VS_COLOR_ATTACHMENT;
-                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXTURE_BINDING_VS_COLOR_ATTACHMENT, 1, null, 7226);
+                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXTURE_BINDING_VS_COLOR_ATTACHMENT, 1, null, __line__);
                                 }
                             }
                             _sg_view_t* resolve_view = _sg_lookup_view(_sg.cur_pass.atts.resolves[att_idx].id);
                             if resolve_view != null {
                                 if img_id != resolve_view.cmn.img.ref.sref.id == 0 {
                                     _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_TEXTURE_BINDING_VS_RESOLVE_ATTACHMENT;
-                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXTURE_BINDING_VS_RESOLVE_ATTACHMENT, 1, null, 7226);
+                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXTURE_BINDING_VS_RESOLVE_ATTACHMENT, 1, null, __line__);
                                 }
                             }
                         }
@@ -13472,7 +13472,7 @@ bool _sg_validate_apply_bindings(sg_bindings* bindings) {
                             if simg_view != null {
                                 if img_id != simg_view.cmn.img.ref.sref.id == 0 {
                                     _sg.validate_error = SG_LOGITEM_VALIDATE_ABND_TEXTURE_VS_STORAGEIMAGE_BINDING;
-                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXTURE_VS_STORAGEIMAGE_BINDING, 1, null, 7226);
+                                    _sg_log(SG_LOGITEM_VALIDATE_ABND_TEXTURE_VS_STORAGEIMAGE_BINDING, 1, null, __line__);
                                 }
                             }
                         }
@@ -13496,44 +13496,44 @@ bool _sg_validate_apply_uniforms(i32 ub_slot, sg_range* data) {
         _sg_validate_begin();
         if _sg.cur_pass.in_pass == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_AU_PASS_EXPECTED;
-            _sg_log(SG_LOGITEM_VALIDATE_AU_PASS_EXPECTED, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_AU_PASS_EXPECTED, 1, null, __line__);
         }
         _sg_pipeline_ref_t* pip_ref = &_sg.cur_pip;
         bool pip_null = _sg_pipeline_ref_null(pip_ref);
         bool pip_alive = _sg_pipeline_ref_alive(pip_ref);
         if !pip_null == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_AU_NO_PIPELINE;
-            _sg_log(SG_LOGITEM_VALIDATE_AU_NO_PIPELINE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_AU_NO_PIPELINE, 1, null, __line__);
         }
         if pip_alive == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_AU_PIPELINE_ALIVE;
-            _sg_log(SG_LOGITEM_VALIDATE_AU_PIPELINE_ALIVE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_AU_PIPELINE_ALIVE, 1, null, __line__);
         }
         if pip_alive != 0 {
             _sg_pipeline_t* pip = _sg_pipeline_ref_ptr(pip_ref);
             if pip.slot.state == SG_RESOURCESTATE_VALID == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_AU_PIPELINE_VALID;
-                _sg_log(SG_LOGITEM_VALIDATE_AU_PIPELINE_VALID, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_AU_PIPELINE_VALID, 1, null, __line__);
             }
             _sg_shader_ref_t* shd_ref = &pip.cmn.shader;
             bool shd_alive = _sg_shader_ref_alive(shd_ref);
             if shd_alive == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_AU_PIPELINE_SHADER_ALIVE;
-                _sg_log(SG_LOGITEM_VALIDATE_AU_PIPELINE_SHADER_ALIVE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_AU_PIPELINE_SHADER_ALIVE, 1, null, __line__);
             }
             if shd_alive != 0 {
                 _sg_shader_t* shd = _sg_shader_ref_ptr(shd_ref);
                 if shd.slot.state == SG_RESOURCESTATE_VALID == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_AU_PIPELINE_SHADER_VALID;
-                    _sg_log(SG_LOGITEM_VALIDATE_AU_PIPELINE_SHADER_VALID, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_AU_PIPELINE_SHADER_VALID, 1, null, __line__);
                 }
                 if shd.cmn.uniform_blocks[ub_slot].stage != SG_SHADERSTAGE_NONE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_AU_NO_UNIFORMBLOCK_AT_SLOT;
-                    _sg_log(SG_LOGITEM_VALIDATE_AU_NO_UNIFORMBLOCK_AT_SLOT, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_AU_NO_UNIFORMBLOCK_AT_SLOT, 1, null, __line__);
                 }
                 if data.size == shd.cmn.uniform_blocks[ub_slot].size == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_AU_SIZE;
-                    _sg_log(SG_LOGITEM_VALIDATE_AU_SIZE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_AU_SIZE, 1, null, __line__);
                 }
             }
         }
@@ -13553,23 +13553,23 @@ bool _sg_validate_draw(i32 base_element, i32 num_elements, i32 num_instances) {
         _sg_validate_begin();
         if (_sg.cur_pass.in_pass && !_sg.cur_pass.is_compute) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_RENDERPASS_EXPECTED;
-            _sg_log(SG_LOGITEM_VALIDATE_DRAW_RENDERPASS_EXPECTED, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DRAW_RENDERPASS_EXPECTED, 1, null, __line__);
         }
         if base_element >= 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_BASEELEMENT_GE_ZERO;
-            _sg_log(SG_LOGITEM_VALIDATE_DRAW_BASEELEMENT_GE_ZERO, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DRAW_BASEELEMENT_GE_ZERO, 1, null, __line__);
         }
         if num_elements >= 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_NUMELEMENTS_GE_ZERO;
-            _sg_log(SG_LOGITEM_VALIDATE_DRAW_NUMELEMENTS_GE_ZERO, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DRAW_NUMELEMENTS_GE_ZERO, 1, null, __line__);
         }
         if num_instances >= 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_NUMINSTANCES_GE_ZERO;
-            _sg_log(SG_LOGITEM_VALIDATE_DRAW_NUMINSTANCES_GE_ZERO, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DRAW_NUMINSTANCES_GE_ZERO, 1, null, __line__);
         }
         if _sg.required_bindings_and_uniforms == _sg.applied_bindings_and_uniforms == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING;
-            _sg_log(SG_LOGITEM_VALIDATE_DRAW_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DRAW_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -13589,52 +13589,52 @@ bool _sg_validate_draw_ex(i32 base_element, i32 num_elements, i32 num_instances,
         _sg_validate_begin();
         if (_sg.cur_pass.in_pass && !_sg.cur_pass.is_compute) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_EX_RENDERPASS_EXPECTED;
-            _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_RENDERPASS_EXPECTED, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_RENDERPASS_EXPECTED, 1, null, __line__);
         }
         if base_element >= 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_EX_BASEELEMENT_GE_ZERO;
-            _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_BASEELEMENT_GE_ZERO, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_BASEELEMENT_GE_ZERO, 1, null, __line__);
         }
         if num_elements >= 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_EX_NUMELEMENTS_GE_ZERO;
-            _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_NUMELEMENTS_GE_ZERO, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_NUMELEMENTS_GE_ZERO, 1, null, __line__);
         }
         if num_instances >= 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_EX_NUMINSTANCES_GE_ZERO;
-            _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_NUMINSTANCES_GE_ZERO, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_NUMINSTANCES_GE_ZERO, 1, null, __line__);
         }
         if base_instance >= 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_EX_BASEINSTANCE_GE_ZERO;
-            _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_BASEINSTANCE_GE_ZERO, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_BASEINSTANCE_GE_ZERO, 1, null, __line__);
         }
         if base_vertex != 0 {
             if _sg.features.draw_base_vertex == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_EX_BASEVERTEX_NOT_SUPPORTED;
-                _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_BASEVERTEX_NOT_SUPPORTED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_BASEVERTEX_NOT_SUPPORTED, 1, null, __line__);
             }
         }
         if base_instance > 0 {
             if _sg.features.draw_base_instance == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_EX_BASEINSTANCE_NOT_SUPPORTED;
-                _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_BASEINSTANCE_NOT_SUPPORTED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_BASEINSTANCE_NOT_SUPPORTED, 1, null, __line__);
             }
         }
         if _sg.use_indexed_draw == 0 {
             if base_vertex == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_EX_BASEVERTEX_VS_INDEXED;
-                _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_BASEVERTEX_VS_INDEXED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_BASEVERTEX_VS_INDEXED, 1, null, __line__);
             }
         }
         bool use_instanced_draw = num_instances > 1 || _sg.use_instanced_draw;
         if use_instanced_draw == 0 {
             if base_instance == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_EX_BASEINSTANCE_VS_INSTANCED;
-                _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_BASEINSTANCE_VS_INSTANCED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_DRAW_EX_BASEINSTANCE_VS_INSTANCED, 1, null, __line__);
             }
         }
         if _sg.required_bindings_and_uniforms == _sg.applied_bindings_and_uniforms == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING;
-            _sg_log(SG_LOGITEM_VALIDATE_DRAW_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DRAW_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -13652,23 +13652,23 @@ bool _sg_validate_dispatch(i32 num_groups_x, i32 num_groups_y, i32 num_groups_z)
         _sg_validate_begin();
         if (_sg.cur_pass.in_pass && _sg.cur_pass.is_compute) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DISPATCH_COMPUTEPASS_EXPECTED;
-            _sg_log(SG_LOGITEM_VALIDATE_DISPATCH_COMPUTEPASS_EXPECTED, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DISPATCH_COMPUTEPASS_EXPECTED, 1, null, __line__);
         }
         if (num_groups_x >= 0 && num_groups_x < 1 << 16) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DISPATCH_NUMGROUPSX;
-            _sg_log(SG_LOGITEM_VALIDATE_DISPATCH_NUMGROUPSX, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DISPATCH_NUMGROUPSX, 1, null, __line__);
         }
         if (num_groups_y >= 0 && num_groups_y < 1 << 16) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DISPATCH_NUMGROUPSY;
-            _sg_log(SG_LOGITEM_VALIDATE_DISPATCH_NUMGROUPSY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DISPATCH_NUMGROUPSY, 1, null, __line__);
         }
         if (num_groups_z >= 0 && num_groups_z < 1 << 16) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DISPATCH_NUMGROUPSZ;
-            _sg_log(SG_LOGITEM_VALIDATE_DISPATCH_NUMGROUPSZ, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DISPATCH_NUMGROUPSZ, 1, null, __line__);
         }
         if _sg.required_bindings_and_uniforms == _sg.applied_bindings_and_uniforms == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_DRAW_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING;
-            _sg_log(SG_LOGITEM_VALIDATE_DRAW_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_DRAW_REQUIRED_BINDINGS_OR_UNIFORMS_MISSING, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -13686,19 +13686,19 @@ bool _sg_validate_update_buffer(_sg_buffer_t* buf, sg_range* data) {
         _sg_validate_begin();
         if !buf.cmn.usage.immutable == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_UPDATEBUF_USAGE;
-            _sg_log(SG_LOGITEM_VALIDATE_UPDATEBUF_USAGE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_UPDATEBUF_USAGE, 1, null, __line__);
         }
         if buf.cmn.size >= cast(i32, data.size) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_UPDATEBUF_SIZE;
-            _sg_log(SG_LOGITEM_VALIDATE_UPDATEBUF_SIZE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_UPDATEBUF_SIZE, 1, null, __line__);
         }
         if buf.cmn.update_frame_index != _sg.frame_index == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_UPDATEBUF_ONCE;
-            _sg_log(SG_LOGITEM_VALIDATE_UPDATEBUF_ONCE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_UPDATEBUF_ONCE, 1, null, __line__);
         }
         if buf.cmn.append_frame_index != _sg.frame_index == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_UPDATEBUF_APPEND;
-            _sg_log(SG_LOGITEM_VALIDATE_UPDATEBUF_APPEND, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_UPDATEBUF_APPEND, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -13716,15 +13716,15 @@ bool _sg_validate_append_buffer(_sg_buffer_t* buf, sg_range* data) {
         _sg_validate_begin();
         if !buf.cmn.usage.immutable == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_APPENDBUF_USAGE;
-            _sg_log(SG_LOGITEM_VALIDATE_APPENDBUF_USAGE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_APPENDBUF_USAGE, 1, null, __line__);
         }
         if buf.cmn.size >= buf.cmn.append_pos + cast(i32, data.size) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_APPENDBUF_SIZE;
-            _sg_log(SG_LOGITEM_VALIDATE_APPENDBUF_SIZE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_APPENDBUF_SIZE, 1, null, __line__);
         }
         if buf.cmn.update_frame_index != _sg.frame_index == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_APPENDBUF_UPDATE;
-            _sg_log(SG_LOGITEM_VALIDATE_APPENDBUF_UPDATE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_APPENDBUF_UPDATE, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -13742,11 +13742,11 @@ bool _sg_validate_update_image(_sg_image_t* img, sg_image_data* data) {
         _sg_validate_begin();
         if !img.cmn.usage.immutable == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_UPDIMG_USAGE;
-            _sg_log(SG_LOGITEM_VALIDATE_UPDIMG_USAGE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_UPDIMG_USAGE, 1, null, __line__);
         }
         if img.cmn.upd_frame_index != _sg.frame_index == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_UPDIMG_ONCE;
-            _sg_log(SG_LOGITEM_VALIDATE_UPDIMG_ONCE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_UPDIMG_ONCE, 1, null, __line__);
         }
         _sg_validate_image_data(data, img.cmn.pixel_format, img.cmn.width, img.cmn.height, img.cmn.num_mipmaps, img.cmn.num_slices);
         return _sg_validate_end();
@@ -13765,31 +13765,31 @@ bool _sg_validate_write_buffer_unsealed(_sg_buffer_t* buf, sg_write_buffer_desc*
         _sg_validate_begin();
         if (buf.cmn.usage.immutable && buf.cmn.usage.write_unsealed) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_USAGE;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_USAGE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_USAGE, 1, null, __line__);
         }
         if buf.slot.state == SG_RESOURCESTATE_UNSEALED == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_RESOURCESTATE;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_RESOURCESTATE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_RESOURCESTATE, 1, null, __line__);
         }
         if desc.src.data.ptr == null {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_SRC_DATA_POINTER;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_SRC_DATA_POINTER, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_SRC_DATA_POINTER, 1, null, __line__);
         }
         if desc.src.data.size > 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_SRC_DATA_SIZE;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_SRC_DATA_SIZE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_SRC_DATA_SIZE, 1, null, __line__);
         }
         if (desc.size > 0 && desc.size <= desc.src.data.size) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_SIZE;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_SIZE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_SIZE, 1, null, __line__);
         }
         if desc.dst.offset + desc.size <= cast(u64, buf.cmn.size) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_WRITE_OVERFLOW;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_WRITE_OVERFLOW, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_WRITE_OVERFLOW, 1, null, __line__);
         }
         if desc.src.offset + desc.size <= desc.src.data.size == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_READ_OVERFLOW;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_READ_OVERFLOW, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEBUFFERUNSEALED_READ_OVERFLOW, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -13812,71 +13812,71 @@ bool _sg_validate_write_image_unsealed(_sg_image_t* img, sg_write_image_desc* de
         _sg_validate_begin();
         if (img.cmn.usage.immutable && img.cmn.usage.write_unsealed) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_USAGE;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_USAGE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_USAGE, 1, null, __line__);
         }
         if img.slot.state == SG_RESOURCESTATE_UNSEALED == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_RESOURCESTATE;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_RESOURCESTATE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_RESOURCESTATE, 1, null, __line__);
         }
         if desc.src.data.ptr == null {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_SRC_DATA_POINTER;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_SRC_DATA_POINTER, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_SRC_DATA_POINTER, 1, null, __line__);
         }
         if desc.src.data.size == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_SRC_DATA_SIZE;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_SRC_DATA_SIZE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_SRC_DATA_SIZE, 1, null, __line__);
         }
         if (desc.src.bytes_per_row > 0 && _sg_multiple(desc.src.bytes_per_row, bsize)) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_BYTESPERROW;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_BYTESPERROW, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_BYTESPERROW, 1, null, __line__);
         }
         if (desc.src.bytes_per_slice > 0 && _sg_multiple(desc.src.bytes_per_slice, desc.src.bytes_per_row)) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_BYTESPERSLICE;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_BYTESPERSLICE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_BYTESPERSLICE, 1, null, __line__);
         }
         if (desc.dst.mip_level >= 0 && desc.dst.mip_level < img.cmn.num_mipmaps) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_MIPLEVEL;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_MIPLEVEL, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_MIPLEVEL, 1, null, __line__);
         }
         if (desc.size.width >= 0 && desc.size.width <= mip_width) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_WIDTH;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_WIDTH, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_WIDTH, 1, null, __line__);
         }
         if (desc.size.height >= 0 && desc.size.height <= mip_height) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_HEIGHT;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_HEIGHT, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_HEIGHT, 1, null, __line__);
         }
         if (desc.size.num_slices >= 0 && desc.size.num_slices <= mip_depth_or_slices) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_NUMSLICES;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_NUMSLICES, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_NUMSLICES, 1, null, __line__);
         }
         if desc.src.offset + write_size <= desc.src.data.size == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_READ_OVERFLOW;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_READ_OVERFLOW, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_READ_OVERFLOW, 1, null, __line__);
         }
         if (desc.dst.x >= 0 && desc.dst.x < mip_width) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_DST_X_RANGE;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_DST_X_RANGE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_DST_X_RANGE, 1, null, __line__);
         }
         if (desc.dst.y >= 0 && desc.dst.y < mip_height) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_DST_Y_RANGE;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_DST_Y_RANGE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_DST_Y_RANGE, 1, null, __line__);
         }
         if (desc.dst.slice >= 0 && desc.dst.slice < mip_depth_or_slices) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_DST_SLICE_RANGE;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_DST_SLICE_RANGE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_DST_SLICE_RANGE, 1, null, __line__);
         }
         if desc.dst.x + desc.size.width <= mip_width == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_WRITE_WIDTH_OVERFLOW;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_WRITE_WIDTH_OVERFLOW, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_WRITE_WIDTH_OVERFLOW, 1, null, __line__);
         }
         if desc.dst.y + desc.size.height <= mip_height == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_WRITE_HEIGHT_OVERFLOW;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_WRITE_HEIGHT_OVERFLOW, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_WRITE_HEIGHT_OVERFLOW, 1, null, __line__);
         }
         if desc.dst.slice + desc.size.num_slices <= mip_depth_or_slices == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_WRITE_NUMSLICES_OVERFLOW;
-            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_WRITE_NUMSLICES_OVERFLOW, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_WRITEIMAGEUNSEALED_WRITE_NUMSLICES_OVERFLOW, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -13893,7 +13893,7 @@ bool _sg_validate_seal_buffer(_sg_buffer_t* buf) {
         _sg_validate_begin();
         if buf.slot.state == SG_RESOURCESTATE_UNSEALED == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SEALBUFFER_RESOURCESTATE;
-            _sg_log(SG_LOGITEM_VALIDATE_SEALBUFFER_RESOURCESTATE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SEALBUFFER_RESOURCESTATE, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -13910,7 +13910,7 @@ bool _sg_validate_seal_image(_sg_image_t* img) {
         _sg_validate_begin();
         if img.slot.state == SG_RESOURCESTATE_UNSEALED == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SEALIMAGE_RESOURCESTATE;
-            _sg_log(SG_LOGITEM_VALIDATE_SEALIMAGE_RESOURCESTATE, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SEALIMAGE_RESOURCESTATE, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -13990,51 +13990,51 @@ bool _sg_validate_shader_binding_limits(sg_shader_desc* desc) {
     i32 max_simg = _sg.limits.max_storage_image_bindings_per_stage;
     bool retval = true;
     if vs_num_tex > max_tex {
-        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_VERTEXSTAGE_TEXTURES, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_VERTEXSTAGE_TEXTURES, 1, null, __line__);
         retval = false;
     }
     if fs_num_tex > max_tex {
-        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_FRAGMENTSTAGE_TEXTURES, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_FRAGMENTSTAGE_TEXTURES, 1, null, __line__);
         retval = false;
     }
     if cs_num_tex > max_tex {
-        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_COMPUTESTAGE_TEXTURES, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_COMPUTESTAGE_TEXTURES, 1, null, __line__);
         retval = false;
     }
     if vs_num_sbuf > max_sbuf {
-        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_VERTEXSTAGE_STORAGEBUFFERS, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_VERTEXSTAGE_STORAGEBUFFERS, 1, null, __line__);
         retval = false;
     }
     if fs_num_sbuf > max_sbuf {
-        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_FRAGMENTSTAGE_STORAGEBUFFERS, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_FRAGMENTSTAGE_STORAGEBUFFERS, 1, null, __line__);
         retval = false;
     }
     if cs_num_sbuf > max_sbuf {
-        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_COMPUTESTAGE_STORAGEBUFFERS, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_COMPUTESTAGE_STORAGEBUFFERS, 1, null, __line__);
         retval = false;
     }
     if vs_num_simg > max_simg {
-        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_VERTEXSTAGE_STORAGEIMAGES, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_VERTEXSTAGE_STORAGEIMAGES, 1, null, __line__);
         retval = false;
     }
     if fs_num_simg > max_simg {
-        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_FRAGMENTSTAGE_STORAGEIMAGES, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_FRAGMENTSTAGE_STORAGEIMAGES, 1, null, __line__);
         retval = false;
     }
     if cs_num_simg > max_simg {
-        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_COMPUTESTAGE_STORAGEIMAGES, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_COMPUTESTAGE_STORAGEIMAGES, 1, null, __line__);
         retval = false;
     }
     if vs_num_texsmp > max_tex {
-        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_VERTEXSTAGE_TEXTURESAMPLERPAIRS, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_VERTEXSTAGE_TEXTURESAMPLERPAIRS, 1, null, __line__);
         retval = false;
     }
     if fs_num_texsmp > max_tex {
-        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_FRAGMENTSTAGE_TEXTURESAMPLERPAIRS, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_FRAGMENTSTAGE_TEXTURESAMPLERPAIRS, 1, null, __line__);
         retval = false;
     }
     if cs_num_texsmp > max_tex {
-        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_COMPUTESTAGE_TEXTURESAMPLERPAIRS, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SHADERDESC_TOO_MANY_COMPUTESTAGE_TEXTURESAMPLERPAIRS, 1, null, __line__);
         retval = false;
     }
     return retval;
@@ -14054,11 +14054,11 @@ bool _sg_validate_pass_attachment_limits(sg_pass* pass) {
     bool retval = true;
     i32 max_color_atts = _sg.limits.max_color_attachments;
     if num_color_atts > max_color_atts {
-        _sg_log(SG_LOGITEM_BEGINPASS_TOO_MANY_COLOR_ATTACHMENTS, 1, null, 7222);
+        _sg_log(SG_LOGITEM_BEGINPASS_TOO_MANY_COLOR_ATTACHMENTS, 1, null, __line__);
         retval = false;
     }
     if num_resolve_atts > max_color_atts {
-        _sg_log(SG_LOGITEM_BEGINPASS_TOO_MANY_RESOLVE_ATTACHMENTS, 1, null, 7222);
+        _sg_log(SG_LOGITEM_BEGINPASS_TOO_MANY_RESOLVE_ATTACHMENTS, 1, null, __line__);
         retval = false;
     }
     return retval;
@@ -14226,7 +14226,7 @@ sg_buffer _sg_alloc_buffer() {
         }
     } else {
         res.id = cast(u32, SG_INVALID_ID);
-        _sg_log(SG_LOGITEM_BUFFER_POOL_EXHAUSTED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_BUFFER_POOL_EXHAUSTED, 1, null, __line__);
     }
     return res;
 }
@@ -14243,7 +14243,7 @@ sg_image _sg_alloc_image() {
         }
     } else {
         res.id = cast(u32, SG_INVALID_ID);
-        _sg_log(SG_LOGITEM_IMAGE_POOL_EXHAUSTED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_IMAGE_POOL_EXHAUSTED, 1, null, __line__);
     }
     return res;
 }
@@ -14260,7 +14260,7 @@ sg_sampler _sg_alloc_sampler() {
         }
     } else {
         res.id = cast(u32, SG_INVALID_ID);
-        _sg_log(SG_LOGITEM_SAMPLER_POOL_EXHAUSTED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SAMPLER_POOL_EXHAUSTED, 1, null, __line__);
     }
     return res;
 }
@@ -14277,7 +14277,7 @@ sg_shader _sg_alloc_shader() {
         }
     } else {
         res.id = cast(u32, SG_INVALID_ID);
-        _sg_log(SG_LOGITEM_SHADER_POOL_EXHAUSTED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_SHADER_POOL_EXHAUSTED, 1, null, __line__);
     }
     return res;
 }
@@ -14294,7 +14294,7 @@ sg_pipeline _sg_alloc_pipeline() {
         }
     } else {
         res.id = cast(u32, SG_INVALID_ID);
-        _sg_log(SG_LOGITEM_PIPELINE_POOL_EXHAUSTED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_PIPELINE_POOL_EXHAUSTED, 1, null, __line__);
     }
     return res;
 }
@@ -14311,7 +14311,7 @@ sg_view _sg_alloc_view() {
         }
     } else {
         res.id = cast(u32, SG_INVALID_ID);
-        _sg_log(SG_LOGITEM_VIEW_POOL_EXHAUSTED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_VIEW_POOL_EXHAUSTED, 1, null, __line__);
     }
     return res;
 }
@@ -14615,7 +14615,7 @@ bool _sg_add_commit_listener(sg_commit_listener* new_listener) {
     for i32 i = 0; i < _sg.commit_listeners.upper; i++ {
         sg_commit_listener* slot = &_sg.commit_listeners.items[i];
         if slot.func == new_listener.func && slot.user_data == new_listener.user_data {
-            _sg_log(SG_LOGITEM_IDENTICAL_COMMIT_LISTENER, 1, null, 7222);
+            _sg_log(SG_LOGITEM_IDENTICAL_COMMIT_LISTENER, 1, null, __line__);
             return false;
         }
     }
@@ -14632,7 +14632,7 @@ bool _sg_add_commit_listener(sg_commit_listener* new_listener) {
         }
     }
     if slot == null {
-        _sg_log(SG_LOGITEM_COMMIT_LISTENER_ARRAY_FULL, 1, null, 7222);
+        _sg_log(SG_LOGITEM_COMMIT_LISTENER_ARRAY_FULL, 1, null, __line__);
         return false;
     }
     *slot = *new_listener;
@@ -15178,35 +15178,35 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
         _sg_validate_begin();
         if desc._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY, 1, null, __line__);
         }
         if desc._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY, 1, null, __line__);
         }
         if desc.shader.id != cast(u32, SG_INVALID_ID) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER;
-            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, __line__);
         }
         _sg_shader_t* shd = _sg_lookup_shader(desc.shader.id);
         if null != shd == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER;
-            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, __line__);
         }
         if shd != null {
             if shd.slot.state == SG_RESOURCESTATE_VALID == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER;
-                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, __line__);
             }
             if desc.compute != 0 {
                 if shd.cmn.is_compute == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_COMPUTE_SHADER_EXPECTED;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_COMPUTE_SHADER_EXPECTED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_COMPUTE_SHADER_EXPECTED, 1, null, __line__);
                 }
             } else {
                 if !shd.cmn.is_compute == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_COMPUTE_SHADER_EXPECTED;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_COMPUTE_SHADER_EXPECTED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_COMPUTE_SHADER_EXPECTED, 1, null, __line__);
                 }
                 bool attrs_cont = true;
                 for u64 attr_index = 0; attr_index < cast(u64, SG_MAX_VERTEX_ATTRIBUTES); attr_index++ {
@@ -15217,31 +15217,31 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
                     }
                     if attrs_cont == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_CONT_ATTRS;
-                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_CONT_ATTRS, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_CONT_ATTRS, 1, null, __line__);
                     }
                     assert(a_state.buffer_index < SG_MAX_VERTEXBUFFER_BINDSLOTS);
                     if shd.cmn.attrs[attr_index].base_type != SG_SHADERATTRBASETYPE_UNDEFINED {
                         if _sg_vertexformat_basetype(a_state.format) != shd.cmn.attrs[attr_index].base_type {
                             if false == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH;
-                                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 1, null, __line__);
                             }
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, "attr format:", 7225);
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, _sg_vertexformat_to_string(a_state.format), 7225);
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, "shader attr base type:", 7225);
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, _sg_shaderattrbasetype_to_string(shd.cmn.attrs[attr_index].base_type), 7225);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, "attr format:", __line__);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, _sg_vertexformat_to_string(a_state.format), __line__);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, "shader attr base type:", __line__);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, _sg_shaderattrbasetype_to_string(shd.cmn.attrs[attr_index].base_type), __line__);
                         }
                     }
                     if a_state.format == SG_VERTEXFORMAT_INT10_N2 {
                         if _sg.features.vertexformat_int10_n2 == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_VERTEXFORMAT_INT10_N2_NOT_SUPPORTED;
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_VERTEXFORMAT_INT10_N2_NOT_SUPPORTED, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_VERTEXFORMAT_INT10_N2_NOT_SUPPORTED, 1, null, __line__);
                         }
                     }
                     when defined(SOKOL_D3D11) {
                         if !_sg_strempty(&shd.d3d11.attrs[attr_index].sem_name) == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_SEMANTICS;
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_SEMANTICS, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_SEMANTICS, 1, null, __line__);
                         }
                     }
                 }
@@ -15249,7 +15249,7 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
                     if shd.cmn.views[i].view_type == SG_VIEWTYPE_STORAGEBUFFER {
                         if shd.cmn.views[i].sbuf_readonly == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER_READONLY_STORAGEBUFFERS;
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER_READONLY_STORAGEBUFFERS, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER_READONLY_STORAGEBUFFERS, 1, null, __line__);
                         }
                     }
                 }
@@ -15260,7 +15260,7 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
                     }
                     if _sg_multiple_u64(cast(u64, l_state.stride), 4) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_LAYOUT_STRIDE4;
-                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_LAYOUT_STRIDE4, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_LAYOUT_STRIDE4, 1, null, __line__);
                     }
                 }
             }
@@ -15268,11 +15268,11 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
         if desc.depth.pixel_format == SG_PIXELFORMAT_NONE {
             if desc.depth.write_enabled == false == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_BUT_DEPTH_WRITE_ENABLED;
-                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_BUT_DEPTH_WRITE_ENABLED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_BUT_DEPTH_WRITE_ENABLED, 1, null, __line__);
             }
             if (desc.depth.compare == SG_COMPAREFUNC_ALWAYS || desc.depth.compare == SG_COMPAREFUNC_NEVER) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_COMPARE_FUNC_MISMATCH;
-                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_COMPARE_FUNC_MISMATCH, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_COMPARE_FUNC_MISMATCH, 1, null, __line__);
             }
         }
         for u64 color_index = 0; color_index < cast(u64, desc.color_count); color_index++ {
@@ -15281,20 +15281,20 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
             if bs.op_rgb == SG_BLENDOP_MIN || bs.op_rgb == SG_BLENDOP_MAX {
                 if (bs.src_factor_rgb == SG_BLENDFACTOR_ONE && bs.dst_factor_rgb == SG_BLENDFACTOR_ONE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE, 1, null, __line__);
                 }
             }
             if bs.op_alpha == SG_BLENDOP_MIN || bs.op_alpha == SG_BLENDOP_MAX {
                 if (bs.src_factor_alpha == SG_BLENDFACTOR_ONE && bs.dst_factor_alpha == SG_BLENDFACTOR_ONE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE, 1, null, __line__);
                 }
             }
             bool needs_dualsource_blending = _sg_is_dualsource_blendfactor(bs.src_factor_rgb) || _sg_is_dualsource_blendfactor(bs.dst_factor_rgb) || _sg_is_dualsource_blendfactor(bs.src_factor_alpha) || _sg_is_dualsource_blendfactor(bs.dst_factor_alpha);
             if needs_dualsource_blending != 0 {
                 if _sg.features.dual_source_blending == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_DUAL_SOURCE_BLENDING_NOT_SUPPORTED;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DUAL_SOURCE_BLENDING_NOT_SUPPORTED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DUAL_SOURCE_BLENDING_NOT_SUPPORTED, 1, null, __line__);
                 }
             }
         }
@@ -16212,8 +16212,8 @@ sg_resource_state _sg_gl_create_pipeline(_sg_pipeline_t* pip, sg_pipeline_desc* 
             gl_attr.base_type = _sg_vertexformat_basetype(a_state.format);
             pip.cmn.vertex_buffer_layout_active[a_state.buffer_index] = true;
         } else {
-            _sg_log(SG_LOGITEM_GL_VERTEX_ATTRIBUTE_NOT_FOUND_IN_SHADER, 2, null, 7223);
-            _sg_log(SG_LOGITEM_GL_VERTEX_ATTRIBUTE_NOT_FOUND_IN_SHADER, 3, _sg_strptr(&shd.gl.attrs[attr_index].name), 7225);
+            _sg_log(SG_LOGITEM_GL_VERTEX_ATTRIBUTE_NOT_FOUND_IN_SHADER, 2, null, __line__);
+            _sg_log(SG_LOGITEM_GL_VERTEX_ATTRIBUTE_NOT_FOUND_IN_SHADER, 3, _sg_strptr(&shd.gl.attrs[attr_index].name), __line__);
         }
     }
     return SG_RESOURCESTATE_VALID;
@@ -16648,13 +16648,13 @@ bool _sg_gl_ensure_glsl_bindslot_ranges(sg_shader_desc* desc) {
         sg_shader_view* view = &desc.views[i];
         if view.storage_buffer.stage != SG_SHADERSTAGE_NONE {
             if cast(i32, view.storage_buffer.glsl_binding_n) >= _sg.limits.max_storage_buffer_bindings_per_stage {
-                _sg_log(SG_LOGITEM_GL_STORAGEBUFFER_GLSL_BINDING_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_STORAGEBUFFER_GLSL_BINDING_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
         if view.storage_image.stage != SG_SHADERSTAGE_NONE {
             if cast(i32, view.storage_image.glsl_binding_n) >= _sg.limits.max_storage_image_bindings_per_stage {
-                _sg_log(SG_LOGITEM_GL_STORAGEIMAGE_GLSL_BINDING_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_STORAGEIMAGE_GLSL_BINDING_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
@@ -16680,40 +16680,40 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
         _sg_validate_begin();
         if desc._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, __line__);
         }
         if desc._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, __line__);
         }
         if is_compute_shader != 0 {
             if null != desc.compute_func.source == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE, 1, null, __line__);
             }
         } else {
             if null != desc.vertex_func.source == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE, 1, null, __line__);
             }
             if null != desc.fragment_func.source == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE, 1, null, __line__);
             }
         }
         if is_compute_shader != 0 {
             if (null == desc.vertex_func.source && null == desc.vertex_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
             if (null == desc.fragment_func.source && null == desc.fragment_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
         } else {
             if (null == desc.compute_func.source && null == desc.compute_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
         }
         when defined(SOKOL_METAL) {
@@ -16723,11 +16723,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 i32 z = desc.mtl_threads_per_threadgroup.z;
                 if (x > 0 && y > 0 && z > 0) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED, 1, null, __line__);
                 }
                 if (x * y * z & 31) == 0 == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32, 1, null, __line__);
                 }
             }
         }
@@ -16735,32 +16735,32 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             if desc.attrs[i].glsl_name != null {
                 if strlen(desc.attrs[i].glsl_name) < cast(u64, _SG_STRING_SIZE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, __line__);
                 }
             }
             if desc.attrs[i].hlsl_sem_name != null {
                 if strlen(desc.attrs[i].hlsl_sem_name) < cast(u64, _SG_STRING_SIZE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, __line__);
                 }
             }
         }
         if null != desc.vertex_func.bytecode.ptr {
             if desc.vertex_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         if null != desc.fragment_func.bytecode.ptr {
             if desc.fragment_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         if null != desc.compute_func.bytecode.ptr {
             if desc.compute_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         _sg_u128_t glsl_sbuf_bnd_bits = _sg_u128();
@@ -16772,30 +16772,30 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             }
             if ub_desc.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO, 1, null, __line__);
             }
             when defined(SOKOL_METAL) {
                 if _sg_validate_slot_bits(msl_buf_bits, ub_desc.stage, ub_desc.msl_buffer_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_METAL_BUFFER_SLOT_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_METAL_BUFFER_SLOT_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_METAL_BUFFER_SLOT_COLLISION, 1, null, __line__);
                 }
                 msl_buf_bits = _sg_validate_set_slot_bit(msl_buf_bits, ub_desc.stage, ub_desc.msl_buffer_n);
             } else when defined(SOKOL_D3D11) {
                 if _sg_validate_slot_bits(hlsl_buf_bits, ub_desc.stage, ub_desc.hlsl_register_b_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_HLSL_REGISTER_B_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_HLSL_REGISTER_B_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_HLSL_REGISTER_B_COLLISION, 1, null, __line__);
                 }
                 hlsl_buf_bits = _sg_validate_set_slot_bit(hlsl_buf_bits, ub_desc.stage, ub_desc.hlsl_register_b_n);
             } else when defined(SOKOL_WGPU) {
                 if _sg_validate_slot_bits(wgsl_group0_bits, SG_SHADERSTAGE_NONE, ub_desc.wgsl_group0_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_WGSL_GROUP0_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_WGSL_GROUP0_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_WGSL_GROUP0_BINDING_COLLISION, 1, null, __line__);
                 }
                 wgsl_group0_bits = _sg_validate_set_slot_bit(wgsl_group0_bits, SG_SHADERSTAGE_NONE, ub_desc.wgsl_group0_binding_n);
             } else when defined(SOKOL_VULKAN) {
                 if _sg_validate_slot_bits(spirv_set0_bits, SG_SHADERSTAGE_NONE, ub_desc.spirv_set0_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SPIRV_SET0_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SPIRV_SET0_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SPIRV_SET0_BINDING_COLLISION, 1, null, __line__);
                 }
                 spirv_set0_bits = _sg_validate_set_slot_bit(spirv_set0_bits, SG_SHADERSTAGE_NONE, ub_desc.spirv_set0_binding_n);
             }
@@ -16807,16 +16807,16 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 if u_desc.type != SG_UNIFORMTYPE_INVALID {
                     if uniforms_continuous == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_CONT_MEMBERS;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_CONT_MEMBERS, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_CONT_MEMBERS, 1, null, __line__);
                     }
                     if u_desc.glsl_name == null {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_UNIFORM_GLSL_NAME;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_UNIFORM_GLSL_NAME, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_UNIFORM_GLSL_NAME, 1, null, __line__);
                     }
                     var array_count = cast(i32, u_desc.array_count);
                     if array_count > 0 == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_ARRAY_COUNT;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_ARRAY_COUNT, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_ARRAY_COUNT, 1, null, __line__);
                     }
                     u32 u_align = _sg_uniform_alignment(u_desc.type, array_count, ub_desc.layout);
                     u32 u_size = _sg_uniform_size(u_desc.type, array_count, ub_desc.layout);
@@ -16827,7 +16827,7 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                         if array_count > 1 {
                             if (u_desc.type == SG_UNIFORMTYPE_FLOAT4 || u_desc.type == SG_UNIFORMTYPE_INT4 || u_desc.type == SG_UNIFORMTYPE_MAT4) == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_STD140_ARRAY_TYPE;
-                                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_STD140_ARRAY_TYPE, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_STD140_ARRAY_TYPE, 1, null, __line__);
                             }
                         }
                     }
@@ -16840,11 +16840,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             }
             if cast(u64, uniform_offset) == ub_desc.size == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_MISMATCH;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_MISMATCH, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_MISMATCH, 1, null, __line__);
             }
             if num_uniforms > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_MEMBERS;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_MEMBERS, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_MEMBERS, 1, null, __line__);
             }
         }
         u32 texview_slot_mask = 0;
@@ -16858,18 +16858,18 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 sg_shader_storage_buffer_view* sbuf_desc = &view_desc.storage_buffer;
                 if _sg_validate_slot_bits(glsl_sbuf_bnd_bits, SG_SHADERSTAGE_NONE, sbuf_desc.glsl_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_GLSL_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_GLSL_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_GLSL_BINDING_COLLISION, 1, null, __line__);
                 }
                 glsl_sbuf_bnd_bits = _sg_validate_set_slot_bit(glsl_sbuf_bnd_bits, SG_SHADERSTAGE_NONE, sbuf_desc.glsl_binding_n);
             } else if view_desc.storage_image.stage != SG_SHADERSTAGE_NONE {
                 sg_shader_storage_image_view* simg_desc = &view_desc.storage_image;
                 if simg_desc.stage == SG_SHADERSTAGE_COMPUTE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE, 1, null, __line__);
                 }
                 if _sg_validate_slot_bits(glsl_simg_bnd_bits, SG_SHADERSTAGE_NONE, simg_desc.glsl_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_GLSL_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_GLSL_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_GLSL_BINDING_COLLISION, 1, null, __line__);
                 }
                 glsl_simg_bnd_bits = _sg_validate_set_slot_bit(glsl_simg_bnd_bits, SG_SHADERSTAGE_NONE, simg_desc.glsl_binding_n);
             }
@@ -16884,25 +16884,25 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             when defined(SOKOL_METAL) {
                 if _sg_validate_slot_bits(msl_smp_bits, smp_desc.stage, smp_desc.msl_sampler_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_METAL_SAMPLER_SLOT_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_METAL_SAMPLER_SLOT_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_METAL_SAMPLER_SLOT_COLLISION, 1, null, __line__);
                 }
                 msl_smp_bits = _sg_validate_set_slot_bit(msl_smp_bits, smp_desc.stage, smp_desc.msl_sampler_n);
             } else when defined(SOKOL_D3D11) {
                 if _sg_validate_slot_bits(hlsl_smp_bits, smp_desc.stage, smp_desc.hlsl_register_s_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_HLSL_REGISTER_S_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_HLSL_REGISTER_S_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_HLSL_REGISTER_S_COLLISION, 1, null, __line__);
                 }
                 hlsl_smp_bits = _sg_validate_set_slot_bit(hlsl_smp_bits, smp_desc.stage, smp_desc.hlsl_register_s_n);
             } else when defined(SOKOL_WGPU) {
                 if _sg_validate_slot_bits(wgsl_group1_bits, SG_SHADERSTAGE_NONE, smp_desc.wgsl_group1_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_WGSL_GROUP1_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_WGSL_GROUP1_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_WGSL_GROUP1_BINDING_COLLISION, 1, null, __line__);
                 }
                 wgsl_group1_bits = _sg_validate_set_slot_bit(wgsl_group1_bits, SG_SHADERSTAGE_NONE, smp_desc.wgsl_group1_binding_n);
             } else when defined(SOKOL_VULKAN) {
                 if _sg_validate_slot_bits(spirv_set1_bits, SG_SHADERSTAGE_NONE, smp_desc.spirv_set1_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_SPIRV_SET1_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_SPIRV_SET1_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_SPIRV_SET1_BINDING_COLLISION, 1, null, __line__);
                 }
                 spirv_set1_bits = _sg_validate_set_slot_bit(spirv_set1_bits, SG_SHADERSTAGE_NONE, smp_desc.spirv_set1_binding_n);
             }
@@ -16916,17 +16916,17 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             }
             if tex_smp_desc.glsl_name != null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_GLSL_NAME;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_GLSL_NAME, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_GLSL_NAME, 1, null, __line__);
             }
             bool view_slot_in_range = cast(i32, tex_smp_desc.view_slot) < SG_MAX_VIEW_BINDSLOTS;
             bool smp_slot_in_range = cast(i32, tex_smp_desc.sampler_slot) < SG_MAX_SAMPLER_BINDSLOTS;
             if view_slot_in_range == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE, 1, null, __line__);
             }
             if smp_slot_in_range == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, __line__);
             }
             if view_slot_in_range && smp_slot_in_range {
                 ref_texview_slot_mask |= cast(u32, 1 << cast(i32, tex_smp_desc.view_slot));
@@ -16935,39 +16935,39 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 sg_shader_sampler* smp_desc = &desc.samplers[tex_smp_desc.sampler_slot];
                 if view_desc.texture.stage != SG_SHADERSTAGE_NONE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW, 1, null, __line__);
                 }
                 if view_desc.texture.stage == tex_smp_desc.stage == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH, 1, null, __line__);
                 }
                 if smp_desc.stage == tex_smp_desc.stage == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH, 1, null, __line__);
                 }
                 bool needs_nonfiltering = view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_UINT || view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_SINT || view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_UNFILTERABLE_FLOAT;
                 bool needs_comparison = view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_DEPTH;
                 if needs_nonfiltering != 0 {
                     if (needs_nonfiltering && smp_desc.sampler_type == SG_SAMPLERTYPE_NONFILTERING) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED, 1, null, __line__);
                     }
                 }
                 if needs_comparison != 0 {
                     if (needs_comparison && smp_desc.sampler_type == SG_SAMPLERTYPE_COMPARISON) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED, 1, null, __line__);
                     }
                 }
             }
         }
         if texview_slot_mask == ref_texview_slot_mask == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, __line__);
         }
         if smp_slot_mask == ref_smp_slot_mask == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -16987,170 +16987,170 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
         _sg_validate_begin();
         if pass._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, __line__);
         }
         if pass._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, __line__);
         }
         if is_compute_pass != 0 {
             if _sg_attachments_empty(&pass.attachments) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS, 1, null, __line__);
             }
         } else if is_invalid_swapchain_pass != 0 {
         } else if is_swapchain_pass != 0 {
             if pass.swapchain.width > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH, 1, null, __line__);
             }
             if pass.swapchain.height > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT, 1, null, __line__);
             }
             if pass.swapchain.sample_count > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT, 1, null, __line__);
             }
             if pass.swapchain.color_format > SG_PIXELFORMAT_NONE == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT, 1, null, __line__);
             }
             when defined(SOKOL_METAL) {
                 if pass.swapchain.metal.current_drawable != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE, 1, null, __line__);
                 }
                 if pass.swapchain.depth_format == SG_PIXELFORMAT_NONE {
                     if pass.swapchain.metal.depth_stencil_texture == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.metal.depth_stencil_texture != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE, 1, null, __line__);
                     }
                 }
                 if pass.swapchain.sample_count > 1 {
                     if pass.swapchain.metal.msaa_color_texture != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.metal.msaa_color_texture == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET, 1, null, __line__);
                     }
                 }
             } else when defined(SOKOL_D3D11) {
                 if pass.swapchain.d3d11.render_view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW, 1, null, __line__);
                 }
                 if pass.swapchain.depth_format == SG_PIXELFORMAT_NONE {
                     if pass.swapchain.d3d11.depth_stencil_view == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.d3d11.depth_stencil_view != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW, 1, null, __line__);
                     }
                 }
                 if pass.swapchain.sample_count > 1 {
                     if pass.swapchain.d3d11.resolve_view != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.d3d11.resolve_view == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET, 1, null, __line__);
                     }
                 }
             } else when defined(SOKOL_WGPU) {
                 if pass.swapchain.wgpu.render_view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW, 1, null, __line__);
                 }
                 if pass.swapchain.depth_format == SG_PIXELFORMAT_NONE {
                     if pass.swapchain.wgpu.depth_stencil_view == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.wgpu.depth_stencil_view != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW, 1, null, __line__);
                     }
                 }
                 if pass.swapchain.sample_count > 1 {
                     if pass.swapchain.wgpu.resolve_view != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.wgpu.resolve_view == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET, 1, null, __line__);
                     }
                 }
             } else when defined(SOKOL_VULKAN) {
                 if pass.swapchain.vulkan.render_image != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERIMAGE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERIMAGE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERIMAGE, 1, null, __line__);
                 }
                 if pass.swapchain.vulkan.render_view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERVIEW, 1, null, __line__);
                 }
                 if pass.swapchain.depth_format == SG_PIXELFORMAT_NONE {
                     if pass.swapchain.vulkan.depth_stencil_image == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILIMAGE_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILIMAGE_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILIMAGE_NOTSET, 1, null, __line__);
                     }
                     if pass.swapchain.vulkan.depth_stencil_view == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILVIEW_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.vulkan.depth_stencil_image != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILIMAGE;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILIMAGE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILIMAGE, 1, null, __line__);
                     }
                     if pass.swapchain.vulkan.depth_stencil_view != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILVIEW;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILVIEW, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILVIEW, 1, null, __line__);
                     }
                 }
                 if pass.swapchain.sample_count > 1 {
                     if pass.swapchain.vulkan.resolve_image != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEIMAGE;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEIMAGE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEIMAGE, 1, null, __line__);
                     }
                     if pass.swapchain.vulkan.resolve_view != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEVIEW;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEVIEW, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEVIEW, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.vulkan.resolve_image == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEIMAGE_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEIMAGE_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEIMAGE_NOTSET, 1, null, __line__);
                     }
                     if pass.swapchain.vulkan.resolve_view == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEVIEW_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEVIEW_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEVIEW_NOTSET, 1, null, __line__);
                     }
                 }
                 if pass.swapchain.vulkan.render_finished_semaphore != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERFINISHEDSEMAPHORE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERFINISHEDSEMAPHORE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERFINISHEDSEMAPHORE, 1, null, __line__);
                 }
                 if pass.swapchain.vulkan.present_complete_semaphore != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_PRESENTCOMPLETESEMAPHORE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_PRESENTCOMPLETESEMAPHORE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_PRESENTCOMPLETESEMAPHORE, 1, null, __line__);
                 }
             }
         } else {
@@ -17168,32 +17168,32 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 has_color_atts = true;
                 if atts_cont == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS, 1, null, __line__);
                 }
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.colors[att_index].id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_COLORATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width == -1 {
@@ -17203,15 +17203,15 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                                 } else {
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_sample_count == img.cmn.sample_count == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL, 1, null, __line__);
                                     }
                                 }
                             }
@@ -17225,46 +17225,46 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 }
                 if pass.attachments.colors[att_index].id != cast(u32, SG_INVALID_ID) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW, 1, null, __line__);
                 }
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.resolves[att_index].id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_RESOLVEATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width != -1 {
                                     if color_sample_count > 1 == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT, 1, null, __line__);
                                     }
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                 }
                             }
@@ -17277,41 +17277,41 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.depth_stencil.id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_DEPTHSTENCILATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width != -1 {
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_sample_count == img.cmn.sample_count == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT, 1, null, __line__);
                                     }
                                 }
                             }
@@ -17321,33 +17321,33 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
             }
             if (has_color_atts || has_depth_stencil_atts) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED, 1, null, __line__);
             }
         }
         if is_compute_pass || is_offscreen_pass || is_invalid_swapchain_pass {
             if pass.swapchain.width == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.height == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.sample_count == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.color_format == _SG_PIXELFORMAT_DEFAULT == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.depth_format == _SG_PIXELFORMAT_DEFAULT == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.gl.framebuffer == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_GL_EXPECT_FRAMEBUFFER_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_GL_EXPECT_FRAMEBUFFER_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_GL_EXPECT_FRAMEBUFFER_NOTSET, 1, null, __line__);
             }
         }
         return _sg_validate_end();
@@ -19072,7 +19072,7 @@ sg_resource_state _sg_gl_create_image(_sg_image_t* img, sg_image_desc* desc) {
     }
     img.gl.injected = 0 != desc.gl_textures[0];
     if _sg_gl_supported_texture_format(img.cmn.pixel_format) == 0 {
-        _sg_log(SG_LOGITEM_GL_TEXTURE_FORMAT_NOT_SUPPORTED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_GL_TEXTURE_FORMAT_NOT_SUPPORTED, 1, null, __line__);
         return SG_RESOURCESTATE_FAILED;
     }
     if img.gl.injected != 0 {
@@ -19187,8 +19187,8 @@ u32 _sg_gl_compile_shader(sg_shader_stage stage, u8* src) {
         if log_len > 0 {
             var log_buf = cast(u8*, _sg_malloc(cast(u64, log_len)));
             glGetShaderInfoLog(gl_shd, log_len, &log_len, log_buf);
-            _sg_log(SG_LOGITEM_GL_SHADER_COMPILATION_FAILED, 1, null, 7222);
-            _sg_log(SG_LOGITEM_GL_SHADER_COMPILATION_FAILED, 3, log_buf, 7225);
+            _sg_log(SG_LOGITEM_GL_SHADER_COMPILATION_FAILED, 1, null, __line__);
+            _sg_log(SG_LOGITEM_GL_SHADER_COMPILATION_FAILED, 3, log_buf, __line__);
             _sg_free(log_buf);
         }
         glDeleteShader(gl_shd);
@@ -19268,8 +19268,8 @@ sg_resource_state _sg_gl_create_shader(_sg_shader_t* shd, sg_shader_desc* desc) 
         if log_len > 0 {
             var log_buf = cast(u8*, _sg_malloc(cast(u64, log_len)));
             glGetProgramInfoLog(gl_prog, log_len, &log_len, log_buf);
-            _sg_log(SG_LOGITEM_GL_SHADER_LINKING_FAILED, 1, null, 7222);
-            _sg_log(SG_LOGITEM_GL_SHADER_LINKING_FAILED, 3, log_buf, 7225);
+            _sg_log(SG_LOGITEM_GL_SHADER_LINKING_FAILED, 1, null, __line__);
+            _sg_log(SG_LOGITEM_GL_SHADER_LINKING_FAILED, 3, log_buf, __line__);
             _sg_free(log_buf);
         }
         glDeleteProgram(gl_prog);
@@ -19305,8 +19305,8 @@ sg_resource_state _sg_gl_create_shader(_sg_shader_t* shd, sg_shader_desc* desc) 
             assert(cast(i64, u_desc.glsl_name));
             u.gl_loc = glGetUniformLocation(gl_prog, u_desc.glsl_name);
             if u.gl_loc == -1 {
-                _sg_log(SG_LOGITEM_GL_UNIFORMBLOCK_NAME_NOT_FOUND_IN_SHADER, 2, null, 7223);
-                _sg_log(SG_LOGITEM_GL_UNIFORMBLOCK_NAME_NOT_FOUND_IN_SHADER, 3, u_desc.glsl_name, 7225);
+                _sg_log(SG_LOGITEM_GL_UNIFORMBLOCK_NAME_NOT_FOUND_IN_SHADER, 2, null, __line__);
+                _sg_log(SG_LOGITEM_GL_UNIFORMBLOCK_NAME_NOT_FOUND_IN_SHADER, 3, u_desc.glsl_name, __line__);
             }
             cur_uniform_offset += u_size;
             ub.num_uniforms++;
@@ -19348,8 +19348,8 @@ sg_resource_state _sg_gl_create_shader(_sg_shader_t* shd, sg_shader_desc* desc) 
             shd.gl.tex_slot[tex_smp_index] = cast(i8, gl_tex_slot++);
         } else {
             shd.gl.tex_slot[tex_smp_index] = -1;
-            _sg_log(SG_LOGITEM_GL_IMAGE_SAMPLER_NAME_NOT_FOUND_IN_SHADER, 2, null, 7223);
-            _sg_log(SG_LOGITEM_GL_IMAGE_SAMPLER_NAME_NOT_FOUND_IN_SHADER, 3, tex_smp_desc.glsl_name, 7225);
+            _sg_log(SG_LOGITEM_GL_IMAGE_SAMPLER_NAME_NOT_FOUND_IN_SHADER, 2, null, __line__);
+            _sg_log(SG_LOGITEM_GL_IMAGE_SAMPLER_NAME_NOT_FOUND_IN_SHADER, 3, tex_smp_desc.glsl_name, __line__);
         }
     }
     glUseProgram(cur_prog);
@@ -20424,7 +20424,7 @@ void _sapp_win32_do_lock_mouse() {
     ClipCursor(&clip_rect);
     var rid = RAWINPUTDEVICE{0x01, 0x02, 0, _sapp.win32.hwnd};
     if RegisterRawInputDevices(&rid, 1, sizeof(rid)) == 0 {
-        _sapp_log(SAPP_LOGITEM_WIN32_REGISTER_RAW_INPUT_DEVICES_FAILED_MOUSE_LOCK, 1, null, 3247);
+        _sapp_log(SAPP_LOGITEM_WIN32_REGISTER_RAW_INPUT_DEVICES_FAILED_MOUSE_LOCK, 1, null, __line__);
     }
     _sapp.win32.mouse.raw_input.pos_valid = false;
 }
@@ -20436,7 +20436,7 @@ void _sapp_win32_do_unlock_mouse() {
     _sapp_win32_release_mouse(0xFF);
     var rid = RAWINPUTDEVICE{0x01, 0x02, RIDEV_REMOVE, null};
     if RegisterRawInputDevices(&rid, 1, sizeof(rid)) == 0 {
-        _sapp_log(SAPP_LOGITEM_WIN32_REGISTER_RAW_INPUT_DEVICES_FAILED_MOUSE_UNLOCK, 1, null, 3247);
+        _sapp_log(SAPP_LOGITEM_WIN32_REGISTER_RAW_INPUT_DEVICES_FAILED_MOUSE_UNLOCK, 1, null, __line__);
     }
     ClipCursor(null);
     if _sapp.win32.mouse.lock.pos_valid != 0 {
@@ -20594,7 +20594,7 @@ void _sapp_win32_files_dropped(HDROP hdrop) {
         var buffer = cast(WCHAR*, _sapp_malloc_clear(cast(u64, num_chars * sizeof(WCHAR))));
         DragQueryFileW(hdrop, i, buffer, num_chars);
         if _sapp_win32_wide_to_utf8(buffer, _sapp_dropped_file_path_ptr(cast(i32, i)), _sapp.drop.max_path_length) == 0 {
-            _sapp_log(SAPP_LOGITEM_DROPPED_FILE_PATH_TOO_LONG, 1, null, 3247);
+            _sapp_log(SAPP_LOGITEM_DROPPED_FILE_PATH_TOO_LONG, 1, null, __line__);
             drop_failed = true;
         }
         _sapp_free(buffer);
@@ -20727,7 +20727,7 @@ LRESULT _sapp_win32_wndproc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                     GetRawInputData(ri, RID_INPUT, null, &size, sizeof(RAWINPUTHEADER));
                     void* raw_input_data_ptr = _sapp_win32_ensure_raw_input_data(size);
                     if cast(UINT, -1) == GetRawInputData(ri, RID_INPUT, raw_input_data_ptr, &size, sizeof(RAWINPUTHEADER)) {
-                        _sapp_log(SAPP_LOGITEM_WIN32_GET_RAW_INPUT_DATA_FAILED, 1, null, 3247);
+                        _sapp_log(SAPP_LOGITEM_WIN32_GET_RAW_INPUT_DATA_FAILED, 1, null, __line__);
                         break case;
                     }
                     var raw_mouse_data = cast(RAWINPUT*, raw_input_data_ptr);
@@ -20959,7 +20959,7 @@ u8* _sapp_win32_get_clipboard_string() {
         return _sapp.clipboard.buffer;
     }
     if _sapp_win32_wide_to_utf8(wchar_buf, _sapp.clipboard.buffer, _sapp.clipboard.buf_size) == 0 {
-        _sapp_log(SAPP_LOGITEM_CLIPBOARD_STRING_TOO_BIG, 1, null, 3247);
+        _sapp_log(SAPP_LOGITEM_CLIPBOARD_STRING_TOO_BIG, 1, null, __line__);
     }
     GlobalUnlock(object);
     CloseClipboard();
@@ -21088,7 +21088,7 @@ void _sapp_win32_destroy_custom_mouse_cursor(sapp_mouse_cursor cursor) {
     _sapp.win32.custom_cursors[cursor] = null;
     BOOL res = DestroyIcon(win32_cursor);
     if res == 0 {
-        _sapp_log(SAPP_LOGITEM_WIN32_DESTROYICON_FOR_CURSOR_FAILED, 2, null, 3248);
+        _sapp_log(SAPP_LOGITEM_WIN32_DESTROYICON_FOR_CURSOR_FAILED, 2, null, __line__);
     }
 }
 void _sapp_update_cursor(sapp_mouse_cursor cursor, bool shown) {
@@ -22456,14 +22456,14 @@ void _sapp_mtl_swapchain_create(i32 width, i32 height) {
         MTLPixelFormat format_var = _sapp_mtl_depth_format();  // renamed from: format
         _sapp.mtl.depth_tex = _sapp_mtl_create_texture(width, height, format_var, sample_count, "swapchain_depth_tex");
         if null == _sapp.mtl.depth_tex {
-            _sapp_log(SAPP_LOGITEM_METAL_CREATE_SWAPCHAIN_DEPTH_TEXTURE_FAILED, 0, null, 3246);
+            _sapp_log(SAPP_LOGITEM_METAL_CREATE_SWAPCHAIN_DEPTH_TEXTURE_FAILED, 0, null, __line__);
         }
     }
     if _sapp.desc.sample_count > 1 {
         MTLPixelFormat format_var = _sapp_mtl_color_format();  // renamed from: format
         _sapp.mtl.msaa_tex = _sapp_mtl_create_texture(width, height, format_var, sample_count, "swapchain_msaa_tex");
         if null == _sapp.mtl.msaa_tex {
-            _sapp_log(SAPP_LOGITEM_METAL_CREATE_SWAPCHAIN_MSAA_TEXTURE_FAILED, 0, null, 3246);
+            _sapp_log(SAPP_LOGITEM_METAL_CREATE_SWAPCHAIN_MSAA_TEXTURE_FAILED, 0, null, __line__);
         }
     }
 }
@@ -23161,7 +23161,7 @@ sg_resource_state _sg_mtl_create_buffer(_sg_buffer_t* buf, sg_buffer_desc* desc)
                 mtl_buf = cast(fn(void*, void*, u64, u64): void*, objc.raw)(_sg.mtl.device, objc_selref("newBufferWithLength:options:"), cast(u64, cast(NSUInteger, buf.cmn.size)), mtl_options);
             }
             if null == mtl_buf {
-                _sg_log(SG_LOGITEM_METAL_CREATE_BUFFER_FAILED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_METAL_CREATE_BUFFER_FAILED, 1, null, __line__);
                 return SG_RESOURCESTATE_FAILED;
             }
         }
@@ -23234,7 +23234,7 @@ bool _sg_mtl_init_texdesc(MTLTextureDescriptor* mtl_desc, _sg_image_t* img) {
     cast(fn(void*, void*, u64): void, objc.raw)(mtl_desc, objc_selref("setTextureType:"), cast(u64, _sg_mtl_texture_type(img.cmn.type, img.cmn.sample_count > 1)));
     cast(fn(void*, void*, u64): void, objc.raw)(mtl_desc, objc_selref("setPixelFormat:"), cast(u64, _sg_mtl_pixel_format(img.cmn.pixel_format)));
     if MTLPixelFormatInvalid == cast(fn(void*, void*): u64, objc.raw)(mtl_desc, objc_selref("pixelFormat")) {
-        _sg_log(SG_LOGITEM_METAL_TEXTURE_FORMAT_NOT_SUPPORTED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_METAL_TEXTURE_FORMAT_NOT_SUPPORTED, 1, null, __line__);
         return false;
     }
     cast(fn(void*, void*, u64): void, objc.raw)(mtl_desc, objc_selref("setWidth:"), cast(u64, cast(NSUInteger, img.cmn.width)));
@@ -23297,7 +23297,7 @@ sg_resource_state _sg_mtl_create_image(_sg_image_t* img, sg_image_desc* desc) {
                 {
                     mtl_desc = null;
                 }
-                _sg_log(SG_LOGITEM_METAL_CREATE_TEXTURE_FAILED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_METAL_CREATE_TEXTURE_FAILED, 1, null, __line__);
                 return SG_RESOURCESTATE_FAILED;
             }
             if desc.data.mip_levels[0].ptr != null {
@@ -23364,7 +23364,7 @@ sg_resource_state _sg_mtl_create_sampler(_sg_sampler_t* smp, sg_sampler_desc* de
             mtl_desc = null;
         }
         if null == mtl_smp {
-            _sg_log(SG_LOGITEM_METAL_CREATE_SAMPLER_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_METAL_CREATE_SAMPLER_FAILED, 1, null, __line__);
             return SG_RESOURCESTATE_FAILED;
         }
     }
@@ -23382,8 +23382,8 @@ ObjcId _sg_mtl_compile_library(u8* src) {
     NSError* err = null;
     ObjcId lib = cast(fn(void*, void*, void*, void*, void*): void*, objc.raw)(_sg.mtl.device, objc_selref("newLibraryWithSource:options:error:"), cast(fn(void*, void*, u8*): void*, objc.raw)(objc_classref("NSString", "/System/Library/Frameworks/Foundation.framework/Foundation"), objc_selref("stringWithUTF8String:"), src), null, &err);
     if err != null {
-        _sg_log(SG_LOGITEM_METAL_SHADER_COMPILATION_FAILED, 1, null, 7222);
-        _sg_log(SG_LOGITEM_METAL_SHADER_COMPILATION_OUTPUT, 3, objc.msg_id_v(objc.msg_id_v(err, objc_selref("localizedDescription")), objc_selref("UTF8String")), 7225);
+        _sg_log(SG_LOGITEM_METAL_SHADER_COMPILATION_FAILED, 1, null, __line__);
+        _sg_log(SG_LOGITEM_METAL_SHADER_COMPILATION_OUTPUT, 3, objc.msg_id_v(objc.msg_id_v(err, objc_selref("localizedDescription")), objc_selref("UTF8String")), __line__);
     }
     return lib;
 }
@@ -23392,8 +23392,8 @@ ObjcId _sg_mtl_library_from_bytecode(void* ptr, u64 num_bytes) {
     dispatch_data_t lib_data = dispatch_data_create(ptr, num_bytes, null, DISPATCH_DATA_DESTRUCTOR_DEFAULT);
     ObjcId lib = cast(fn(void*, void*, void*, void*): void*, objc.raw)(_sg.mtl.device, objc_selref("newLibraryWithData:error:"), lib_data, &err);
     if err != null {
-        _sg_log(SG_LOGITEM_METAL_SHADER_CREATION_FAILED, 1, null, 7222);
-        _sg_log(SG_LOGITEM_METAL_SHADER_COMPILATION_OUTPUT, 3, objc.msg_id_v(objc.msg_id_v(err, objc_selref("localizedDescription")), objc_selref("UTF8String")), 7225);
+        _sg_log(SG_LOGITEM_METAL_SHADER_CREATION_FAILED, 1, null, __line__);
+        _sg_log(SG_LOGITEM_METAL_SHADER_COMPILATION_OUTPUT, 3, objc.msg_id_v(objc.msg_id_v(err, objc_selref("localizedDescription")), objc_selref("UTF8String")), __line__);
     }
     {
         lib_data = null;
@@ -23425,7 +23425,7 @@ bool _sg_mtl_create_shader_func(sg_shader_function* func, u8* label, u8* label_e
     assert(cast(i64, func.entry));
     ObjcId mtl_func = cast(fn(void*, void*, void*): void*, objc.raw)(mtl_lib, objc_selref("newFunctionWithName:"), cast(fn(void*, void*, u8*): void*, objc.raw)(objc_classref("NSString", "/System/Library/Frameworks/Foundation.framework/Foundation"), objc_selref("stringWithUTF8String:"), func.entry));
     if mtl_func == null {
-        _sg_log(SG_LOGITEM_METAL_SHADER_ENTRY_NOT_FOUND, 1, null, 7222);
+        _sg_log(SG_LOGITEM_METAL_SHADER_ENTRY_NOT_FOUND, 1, null, __line__);
         {
             mtl_lib = null;
         }
@@ -23451,7 +23451,7 @@ bool _sg_mtl_ensure_msl_bindslot_ranges(sg_shader_desc* desc) {
         sg_shader_uniform_block* ub = &desc.uniform_blocks[i];
         if ub.stage != SG_SHADERSTAGE_NONE {
             if cast(i32, ub.msl_buffer_n) >= _SG_MAX_UNIFORMBLOCK_BINDINGS_PER_STAGE {
-                _sg_log(SG_LOGITEM_METAL_UNIFORMBLOCK_MSL_BUFFER_SLOT_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_METAL_UNIFORMBLOCK_MSL_BUFFER_SLOT_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
@@ -23460,19 +23460,19 @@ bool _sg_mtl_ensure_msl_bindslot_ranges(sg_shader_desc* desc) {
         sg_shader_view* view = &desc.views[i];
         if view.texture.stage != SG_SHADERSTAGE_NONE {
             if cast(i32, view.texture.msl_texture_n) >= SG_MAX_VIEW_BINDSLOTS {
-                _sg_log(SG_LOGITEM_METAL_IMAGE_MSL_TEXTURE_SLOT_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_METAL_IMAGE_MSL_TEXTURE_SLOT_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
         if view.storage_buffer.stage != SG_SHADERSTAGE_NONE {
             if cast(i32, view.storage_buffer.msl_buffer_n) < _SG_MAX_UNIFORMBLOCK_BINDINGS_PER_STAGE || cast(i32, view.storage_buffer.msl_buffer_n) >= 31 - SG_MAX_VERTEXBUFFER_BINDSLOTS {
-                _sg_log(SG_LOGITEM_METAL_STORAGEBUFFER_MSL_BUFFER_SLOT_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_METAL_STORAGEBUFFER_MSL_BUFFER_SLOT_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
         if view.storage_image.stage != SG_SHADERSTAGE_NONE {
             if cast(i32, view.storage_image.msl_texture_n) >= SG_MAX_VIEW_BINDSLOTS {
-                _sg_log(SG_LOGITEM_METAL_STORAGEIMAGE_MSL_TEXTURE_SLOT_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_METAL_STORAGEIMAGE_MSL_TEXTURE_SLOT_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
@@ -23481,7 +23481,7 @@ bool _sg_mtl_ensure_msl_bindslot_ranges(sg_shader_desc* desc) {
         sg_shader_sampler* smp = &desc.samplers[i];
         if smp.stage != SG_SHADERSTAGE_NONE {
             if cast(i32, smp.msl_sampler_n) >= SG_MAX_SAMPLER_BINDSLOTS {
-                _sg_log(SG_LOGITEM_METAL_SAMPLER_MSL_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_METAL_SAMPLER_MSL_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
@@ -23566,8 +23566,8 @@ sg_resource_state _sg_mtl_create_pipeline(_sg_pipeline_t* pip, sg_pipeline_desc*
         }
         if null == mtl_cps {
             assert(cast(i64, err));
-            _sg_log(SG_LOGITEM_METAL_CREATE_CPS_FAILED, 1, null, 7222);
-            _sg_log(SG_LOGITEM_METAL_CREATE_CPS_OUTPUT, 3, objc.msg_id_v(objc.msg_id_v(err, objc_selref("localizedDescription")), objc_selref("UTF8String")), 7225);
+            _sg_log(SG_LOGITEM_METAL_CREATE_CPS_FAILED, 1, null, __line__);
+            _sg_log(SG_LOGITEM_METAL_CREATE_CPS_OUTPUT, 3, objc.msg_id_v(objc.msg_id_v(err, objc_selref("localizedDescription")), objc_selref("UTF8String")), __line__);
             return SG_RESOURCESTATE_FAILED;
         }
         pip.mtl.cps = _sg_mtl_add_resource(mtl_cps);
@@ -23668,8 +23668,8 @@ sg_resource_state _sg_mtl_create_pipeline(_sg_pipeline_t* pip, sg_pipeline_desc*
         }
         if null == mtl_rps {
             assert(cast(i64, err));
-            _sg_log(SG_LOGITEM_METAL_CREATE_RPS_FAILED, 1, null, 7222);
-            _sg_log(SG_LOGITEM_METAL_CREATE_RPS_OUTPUT, 3, objc.msg_id_v(objc.msg_id_v(err, objc_selref("localizedDescription")), objc_selref("UTF8String")), 7225);
+            _sg_log(SG_LOGITEM_METAL_CREATE_RPS_FAILED, 1, null, __line__);
+            _sg_log(SG_LOGITEM_METAL_CREATE_RPS_OUTPUT, 3, objc.msg_id_v(objc.msg_id_v(err, objc_selref("localizedDescription")), objc_selref("UTF8String")), __line__);
             return SG_RESOURCESTATE_FAILED;
         }
         pip.mtl.rps = _sg_mtl_add_resource(mtl_rps);
@@ -23707,7 +23707,7 @@ sg_resource_state _sg_mtl_create_pipeline(_sg_pipeline_t* pip, sg_pipeline_desc*
             ds_desc = null;
         }
         if null == mtl_dss {
-            _sg_log(SG_LOGITEM_METAL_CREATE_DSS_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_METAL_CREATE_DSS_FAILED, 1, null, __line__);
             return SG_RESOURCESTATE_FAILED;
         }
         pip.mtl.dss = _sg_mtl_add_resource(mtl_dss);
@@ -24544,40 +24544,40 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
         _sg_validate_begin();
         if desc._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, __line__);
         }
         if desc._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, __line__);
         }
         if is_compute_shader != 0 {
             if (null != desc.compute_func.source || null != desc.compute_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE_OR_BYTECODE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE_OR_BYTECODE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE_OR_BYTECODE, 1, null, __line__);
             }
         } else {
             if (null != desc.vertex_func.source || null != desc.vertex_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE_OR_BYTECODE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE_OR_BYTECODE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE_OR_BYTECODE, 1, null, __line__);
             }
             if (null != desc.fragment_func.source || null != desc.fragment_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE_OR_BYTECODE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE_OR_BYTECODE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE_OR_BYTECODE, 1, null, __line__);
             }
         }
         if is_compute_shader != 0 {
             if (null == desc.vertex_func.source && null == desc.vertex_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
             if (null == desc.fragment_func.source && null == desc.fragment_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
         } else {
             if (null == desc.compute_func.source && null == desc.compute_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
         }
         if is_compute_shader != 0 {
@@ -24586,43 +24586,43 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             i32 z = desc.mtl_threads_per_threadgroup.z;
             if (x > 0 && y > 0 && z > 0) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED, 1, null, __line__);
             }
             if (x * y * z & 31) == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32, 1, null, __line__);
             }
         }
         for u64 i = 0; i < cast(u64, SG_MAX_VERTEX_ATTRIBUTES); i++ {
             if desc.attrs[i].glsl_name != null {
                 if strlen(desc.attrs[i].glsl_name) < cast(u64, _SG_STRING_SIZE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, __line__);
                 }
             }
             if desc.attrs[i].hlsl_sem_name != null {
                 if strlen(desc.attrs[i].hlsl_sem_name) < cast(u64, _SG_STRING_SIZE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, __line__);
                 }
             }
         }
         if null != desc.vertex_func.bytecode.ptr {
             if desc.vertex_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         if null != desc.fragment_func.bytecode.ptr {
             if desc.fragment_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         if null != desc.compute_func.bytecode.ptr {
             if desc.compute_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         _sg_u128_t msl_buf_bits = _sg_u128();
@@ -24635,11 +24635,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             }
             if ub_desc.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO, 1, null, __line__);
             }
             if _sg_validate_slot_bits(msl_buf_bits, ub_desc.stage, ub_desc.msl_buffer_n) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_METAL_BUFFER_SLOT_COLLISION;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_METAL_BUFFER_SLOT_COLLISION, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_METAL_BUFFER_SLOT_COLLISION, 1, null, __line__);
             }
             msl_buf_bits = _sg_validate_set_slot_bit(msl_buf_bits, ub_desc.stage, ub_desc.msl_buffer_n);
         }
@@ -24651,25 +24651,25 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 texview_slot_mask |= cast(u32, 1 << view_idx);
                 if _sg_validate_slot_bits(msl_tex_bits, tex_desc.stage, tex_desc.msl_texture_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_TEXTURE_METAL_TEXTURE_SLOT_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_TEXTURE_METAL_TEXTURE_SLOT_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_TEXTURE_METAL_TEXTURE_SLOT_COLLISION, 1, null, __line__);
                 }
                 msl_tex_bits = _sg_validate_set_slot_bit(msl_tex_bits, tex_desc.stage, tex_desc.msl_texture_n);
             } else if view_desc.storage_buffer.stage != SG_SHADERSTAGE_NONE {
                 sg_shader_storage_buffer_view* sbuf_desc = &view_desc.storage_buffer;
                 if _sg_validate_slot_bits(msl_buf_bits, sbuf_desc.stage, sbuf_desc.msl_buffer_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_METAL_BUFFER_SLOT_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_METAL_BUFFER_SLOT_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_METAL_BUFFER_SLOT_COLLISION, 1, null, __line__);
                 }
                 msl_buf_bits = _sg_validate_set_slot_bit(msl_buf_bits, sbuf_desc.stage, sbuf_desc.msl_buffer_n);
             } else if view_desc.storage_image.stage != SG_SHADERSTAGE_NONE {
                 sg_shader_storage_image_view* simg_desc = &view_desc.storage_image;
                 if simg_desc.stage == SG_SHADERSTAGE_COMPUTE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE, 1, null, __line__);
                 }
                 if _sg_validate_slot_bits(msl_tex_bits, simg_desc.stage, simg_desc.msl_texture_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_METAL_TEXTURE_SLOT_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_METAL_TEXTURE_SLOT_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_METAL_TEXTURE_SLOT_COLLISION, 1, null, __line__);
                 }
                 msl_tex_bits = _sg_validate_set_slot_bit(msl_tex_bits, simg_desc.stage, simg_desc.msl_texture_n);
             }
@@ -24683,7 +24683,7 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             smp_slot_mask |= cast(u32, 1 << smp_idx);
             if _sg_validate_slot_bits(msl_smp_bits, smp_desc.stage, smp_desc.msl_sampler_n) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_METAL_SAMPLER_SLOT_COLLISION;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_METAL_SAMPLER_SLOT_COLLISION, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_METAL_SAMPLER_SLOT_COLLISION, 1, null, __line__);
             }
             msl_smp_bits = _sg_validate_set_slot_bit(msl_smp_bits, smp_desc.stage, smp_desc.msl_sampler_n);
         }
@@ -24698,11 +24698,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             bool smp_slot_in_range = cast(i32, tex_smp_desc.sampler_slot) < SG_MAX_SAMPLER_BINDSLOTS;
             if view_slot_in_range == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE, 1, null, __line__);
             }
             if smp_slot_in_range == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, __line__);
             }
             if view_slot_in_range && smp_slot_in_range {
                 ref_texview_slot_mask |= cast(u32, 1 << cast(i32, tex_smp_desc.view_slot));
@@ -24711,39 +24711,39 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 sg_shader_sampler* smp_desc = &desc.samplers[tex_smp_desc.sampler_slot];
                 if view_desc.texture.stage != SG_SHADERSTAGE_NONE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW, 1, null, __line__);
                 }
                 if view_desc.texture.stage == tex_smp_desc.stage == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH, 1, null, __line__);
                 }
                 if smp_desc.stage == tex_smp_desc.stage == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH, 1, null, __line__);
                 }
                 bool needs_nonfiltering = view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_UINT || view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_SINT || view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_UNFILTERABLE_FLOAT;
                 bool needs_comparison = view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_DEPTH;
                 if needs_nonfiltering != 0 {
                     if (needs_nonfiltering && smp_desc.sampler_type == SG_SAMPLERTYPE_NONFILTERING) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED, 1, null, __line__);
                     }
                 }
                 if needs_comparison != 0 {
                     if (needs_comparison && smp_desc.sampler_type == SG_SAMPLERTYPE_COMPARISON) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED, 1, null, __line__);
                     }
                 }
             }
         }
         if texview_slot_mask == ref_texview_slot_mask == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, __line__);
         }
         if smp_slot_mask == ref_smp_slot_mask == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -24763,59 +24763,59 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
         _sg_validate_begin();
         if pass._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, __line__);
         }
         if pass._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, __line__);
         }
         if is_compute_pass != 0 {
             if _sg_attachments_empty(&pass.attachments) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS, 1, null, __line__);
             }
         } else if is_invalid_swapchain_pass != 0 {
         } else if is_swapchain_pass != 0 {
             if pass.swapchain.width > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH, 1, null, __line__);
             }
             if pass.swapchain.height > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT, 1, null, __line__);
             }
             if pass.swapchain.sample_count > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT, 1, null, __line__);
             }
             if pass.swapchain.color_format > SG_PIXELFORMAT_NONE == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT, 1, null, __line__);
             }
             if pass.swapchain.metal.current_drawable != null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE, 1, null, __line__);
             }
             if pass.swapchain.depth_format == SG_PIXELFORMAT_NONE {
                 if pass.swapchain.metal.depth_stencil_texture == null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET, 1, null, __line__);
                 }
             } else {
                 if pass.swapchain.metal.depth_stencil_texture != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE, 1, null, __line__);
                 }
             }
             if pass.swapchain.sample_count > 1 {
                 if pass.swapchain.metal.msaa_color_texture != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE, 1, null, __line__);
                 }
             } else {
                 if pass.swapchain.metal.msaa_color_texture == null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET, 1, null, __line__);
                 }
             }
         } else {
@@ -24833,32 +24833,32 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 has_color_atts = true;
                 if atts_cont == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS, 1, null, __line__);
                 }
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.colors[att_index].id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_COLORATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width == -1 {
@@ -24868,15 +24868,15 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                                 } else {
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_sample_count == img.cmn.sample_count == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL, 1, null, __line__);
                                     }
                                 }
                             }
@@ -24890,46 +24890,46 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 }
                 if pass.attachments.colors[att_index].id != cast(u32, SG_INVALID_ID) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW, 1, null, __line__);
                 }
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.resolves[att_index].id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_RESOLVEATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width != -1 {
                                     if color_sample_count > 1 == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT, 1, null, __line__);
                                     }
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                 }
                             }
@@ -24942,41 +24942,41 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.depth_stencil.id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_DEPTHSTENCILATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width != -1 {
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_sample_count == img.cmn.sample_count == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT, 1, null, __line__);
                                     }
                                 }
                             }
@@ -24986,41 +24986,41 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
             }
             if (has_color_atts || has_depth_stencil_atts) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED, 1, null, __line__);
             }
         }
         if is_compute_pass || is_offscreen_pass || is_invalid_swapchain_pass {
             if pass.swapchain.width == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.height == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.sample_count == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.color_format == _SG_PIXELFORMAT_DEFAULT == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.depth_format == _SG_PIXELFORMAT_DEFAULT == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.metal.current_drawable == null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.metal.depth_stencil_texture == null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.metal.msaa_color_texture == null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET, 1, null, __line__);
             }
         }
         return _sg_validate_end();
@@ -25625,22 +25625,22 @@ bool _sg_gl_check_framebuffer_status() {
     if fb_status != GL_FRAMEBUFFER_COMPLETE {
         switch fb_status {
             case GL_FRAMEBUFFER_UNDEFINED: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNDEFINED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNDEFINED, 1, null, __line__);
             }
             case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_ATTACHMENT, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_ATTACHMENT, 1, null, __line__);
             }
             case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MISSING_ATTACHMENT, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MISSING_ATTACHMENT, 1, null, __line__);
             }
             case GL_FRAMEBUFFER_UNSUPPORTED: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNSUPPORTED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNSUPPORTED, 1, null, __line__);
             }
             case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MULTISAMPLE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MULTISAMPLE, 1, null, __line__);
             }
             default: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNKNOWN, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNKNOWN, 1, null, __line__);
             }
         }
         return false;
@@ -27090,7 +27090,7 @@ bool _sapp_win32_utf8_to_wide(u8* src, u16* dst, i32 dst_num_bytes) {
 void _sapp_wgl_init() {
     _sapp.wgl.opengl32 = LoadLibraryA("opengl32.dll");
     if _sapp.wgl.opengl32 == null {
-        _sapp_log(SAPP_LOGITEM_WIN32_LOAD_OPENGL32_DLL_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_LOAD_OPENGL32_DLL_FAILED, 0, null, __line__);
     }
     assert(cast(i64, _sapp.wgl.opengl32));
     _sapp.wgl.CreateContext = cast(PFN_wglCreateContext, cast(void*, GetProcAddress(_sapp.wgl.opengl32, "wglCreateContext")));
@@ -27107,7 +27107,7 @@ void _sapp_wgl_init() {
     assert(cast(i64, _sapp.wgl.GetIntegerv));
     _sapp.wgl.msg_hwnd = CreateWindowExW(WS_EX_OVERLAPPEDWINDOW, cast(u16*, __wide_literal("SOKOLAPP")), cast(u16*, __wide_literal("sokol-app message window")), WS_CLIPSIBLINGS | WS_CLIPCHILDREN, 0, 0, 1, 1, null, null, GetModuleHandleW(null), null);
     if _sapp.wgl.msg_hwnd == null {
-        _sapp_log(SAPP_LOGITEM_WIN32_CREATE_HELPER_WINDOW_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_CREATE_HELPER_WINDOW_FAILED, 0, null, __line__);
     }
     assert(cast(i64, _sapp.wgl.msg_hwnd));
     ShowWindow(_sapp.wgl.msg_hwnd, SW_HIDE);
@@ -27118,7 +27118,7 @@ void _sapp_wgl_init() {
     }
     _sapp.wgl.msg_dc = GetDC(_sapp.wgl.msg_hwnd);
     if _sapp.wgl.msg_dc == null {
-        _sapp_log(SAPP_LOGITEM_WIN32_HELPER_WINDOW_GETDC_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_HELPER_WINDOW_GETDC_FAILED, 0, null, __line__);
     }
 }
 
@@ -27179,14 +27179,14 @@ void _sapp_wgl_load_extensions() {
     pfd.iPixelType = PFD_TYPE_RGBA;
     pfd.cColorBits = 24;
     if SetPixelFormat(_sapp.wgl.msg_dc, ChoosePixelFormat(_sapp.wgl.msg_dc, &pfd), &pfd) == 0 {
-        _sapp_log(SAPP_LOGITEM_WIN32_DUMMY_CONTEXT_SET_PIXELFORMAT_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_DUMMY_CONTEXT_SET_PIXELFORMAT_FAILED, 0, null, __line__);
     }
     HGLRC rc = _sapp.wgl.CreateContext(_sapp.wgl.msg_dc);
     if rc == null {
-        _sapp_log(SAPP_LOGITEM_WIN32_CREATE_DUMMY_CONTEXT_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_CREATE_DUMMY_CONTEXT_FAILED, 0, null, __line__);
     }
     if _sapp.wgl.MakeCurrent(_sapp.wgl.msg_dc, rc) == 0 {
-        _sapp_log(SAPP_LOGITEM_WIN32_DUMMY_CONTEXT_MAKE_CURRENT_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_DUMMY_CONTEXT_MAKE_CURRENT_FAILED, 0, null, __line__);
     }
     _sapp.wgl.GetExtensionsStringEXT = cast(PFNWGLGETEXTENSIONSSTRINGEXTPROC, cast(void*, _sapp.wgl.GetProcAddress("wglGetExtensionsStringEXT")));
     _sapp.wgl.GetExtensionsStringARB = cast(PFNWGLGETEXTENSIONSSTRINGARBPROC, cast(void*, _sapp.wgl.GetProcAddress("wglGetExtensionsStringARB")));
@@ -27207,7 +27207,7 @@ i32 _sapp_wgl_attrib(i32 pixel_format, i32 attrib) {
     assert(cast(i64, _sapp.wgl.arb_pixel_format));
     i32 value = 0;
     if _sapp.wgl.GetPixelFormatAttribivARB(_sapp.win32.dc, pixel_format, 0, 1, &attrib, &value) == 0 {
-        _sapp_log(SAPP_LOGITEM_WIN32_GET_PIXELFORMAT_ATTRIB_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_GET_PIXELFORMAT_ATTRIB_FAILED, 0, null, __line__);
     }
     return value;
 }
@@ -27215,7 +27215,7 @@ i32 _sapp_wgl_attrib(i32 pixel_format, i32 attrib) {
 void _sapp_wgl_attribiv(i32 pixel_format, i32 num_attribs, i32* attribs, i32* results) {
     assert(cast(i64, _sapp.wgl.arb_pixel_format));
     if _sapp.wgl.GetPixelFormatAttribivARB(_sapp.win32.dc, pixel_format, 0, cast(UINT, num_attribs), attribs, results) == 0 {
-        _sapp_log(SAPP_LOGITEM_WIN32_GET_PIXELFORMAT_ATTRIB_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_GET_PIXELFORMAT_ATTRIB_FAILED, 0, null, __line__);
     }
 }
 
@@ -27347,20 +27347,20 @@ i32 _sapp_wgl_find_pixel_format() {
 void _sapp_wgl_create_context() {
     i32 pixel_format = _sapp_wgl_find_pixel_format();
     if 0 == pixel_format {
-        _sapp_log(SAPP_LOGITEM_WIN32_WGL_FIND_PIXELFORMAT_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_WGL_FIND_PIXELFORMAT_FAILED, 0, null, __line__);
     }
     noinit PIXELFORMATDESCRIPTOR pfd;
     if DescribePixelFormat(_sapp.win32.dc, pixel_format, sizeof(pfd), &pfd) == 0 {
-        _sapp_log(SAPP_LOGITEM_WIN32_WGL_DESCRIBE_PIXELFORMAT_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_WGL_DESCRIBE_PIXELFORMAT_FAILED, 0, null, __line__);
     }
     if SetPixelFormat(_sapp.win32.dc, pixel_format, &pfd) == 0 {
-        _sapp_log(SAPP_LOGITEM_WIN32_WGL_SET_PIXELFORMAT_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_WGL_SET_PIXELFORMAT_FAILED, 0, null, __line__);
     }
     if _sapp.wgl.arb_create_context == 0 {
-        _sapp_log(SAPP_LOGITEM_WIN32_WGL_ARB_CREATE_CONTEXT_REQUIRED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_WGL_ARB_CREATE_CONTEXT_REQUIRED, 0, null, __line__);
     }
     if _sapp.wgl.arb_create_context_profile == 0 {
-        _sapp_log(SAPP_LOGITEM_WIN32_WGL_ARB_CREATE_CONTEXT_PROFILE_REQUIRED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_WGL_ARB_CREATE_CONTEXT_PROFILE_REQUIRED, 0, null, __line__);
     }
     i32[10] attrs = {
         0x2091, _sapp.desc.gl.major_version, 0x2092, _sapp.desc.gl.minor_version, 0x2094,
@@ -27374,13 +27374,13 @@ void _sapp_wgl_create_context() {
     if _sapp.wgl.gl_ctx == null {
         DWORD err = GetLastError();
         if err == cast(u32, 0xc0070000 | 0x2095) {
-            _sapp_log(SAPP_LOGITEM_WIN32_WGL_OPENGL_VERSION_NOT_SUPPORTED, 0, null, 3246);
+            _sapp_log(SAPP_LOGITEM_WIN32_WGL_OPENGL_VERSION_NOT_SUPPORTED, 0, null, __line__);
         } else if err == cast(u32, 0xc0070000 | 0x2096) {
-            _sapp_log(SAPP_LOGITEM_WIN32_WGL_OPENGL_PROFILE_NOT_SUPPORTED, 0, null, 3246);
+            _sapp_log(SAPP_LOGITEM_WIN32_WGL_OPENGL_PROFILE_NOT_SUPPORTED, 0, null, __line__);
         } else if err == cast(u32, 0xc0070000 | 0x2054) {
-            _sapp_log(SAPP_LOGITEM_WIN32_WGL_INCOMPATIBLE_DEVICE_CONTEXT, 0, null, 3246);
+            _sapp_log(SAPP_LOGITEM_WIN32_WGL_INCOMPATIBLE_DEVICE_CONTEXT, 0, null, __line__);
         } else {
-            _sapp_log(SAPP_LOGITEM_WIN32_WGL_CREATE_CONTEXT_ATTRIBS_FAILED_OTHER, 0, null, 3246);
+            _sapp_log(SAPP_LOGITEM_WIN32_WGL_CREATE_CONTEXT_ATTRIBS_FAILED_OTHER, 0, null, __line__);
         }
     }
     _sapp.wgl.MakeCurrent(_sapp.win32.dc, _sapp.wgl.gl_ctx);
@@ -29830,7 +29830,7 @@ sg_resource_state _sg_gl_create_image(_sg_image_t* img, sg_image_desc* desc) {
     }
     img.gl.injected = 0 != desc.gl_textures[0];
     if _sg_gl_supported_texture_format(img.cmn.pixel_format) == 0 {
-        _sg_log(SG_LOGITEM_GL_TEXTURE_FORMAT_NOT_SUPPORTED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_GL_TEXTURE_FORMAT_NOT_SUPPORTED, 1, null, __line__);
         return SG_RESOURCESTATE_FAILED;
     }
     if img.gl.injected != 0 {
@@ -30017,8 +30017,8 @@ u32 _sg_gl_compile_shader(sg_shader_stage stage, u8* src) {
         if log_len > 0 {
             var log_buf = cast(u8*, _sg_malloc(cast(u64, log_len)));
             glGetShaderInfoLog(gl_shd, log_len, &log_len, log_buf);
-            _sg_log(SG_LOGITEM_GL_SHADER_COMPILATION_FAILED, 1, null, 7222);
-            _sg_log(SG_LOGITEM_GL_SHADER_COMPILATION_FAILED, 3, log_buf, 7225);
+            _sg_log(SG_LOGITEM_GL_SHADER_COMPILATION_FAILED, 1, null, __line__);
+            _sg_log(SG_LOGITEM_GL_SHADER_COMPILATION_FAILED, 3, log_buf, __line__);
             _sg_free(log_buf);
         }
         glDeleteShader(gl_shd);
@@ -30100,8 +30100,8 @@ sg_resource_state _sg_gl_create_shader(_sg_shader_t* shd, sg_shader_desc* desc) 
         if log_len > 0 {
             var log_buf = cast(u8*, _sg_malloc(cast(u64, log_len)));
             glGetProgramInfoLog(gl_prog, log_len, &log_len, log_buf);
-            _sg_log(SG_LOGITEM_GL_SHADER_LINKING_FAILED, 1, null, 7222);
-            _sg_log(SG_LOGITEM_GL_SHADER_LINKING_FAILED, 3, log_buf, 7225);
+            _sg_log(SG_LOGITEM_GL_SHADER_LINKING_FAILED, 1, null, __line__);
+            _sg_log(SG_LOGITEM_GL_SHADER_LINKING_FAILED, 3, log_buf, __line__);
             _sg_free(log_buf);
         }
         glDeleteProgram(gl_prog);
@@ -30137,8 +30137,8 @@ sg_resource_state _sg_gl_create_shader(_sg_shader_t* shd, sg_shader_desc* desc) 
             assert(cast(i64, u_desc.glsl_name));
             u.gl_loc = glGetUniformLocation(gl_prog, u_desc.glsl_name);
             if u.gl_loc == -1 {
-                _sg_log(SG_LOGITEM_GL_UNIFORMBLOCK_NAME_NOT_FOUND_IN_SHADER, 2, null, 7223);
-                _sg_log(SG_LOGITEM_GL_UNIFORMBLOCK_NAME_NOT_FOUND_IN_SHADER, 3, u_desc.glsl_name, 7225);
+                _sg_log(SG_LOGITEM_GL_UNIFORMBLOCK_NAME_NOT_FOUND_IN_SHADER, 2, null, __line__);
+                _sg_log(SG_LOGITEM_GL_UNIFORMBLOCK_NAME_NOT_FOUND_IN_SHADER, 3, u_desc.glsl_name, __line__);
             }
             cur_uniform_offset += u_size;
             ub.num_uniforms++;
@@ -30180,8 +30180,8 @@ sg_resource_state _sg_gl_create_shader(_sg_shader_t* shd, sg_shader_desc* desc) 
             shd.gl.tex_slot[tex_smp_index] = cast(i8, gl_tex_slot++);
         } else {
             shd.gl.tex_slot[tex_smp_index] = -1;
-            _sg_log(SG_LOGITEM_GL_IMAGE_SAMPLER_NAME_NOT_FOUND_IN_SHADER, 2, null, 7223);
-            _sg_log(SG_LOGITEM_GL_IMAGE_SAMPLER_NAME_NOT_FOUND_IN_SHADER, 3, tex_smp_desc.glsl_name, 7225);
+            _sg_log(SG_LOGITEM_GL_IMAGE_SAMPLER_NAME_NOT_FOUND_IN_SHADER, 2, null, __line__);
+            _sg_log(SG_LOGITEM_GL_IMAGE_SAMPLER_NAME_NOT_FOUND_IN_SHADER, 3, tex_smp_desc.glsl_name, __line__);
         }
     }
     glUseProgram(cur_prog);
@@ -30247,22 +30247,22 @@ bool _sg_gl_check_framebuffer_status() {
     if fb_status != 0x8CD5 {
         switch fb_status {
             case 0x8219: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNDEFINED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNDEFINED, 1, null, __line__);
             }
             case 0x8CD6: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_ATTACHMENT, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_ATTACHMENT, 1, null, __line__);
             }
             case 0x8CD7: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MISSING_ATTACHMENT, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MISSING_ATTACHMENT, 1, null, __line__);
             }
             case 0x8CDD: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNSUPPORTED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNSUPPORTED, 1, null, __line__);
             }
             case 0x8D56: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MULTISAMPLE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MULTISAMPLE, 1, null, __line__);
             }
             default: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNKNOWN, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNKNOWN, 1, null, __line__);
             }
         }
         return false;
@@ -33197,7 +33197,7 @@ void _sapp_d3d11_create_device_and_swapchain() {
     ignore hr;
     when defined(SOKOL_DEBUG) {
         if hr >= 0 == 0 {
-            _sapp_log(SAPP_LOGITEM_WIN32_D3D11_CREATE_DEVICE_AND_SWAPCHAIN_WITH_DEBUG_FAILED, 1, null, 3247);
+            _sapp_log(SAPP_LOGITEM_WIN32_D3D11_CREATE_DEVICE_AND_SWAPCHAIN_WITH_DEBUG_FAILED, 1, null, __line__);
             create_flags &= ~cast(UINT, D3D11_CREATE_DEVICE_DEBUG);
             hr = D3D11CreateDeviceAndSwapChain(null, D3D_DRIVER_TYPE_HARDWARE, null, create_flags, requested_feature_levels, 2, D3D11_SDK_VERSION, sc_desc, cast(void**, &_sapp.d3d11.swap_chain), cast(void**, &_sapp.d3d11.device), &result_feature_level, cast(void**, &_sapp.d3d11.device_context));
         }
@@ -33218,17 +33218,17 @@ void _sapp_d3d11_create_device_and_swapchain() {
                     dxgi_factory = null;
                 }
             } else {
-                _sapp_log(SAPP_LOGITEM_WIN32_D3D11_GET_IDXGIFACTORY_FAILED, 1, null, 3247);
+                _sapp_log(SAPP_LOGITEM_WIN32_D3D11_GET_IDXGIFACTORY_FAILED, 1, null, __line__);
             }
             if dxgi_adapter != null {
                 dxgi_adapter.lpVtbl.Release(dxgi_adapter);
                 dxgi_adapter = null;
             }
         } else {
-            _sapp_log(SAPP_LOGITEM_WIN32_D3D11_GET_IDXGIADAPTER_FAILED, 1, null, 3247);
+            _sapp_log(SAPP_LOGITEM_WIN32_D3D11_GET_IDXGIADAPTER_FAILED, 1, null, __line__);
         }
     } else {
-        _sapp_log(SAPP_LOGITEM_WIN32_D3D11_QUERY_INTERFACE_IDXGIDEVICE1_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_WIN32_D3D11_QUERY_INTERFACE_IDXGIDEVICE1_FAILED, 0, null, __line__);
     }
 }
 
@@ -34754,7 +34754,7 @@ void _sg_d3d11_setup_backend(sg_desc* desc) {
     _sg.d3d11.ctx = cast(ID3D11DeviceContext*, desc.environment.d3d11.device_context);
     _sg_d3d11_init_caps();
     if _sg_d3d11_GetFeatureLevel(_sg.d3d11.dev) == D3D_FEATURE_LEVEL_11_0 {
-        _sg_log(SG_LOGITEM_D3D11_FEATURE_LEVEL_0_DETECTED, 2, null, 7223);
+        _sg_log(SG_LOGITEM_D3D11_FEATURE_LEVEL_0_DETECTED, 2, null, __line__);
     }
 }
 
@@ -34792,7 +34792,7 @@ sg_resource_state _sg_d3d11_create_buffer(_sg_buffer_t* buf, sg_buffer_desc* des
         }
         HRESULT hr = _sg_d3d11_CreateBuffer(_sg.d3d11.dev, &d3d11_buf_desc, init_data_ptr, &buf.d3d11.buf);
         if (hr >= 0 && buf.d3d11.buf) == 0 {
-            _sg_log(SG_LOGITEM_D3D11_CREATE_BUFFER_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_D3D11_CREATE_BUFFER_FAILED, 1, null, __line__);
             return SG_RESOURCESTATE_FAILED;
         }
     }
@@ -34845,7 +34845,7 @@ sg_resource_state _sg_d3d11_create_image(_sg_image_t* img, sg_image_desc* desc) 
     assert(cast(i64, !(msaa && img.cmn.type == SG_IMAGETYPE_CUBE)));
     img.d3d11.format = _sg_d3d11_texture_pixel_format(img.cmn.pixel_format);
     if img.d3d11.format == DXGI_FORMAT_UNKNOWN {
-        _sg_log(SG_LOGITEM_D3D11_CREATE_2D_TEXTURE_UNSUPPORTED_PIXEL_FORMAT, 1, null, 7222);
+        _sg_log(SG_LOGITEM_D3D11_CREATE_2D_TEXTURE_UNSUPPORTED_PIXEL_FORMAT, 1, null, __line__);
         return SG_RESOURCESTATE_FAILED;
     }
     D3D11_SUBRESOURCE_DATA* init_data = null;
@@ -34872,7 +34872,7 @@ sg_resource_state _sg_d3d11_create_image(_sg_image_t* img, sg_image_desc* desc) 
             d3d11_tex_desc.MiscFlags = img.cmn.type == SG_IMAGETYPE_CUBE ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0;
             hr = _sg_d3d11_CreateTexture2D(_sg.d3d11.dev, &d3d11_tex_desc, init_data, &img.d3d11.tex2d);
             if (hr >= 0 && img.d3d11.tex2d) == 0 {
-                _sg_log(SG_LOGITEM_D3D11_CREATE_2D_TEXTURE_FAILED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_CREATE_2D_TEXTURE_FAILED, 1, null, __line__);
                 return SG_RESOURCESTATE_FAILED;
             }
         }
@@ -34894,12 +34894,12 @@ sg_resource_state _sg_d3d11_create_image(_sg_image_t* img, sg_image_desc* desc) 
             d3d11_tex_desc.Usage = _sg_d3d11_image_usage(&img.cmn.usage);
             d3d11_tex_desc.CPUAccessFlags = _sg_d3d11_image_cpu_access_flags(&img.cmn.usage);
             if img.d3d11.format == DXGI_FORMAT_UNKNOWN {
-                _sg_log(SG_LOGITEM_D3D11_CREATE_3D_TEXTURE_UNSUPPORTED_PIXEL_FORMAT, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_CREATE_3D_TEXTURE_UNSUPPORTED_PIXEL_FORMAT, 1, null, __line__);
                 return SG_RESOURCESTATE_FAILED;
             }
             hr = _sg_d3d11_CreateTexture3D(_sg.d3d11.dev, &d3d11_tex_desc, init_data, &img.d3d11.tex3d);
             if (hr >= 0 && img.d3d11.tex3d) == 0 {
-                _sg_log(SG_LOGITEM_D3D11_CREATE_3D_TEXTURE_FAILED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_CREATE_3D_TEXTURE_FAILED, 1, null, __line__);
                 return SG_RESOURCESTATE_FAILED;
             }
         }
@@ -34960,7 +34960,7 @@ sg_resource_state _sg_d3d11_create_sampler(_sg_sampler_t* smp, sg_sampler_desc* 
         d3d11_smp_desc.MaxLOD = desc.max_lod;
         HRESULT hr = _sg_d3d11_CreateSamplerState(_sg.d3d11.dev, &d3d11_smp_desc, &smp.d3d11.smp);
         if (hr >= 0 && smp.d3d11.smp) == 0 {
-            _sg_log(SG_LOGITEM_D3D11_CREATE_SAMPLER_STATE_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_D3D11_CREATE_SAMPLER_STATE_FAILED, 1, null, __line__);
             return SG_RESOURCESTATE_FAILED;
         }
     }
@@ -34978,7 +34978,7 @@ bool _sg_d3d11_load_d3dcompiler_dll() {
     if null == _sg.d3d11.d3dcompiler_dll && !_sg.d3d11.d3dcompiler_dll_load_failed {
         _sg.d3d11.d3dcompiler_dll = LoadLibraryA("d3dcompiler_47.dll");
         if null == _sg.d3d11.d3dcompiler_dll {
-            _sg_log(SG_LOGITEM_D3D11_LOAD_D3DCOMPILER_47_DLL_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_D3D11_LOAD_D3DCOMPILER_47_DLL_FAILED, 1, null, __line__);
             _sg.d3d11.d3dcompiler_dll_load_failed = true;
             return false;
         }
@@ -35003,11 +35003,11 @@ ID3DBlob* _sg_d3d11_compile_shader(sg_shader_function* shd_func) {
     ID3DBlob* errors_or_warnings = null;
     HRESULT hr = _sg.d3d11.D3DCompile_func(shd_func.source, cast(i64, strlen(shd_func.source)), shd_func.d3d11_filepath, null, D3D_COMPILE_STANDARD_FILE_INCLUDE, shd_func.entry != null ? shd_func.entry : "main", shd_func.d3d11_target, flags1, 0, &output, &errors_or_warnings);
     if hr < 0 {
-        _sg_log(SG_LOGITEM_D3D11_SHADER_COMPILATION_FAILED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_D3D11_SHADER_COMPILATION_FAILED, 1, null, __line__);
     }
     if errors_or_warnings != null {
-        _sg_log(SG_LOGITEM_D3D11_SHADER_COMPILATION_OUTPUT, 2, null, 7223);
-        _sg_log(SG_LOGITEM_D3D11_SHADER_COMPILATION_OUTPUT, 3, cast(LPCSTR, _sg_d3d11_GetBufferPointer(errors_or_warnings)), 7225);
+        _sg_log(SG_LOGITEM_D3D11_SHADER_COMPILATION_OUTPUT, 2, null, __line__);
+        _sg_log(SG_LOGITEM_D3D11_SHADER_COMPILATION_OUTPUT, 3, cast(LPCSTR, _sg_d3d11_GetBufferPointer(errors_or_warnings)), __line__);
         errors_or_warnings.lpVtbl.Release(errors_or_warnings);
         errors_or_warnings = null;
     }
@@ -35026,7 +35026,7 @@ bool _sg_d3d11_ensure_hlsl_bindslot_ranges(sg_shader_desc* desc) {
         sg_shader_uniform_block* ub = &desc.uniform_blocks[i];
         if ub.stage != SG_SHADERSTAGE_NONE {
             if cast(i32, ub.hlsl_register_b_n) >= _SG_MAX_UNIFORMBLOCK_BINDINGS_PER_STAGE {
-                _sg_log(SG_LOGITEM_D3D11_UNIFORMBLOCK_HLSL_REGISTER_B_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_UNIFORMBLOCK_HLSL_REGISTER_B_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
@@ -35035,23 +35035,23 @@ bool _sg_d3d11_ensure_hlsl_bindslot_ranges(sg_shader_desc* desc) {
         sg_shader_view* view = &desc.views[i];
         if view.texture.stage != SG_SHADERSTAGE_NONE {
             if cast(i32, view.texture.hlsl_register_t_n) >= SG_MAX_VIEW_BINDSLOTS {
-                _sg_log(SG_LOGITEM_D3D11_IMAGE_HLSL_REGISTER_T_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_IMAGE_HLSL_REGISTER_T_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
         if view.storage_buffer.stage != SG_SHADERSTAGE_NONE {
             if cast(i32, view.storage_buffer.hlsl_register_t_n) >= SG_MAX_VIEW_BINDSLOTS {
-                _sg_log(SG_LOGITEM_D3D11_STORAGEBUFFER_HLSL_REGISTER_T_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_STORAGEBUFFER_HLSL_REGISTER_T_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
             if cast(i32, view.storage_buffer.hlsl_register_u_n) >= SG_MAX_VIEW_BINDSLOTS {
-                _sg_log(SG_LOGITEM_D3D11_STORAGEBUFFER_HLSL_REGISTER_U_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_STORAGEBUFFER_HLSL_REGISTER_U_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
         if view.storage_image.stage != SG_SHADERSTAGE_NONE {
             if cast(i32, view.storage_image.hlsl_register_u_n) >= SG_MAX_VIEW_BINDSLOTS {
-                _sg_log(SG_LOGITEM_D3D11_STORAGEIMAGE_HLSL_REGISTER_U_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_STORAGEIMAGE_HLSL_REGISTER_U_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
@@ -35060,7 +35060,7 @@ bool _sg_d3d11_ensure_hlsl_bindslot_ranges(sg_shader_desc* desc) {
         sg_shader_sampler* smp = &desc.samplers[i];
         if smp.stage != SG_SHADERSTAGE_NONE {
             if cast(i32, smp.hlsl_register_s_n) >= SG_MAX_SAMPLER_BINDSLOTS {
-                _sg_log(SG_LOGITEM_D3D11_SAMPLER_HLSL_REGISTER_S_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_SAMPLER_HLSL_REGISTER_S_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
@@ -35112,7 +35112,7 @@ sg_resource_state _sg_d3d11_create_shader(_sg_shader_t* shd, sg_shader_desc* des
         cb_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         hr = _sg_d3d11_CreateBuffer(_sg.d3d11.dev, &cb_desc, null, &cbuf);
         if (hr >= 0 && cbuf) == 0 {
-            _sg_log(SG_LOGITEM_D3D11_CREATE_CONSTANT_BUFFER_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_D3D11_CREATE_CONSTANT_BUFFER_FAILED, 1, null, __line__);
             return SG_RESOURCESTATE_FAILED;
         }
         shd.d3d11.all_cbufs[ub_index] = cbuf;
@@ -35292,7 +35292,7 @@ sg_resource_state _sg_d3d11_create_pipeline(_sg_pipeline_t* pip, sg_pipeline_des
     if attr_index > 0 {
         hr = _sg_d3d11_CreateInputLayout(_sg.d3d11.dev, d3d11_comps, cast(UINT, attr_index), shd.d3d11.vs_blob, shd.d3d11.vs_blob_length, &pip.d3d11.il);
         if (hr >= 0 && pip.d3d11.il) == 0 {
-            _sg_log(SG_LOGITEM_D3D11_CREATE_INPUT_LAYOUT_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_D3D11_CREATE_INPUT_LAYOUT_FAILED, 1, null, __line__);
             return SG_RESOURCESTATE_FAILED;
         }
     }
@@ -35309,7 +35309,7 @@ sg_resource_state _sg_d3d11_create_pipeline(_sg_pipeline_t* pip, sg_pipeline_des
     rs_desc.AntialiasedLineEnable = FALSE;
     hr = _sg_d3d11_CreateRasterizerState(_sg.d3d11.dev, &rs_desc, &pip.d3d11.rs);
     if (hr >= 0 && pip.d3d11.rs) == 0 {
-        _sg_log(SG_LOGITEM_D3D11_CREATE_RASTERIZER_STATE_FAILED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_D3D11_CREATE_RASTERIZER_STATE_FAILED, 1, null, __line__);
         return SG_RESOURCESTATE_FAILED;
     }
     D3D11_DEPTH_STENCIL_DESC dss_desc;
@@ -35331,7 +35331,7 @@ sg_resource_state _sg_d3d11_create_pipeline(_sg_pipeline_t* pip, sg_pipeline_des
     dss_desc.BackFace.StencilFunc = _sg_d3d11_compare_func(sb.compare);
     hr = _sg_d3d11_CreateDepthStencilState(_sg.d3d11.dev, &dss_desc, &pip.d3d11.dss);
     if (hr >= 0 && pip.d3d11.dss) == 0 {
-        _sg_log(SG_LOGITEM_D3D11_CREATE_DEPTH_STENCIL_STATE_FAILED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_D3D11_CREATE_DEPTH_STENCIL_STATE_FAILED, 1, null, __line__);
         return SG_RESOURCESTATE_FAILED;
     }
     D3D11_BLEND_DESC bs_desc;
@@ -35365,7 +35365,7 @@ sg_resource_state _sg_d3d11_create_pipeline(_sg_pipeline_t* pip, sg_pipeline_des
     }
     hr = _sg_d3d11_CreateBlendState(_sg.d3d11.dev, &bs_desc, &pip.d3d11.bs);
     if (hr >= 0 && pip.d3d11.bs) == 0 {
-        _sg_log(SG_LOGITEM_D3D11_CREATE_BLEND_STATE_FAILED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_D3D11_CREATE_BLEND_STATE_FAILED, 1, null, __line__);
         return SG_RESOURCESTATE_FAILED;
     }
     return SG_RESOURCESTATE_VALID;
@@ -35410,7 +35410,7 @@ sg_resource_state _sg_d3d11_create_view(_sg_view_t* view, sg_view_desc* desc) {
         assert(cast(i64, !view.d3d11.srv));
         hr = _sg_d3d11_CreateShaderResourceView(_sg.d3d11.dev, cast(ID3D11Resource*, buf.d3d11.buf), &d3d11_srv_desc, &view.d3d11.srv);
         if (hr >= 0 && view.d3d11.srv) == 0 {
-            _sg_log(SG_LOGITEM_D3D11_CREATE_BUFFER_SRV_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_D3D11_CREATE_BUFFER_SRV_FAILED, 1, null, __line__);
             return SG_RESOURCESTATE_FAILED;
         }
         if buf.cmn.usage.immutable != 0 {
@@ -35423,7 +35423,7 @@ sg_resource_state _sg_d3d11_create_view(_sg_view_t* view, sg_view_desc* desc) {
             assert(cast(i64, !view.d3d11.uav));
             hr = _sg_d3d11_CreateUnorderedAccessView(_sg.d3d11.dev, cast(ID3D11Resource*, buf.d3d11.buf), &d3d11_uav_desc, &view.d3d11.uav);
             if (hr >= 0 && view.d3d11.uav) == 0 {
-                _sg_log(SG_LOGITEM_D3D11_CREATE_BUFFER_UAV_FAILED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_CREATE_BUFFER_UAV_FAILED, 1, null, __line__);
                 return SG_RESOURCESTATE_FAILED;
             }
         }
@@ -35464,7 +35464,7 @@ sg_resource_state _sg_d3d11_create_view(_sg_view_t* view, sg_view_desc* desc) {
             }
             hr = _sg_d3d11_CreateUnorderedAccessView(_sg.d3d11.dev, img.d3d11.res, &d3d11_uav_desc, &view.d3d11.uav);
             if (hr >= 0 && view.d3d11.uav) == 0 {
-                _sg_log(SG_LOGITEM_D3D11_CREATE_UAV_FAILED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_CREATE_UAV_FAILED, 1, null, __line__);
                 return SG_RESOURCESTATE_FAILED;
             }
         } else if view.cmn.type == SG_VIEWTYPE_TEXTURE {
@@ -35511,7 +35511,7 @@ sg_resource_state _sg_d3d11_create_view(_sg_view_t* view, sg_view_desc* desc) {
             }
             hr = _sg_d3d11_CreateShaderResourceView(_sg.d3d11.dev, img.d3d11.res, &d3d11_srv_desc, &view.d3d11.srv);
             if (hr >= 0 && view.d3d11.srv) == 0 {
-                _sg_log(SG_LOGITEM_D3D11_CREATE_2D_SRV_FAILED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_CREATE_2D_SRV_FAILED, 1, null, __line__);
                 return SG_RESOURCESTATE_FAILED;
             }
         } else if view.cmn.type == SG_VIEWTYPE_COLORATTACHMENT {
@@ -35551,7 +35551,7 @@ sg_resource_state _sg_d3d11_create_view(_sg_view_t* view, sg_view_desc* desc) {
             }
             hr = _sg_d3d11_CreateRenderTargetView(_sg.d3d11.dev, img.d3d11.res, &d3d11_rtv_desc, &view.d3d11.rtv);
             if (hr >= 0 && view.d3d11.rtv) == 0 {
-                _sg_log(SG_LOGITEM_D3D11_CREATE_RTV_FAILED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_CREATE_RTV_FAILED, 1, null, __line__);
                 return SG_RESOURCESTATE_FAILED;
             }
         } else if view.cmn.type == SG_VIEWTYPE_DEPTHSTENCILATTACHMENT {
@@ -35585,7 +35585,7 @@ sg_resource_state _sg_d3d11_create_view(_sg_view_t* view, sg_view_desc* desc) {
             }
             hr = _sg_d3d11_CreateDepthStencilView(_sg.d3d11.dev, img.d3d11.res, &d3d11_dsv_desc, &view.d3d11.dsv);
             if (hr >= 0 && view.d3d11.dsv) == 0 {
-                _sg_log(SG_LOGITEM_D3D11_CREATE_DSV_FAILED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_CREATE_DSV_FAILED, 1, null, __line__);
                 return SG_RESOURCESTATE_FAILED;
             }
         }
@@ -36107,7 +36107,7 @@ void _sg_d3d11_update_buffer(_sg_buffer_t* buf, sg_range* data) {
             }
         }
     } else {
-        _sg_log(SG_LOGITEM_D3D11_MAP_FOR_UPDATE_BUFFER_FAILED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_D3D11_MAP_FOR_UPDATE_BUFFER_FAILED, 1, null, __line__);
     }
 }
 
@@ -36133,7 +36133,7 @@ void _sg_d3d11_append_buffer(_sg_buffer_t* buf, sg_range* data, bool new_frame) 
             }
         }
     } else {
-        _sg_log(SG_LOGITEM_D3D11_MAP_FOR_APPEND_BUFFER_FAILED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_D3D11_MAP_FOR_APPEND_BUFFER_FAILED, 1, null, __line__);
     }
 }
 
@@ -36192,7 +36192,7 @@ void _sg_d3d11_update_image(_sg_image_t* img, sg_image_data* data) {
                     }
                 }
             } else {
-                _sg_log(SG_LOGITEM_D3D11_MAP_FOR_UPDATE_IMAGE_FAILED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_D3D11_MAP_FOR_UPDATE_IMAGE_FAILED, 1, null, __line__);
             }
             subres_index++;
         }
@@ -36438,40 +36438,40 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
         _sg_validate_begin();
         if desc._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, __line__);
         }
         if desc._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, __line__);
         }
         if is_compute_shader != 0 {
             if (null != desc.compute_func.source || null != desc.compute_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE_OR_BYTECODE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE_OR_BYTECODE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE_OR_BYTECODE, 1, null, __line__);
             }
         } else {
             if (null != desc.vertex_func.source || null != desc.vertex_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE_OR_BYTECODE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE_OR_BYTECODE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE_OR_BYTECODE, 1, null, __line__);
             }
             if (null != desc.fragment_func.source || null != desc.fragment_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE_OR_BYTECODE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE_OR_BYTECODE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE_OR_BYTECODE, 1, null, __line__);
             }
         }
         if is_compute_shader != 0 {
             if (null == desc.vertex_func.source && null == desc.vertex_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
             if (null == desc.fragment_func.source && null == desc.fragment_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
         } else {
             if (null == desc.compute_func.source && null == desc.compute_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
         }
         when defined(SOKOL_METAL) {
@@ -36481,11 +36481,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 i32 z = desc.mtl_threads_per_threadgroup.z;
                 if (x > 0 && y > 0 && z > 0) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED, 1, null, __line__);
                 }
                 if (x * y * z & 31) == 0 == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32, 1, null, __line__);
                 }
             }
         }
@@ -36493,32 +36493,32 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             if desc.attrs[i].glsl_name != null {
                 if strlen(desc.attrs[i].glsl_name) < cast(u64, _SG_STRING_SIZE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, __line__);
                 }
             }
             if desc.attrs[i].hlsl_sem_name != null {
                 if strlen(desc.attrs[i].hlsl_sem_name) < cast(u64, _SG_STRING_SIZE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, __line__);
                 }
             }
         }
         if null != desc.vertex_func.bytecode.ptr {
             if desc.vertex_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         if null != desc.fragment_func.bytecode.ptr {
             if desc.fragment_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         if null != desc.compute_func.bytecode.ptr {
             if desc.compute_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         _sg_u128_t hlsl_buf_bits = _sg_u128();
@@ -36532,11 +36532,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             }
             if ub_desc.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO, 1, null, __line__);
             }
             if _sg_validate_slot_bits(hlsl_buf_bits, ub_desc.stage, ub_desc.hlsl_register_b_n) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_HLSL_REGISTER_B_COLLISION;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_HLSL_REGISTER_B_COLLISION, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_HLSL_REGISTER_B_COLLISION, 1, null, __line__);
             }
             hlsl_buf_bits = _sg_validate_set_slot_bit(hlsl_buf_bits, ub_desc.stage, ub_desc.hlsl_register_b_n);
         }
@@ -36548,7 +36548,7 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 texview_slot_mask |= cast(u32, 1 << view_idx);
                 if _sg_validate_slot_bits(hlsl_srv_bits, tex_desc.stage, tex_desc.hlsl_register_t_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_TEXTURE_HLSL_REGISTER_T_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_TEXTURE_HLSL_REGISTER_T_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_TEXTURE_HLSL_REGISTER_T_COLLISION, 1, null, __line__);
                 }
                 hlsl_srv_bits = _sg_validate_set_slot_bit(hlsl_srv_bits, tex_desc.stage, tex_desc.hlsl_register_t_n);
             } else if view_desc.storage_buffer.stage != SG_SHADERSTAGE_NONE {
@@ -36556,13 +36556,13 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 if sbuf_desc.readonly != 0 {
                     if _sg_validate_slot_bits(hlsl_srv_bits, sbuf_desc.stage, sbuf_desc.hlsl_register_t_n) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_HLSL_REGISTER_T_COLLISION;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_HLSL_REGISTER_T_COLLISION, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_HLSL_REGISTER_T_COLLISION, 1, null, __line__);
                     }
                     hlsl_srv_bits = _sg_validate_set_slot_bit(hlsl_srv_bits, sbuf_desc.stage, sbuf_desc.hlsl_register_t_n);
                 } else {
                     if _sg_validate_slot_bits(hlsl_uav_bits, sbuf_desc.stage, sbuf_desc.hlsl_register_u_n) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_HLSL_REGISTER_U_COLLISION;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_HLSL_REGISTER_U_COLLISION, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_HLSL_REGISTER_U_COLLISION, 1, null, __line__);
                     }
                     hlsl_uav_bits = _sg_validate_set_slot_bit(hlsl_uav_bits, sbuf_desc.stage, sbuf_desc.hlsl_register_u_n);
                 }
@@ -36570,11 +36570,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 sg_shader_storage_image_view* simg_desc = &view_desc.storage_image;
                 if simg_desc.stage == SG_SHADERSTAGE_COMPUTE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE, 1, null, __line__);
                 }
                 if _sg_validate_slot_bits(hlsl_uav_bits, simg_desc.stage, simg_desc.hlsl_register_u_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_HLSL_REGISTER_U_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_HLSL_REGISTER_U_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_HLSL_REGISTER_U_COLLISION, 1, null, __line__);
                 }
                 hlsl_uav_bits = _sg_validate_set_slot_bit(hlsl_uav_bits, simg_desc.stage, simg_desc.hlsl_register_u_n);
             }
@@ -36588,7 +36588,7 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             smp_slot_mask |= cast(u32, 1 << smp_idx);
             if _sg_validate_slot_bits(hlsl_smp_bits, smp_desc.stage, smp_desc.hlsl_register_s_n) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_HLSL_REGISTER_S_COLLISION;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_HLSL_REGISTER_S_COLLISION, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_HLSL_REGISTER_S_COLLISION, 1, null, __line__);
             }
             hlsl_smp_bits = _sg_validate_set_slot_bit(hlsl_smp_bits, smp_desc.stage, smp_desc.hlsl_register_s_n);
         }
@@ -36603,11 +36603,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             bool smp_slot_in_range = cast(i32, tex_smp_desc.sampler_slot) < SG_MAX_SAMPLER_BINDSLOTS;
             if view_slot_in_range == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE, 1, null, __line__);
             }
             if smp_slot_in_range == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, __line__);
             }
             if view_slot_in_range && smp_slot_in_range {
                 ref_texview_slot_mask |= cast(u32, 1 << cast(i32, tex_smp_desc.view_slot));
@@ -36616,39 +36616,39 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 sg_shader_sampler* smp_desc = &desc.samplers[tex_smp_desc.sampler_slot];
                 if view_desc.texture.stage != SG_SHADERSTAGE_NONE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW, 1, null, __line__);
                 }
                 if view_desc.texture.stage == tex_smp_desc.stage == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH, 1, null, __line__);
                 }
                 if smp_desc.stage == tex_smp_desc.stage == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH, 1, null, __line__);
                 }
                 bool needs_nonfiltering = view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_UINT || view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_SINT || view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_UNFILTERABLE_FLOAT;
                 bool needs_comparison = view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_DEPTH;
                 if needs_nonfiltering != 0 {
                     if (needs_nonfiltering && smp_desc.sampler_type == SG_SAMPLERTYPE_NONFILTERING) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED, 1, null, __line__);
                     }
                 }
                 if needs_comparison != 0 {
                     if (needs_comparison && smp_desc.sampler_type == SG_SAMPLERTYPE_COMPARISON) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED, 1, null, __line__);
                     }
                 }
             }
         }
         if texview_slot_mask == ref_texview_slot_mask == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, __line__);
         }
         if smp_slot_mask == ref_smp_slot_mask == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -36666,35 +36666,35 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
         _sg_validate_begin();
         if desc._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY, 1, null, __line__);
         }
         if desc._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY, 1, null, __line__);
         }
         if desc.shader.id != cast(u32, SG_INVALID_ID) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER;
-            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, __line__);
         }
         _sg_shader_t* shd = _sg_lookup_shader(desc.shader.id);
         if null != shd == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER;
-            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, __line__);
         }
         if shd != null {
             if shd.slot.state == SG_RESOURCESTATE_VALID == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER;
-                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, __line__);
             }
             if desc.compute != 0 {
                 if shd.cmn.is_compute == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_COMPUTE_SHADER_EXPECTED;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_COMPUTE_SHADER_EXPECTED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_COMPUTE_SHADER_EXPECTED, 1, null, __line__);
                 }
             } else {
                 if !shd.cmn.is_compute == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_COMPUTE_SHADER_EXPECTED;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_COMPUTE_SHADER_EXPECTED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_COMPUTE_SHADER_EXPECTED, 1, null, __line__);
                 }
                 bool attrs_cont = true;
                 for u64 attr_index = 0; attr_index < cast(u64, SG_MAX_VERTEX_ATTRIBUTES); attr_index++ {
@@ -36705,37 +36705,37 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
                     }
                     if attrs_cont == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_CONT_ATTRS;
-                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_CONT_ATTRS, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_CONT_ATTRS, 1, null, __line__);
                     }
                     assert(a_state.buffer_index < SG_MAX_VERTEXBUFFER_BINDSLOTS);
                     if shd.cmn.attrs[attr_index].base_type != SG_SHADERATTRBASETYPE_UNDEFINED {
                         if _sg_vertexformat_basetype(a_state.format) != shd.cmn.attrs[attr_index].base_type {
                             if false == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH;
-                                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 1, null, __line__);
                             }
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, "attr format:", 7225);
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, _sg_vertexformat_to_string(a_state.format), 7225);
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, "shader attr base type:", 7225);
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, _sg_shaderattrbasetype_to_string(shd.cmn.attrs[attr_index].base_type), 7225);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, "attr format:", __line__);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, _sg_vertexformat_to_string(a_state.format), __line__);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, "shader attr base type:", __line__);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, _sg_shaderattrbasetype_to_string(shd.cmn.attrs[attr_index].base_type), __line__);
                         }
                     }
                     if a_state.format == SG_VERTEXFORMAT_INT10_N2 {
                         if _sg.features.vertexformat_int10_n2 == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_VERTEXFORMAT_INT10_N2_NOT_SUPPORTED;
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_VERTEXFORMAT_INT10_N2_NOT_SUPPORTED, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_VERTEXFORMAT_INT10_N2_NOT_SUPPORTED, 1, null, __line__);
                         }
                     }
                     if !_sg_strempty(&shd.d3d11.attrs[attr_index].sem_name) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_SEMANTICS;
-                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_SEMANTICS, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_SEMANTICS, 1, null, __line__);
                     }
                 }
                 for u64 i = 0; i < cast(u64, SG_MAX_VIEW_BINDSLOTS); i++ {
                     if shd.cmn.views[i].view_type == SG_VIEWTYPE_STORAGEBUFFER {
                         if shd.cmn.views[i].sbuf_readonly == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER_READONLY_STORAGEBUFFERS;
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER_READONLY_STORAGEBUFFERS, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER_READONLY_STORAGEBUFFERS, 1, null, __line__);
                         }
                     }
                 }
@@ -36746,7 +36746,7 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
                     }
                     if _sg_multiple_u64(cast(u64, l_state.stride), 4) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_LAYOUT_STRIDE4;
-                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_LAYOUT_STRIDE4, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_LAYOUT_STRIDE4, 1, null, __line__);
                     }
                 }
             }
@@ -36754,11 +36754,11 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
         if desc.depth.pixel_format == SG_PIXELFORMAT_NONE {
             if desc.depth.write_enabled == false == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_BUT_DEPTH_WRITE_ENABLED;
-                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_BUT_DEPTH_WRITE_ENABLED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_BUT_DEPTH_WRITE_ENABLED, 1, null, __line__);
             }
             if (desc.depth.compare == SG_COMPAREFUNC_ALWAYS || desc.depth.compare == SG_COMPAREFUNC_NEVER) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_COMPARE_FUNC_MISMATCH;
-                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_COMPARE_FUNC_MISMATCH, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_COMPARE_FUNC_MISMATCH, 1, null, __line__);
             }
         }
         for u64 color_index = 0; color_index < cast(u64, desc.color_count); color_index++ {
@@ -36767,20 +36767,20 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
             if bs.op_rgb == SG_BLENDOP_MIN || bs.op_rgb == SG_BLENDOP_MAX {
                 if (bs.src_factor_rgb == SG_BLENDFACTOR_ONE && bs.dst_factor_rgb == SG_BLENDFACTOR_ONE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE, 1, null, __line__);
                 }
             }
             if bs.op_alpha == SG_BLENDOP_MIN || bs.op_alpha == SG_BLENDOP_MAX {
                 if (bs.src_factor_alpha == SG_BLENDFACTOR_ONE && bs.dst_factor_alpha == SG_BLENDFACTOR_ONE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE, 1, null, __line__);
                 }
             }
             bool needs_dualsource_blending = _sg_is_dualsource_blendfactor(bs.src_factor_rgb) || _sg_is_dualsource_blendfactor(bs.dst_factor_rgb) || _sg_is_dualsource_blendfactor(bs.src_factor_alpha) || _sg_is_dualsource_blendfactor(bs.dst_factor_alpha);
             if needs_dualsource_blending != 0 {
                 if _sg.features.dual_source_blending == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_DUAL_SOURCE_BLENDING_NOT_SUPPORTED;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DUAL_SOURCE_BLENDING_NOT_SUPPORTED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DUAL_SOURCE_BLENDING_NOT_SUPPORTED, 1, null, __line__);
                 }
             }
         }
@@ -36804,59 +36804,59 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
         _sg_validate_begin();
         if pass._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, __line__);
         }
         if pass._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, __line__);
         }
         if is_compute_pass != 0 {
             if _sg_attachments_empty(&pass.attachments) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS, 1, null, __line__);
             }
         } else if is_invalid_swapchain_pass != 0 {
         } else if is_swapchain_pass != 0 {
             if pass.swapchain.width > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH, 1, null, __line__);
             }
             if pass.swapchain.height > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT, 1, null, __line__);
             }
             if pass.swapchain.sample_count > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT, 1, null, __line__);
             }
             if pass.swapchain.color_format > SG_PIXELFORMAT_NONE == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT, 1, null, __line__);
             }
             if pass.swapchain.d3d11.render_view != null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW, 1, null, __line__);
             }
             if pass.swapchain.depth_format == SG_PIXELFORMAT_NONE {
                 if pass.swapchain.d3d11.depth_stencil_view == null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, __line__);
                 }
             } else {
                 if pass.swapchain.d3d11.depth_stencil_view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW, 1, null, __line__);
                 }
             }
             if pass.swapchain.sample_count > 1 {
                 if pass.swapchain.d3d11.resolve_view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW, 1, null, __line__);
                 }
             } else {
                 if pass.swapchain.d3d11.resolve_view == null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET, 1, null, __line__);
                 }
             }
         } else {
@@ -36874,32 +36874,32 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 has_color_atts = true;
                 if atts_cont == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS, 1, null, __line__);
                 }
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.colors[att_index].id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_COLORATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width == -1 {
@@ -36909,15 +36909,15 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                                 } else {
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_sample_count == img.cmn.sample_count == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL, 1, null, __line__);
                                     }
                                 }
                             }
@@ -36931,46 +36931,46 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 }
                 if pass.attachments.colors[att_index].id != cast(u32, SG_INVALID_ID) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW, 1, null, __line__);
                 }
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.resolves[att_index].id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_RESOLVEATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width != -1 {
                                     if color_sample_count > 1 == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT, 1, null, __line__);
                                     }
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                 }
                             }
@@ -36983,41 +36983,41 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.depth_stencil.id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_DEPTHSTENCILATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width != -1 {
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_sample_count == img.cmn.sample_count == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT, 1, null, __line__);
                                     }
                                 }
                             }
@@ -37027,41 +37027,41 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
             }
             if (has_color_atts || has_depth_stencil_atts) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED, 1, null, __line__);
             }
         }
         if is_compute_pass || is_offscreen_pass || is_invalid_swapchain_pass {
             if pass.swapchain.width == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.height == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.sample_count == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.color_format == _SG_PIXELFORMAT_DEFAULT == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.depth_format == _SG_PIXELFORMAT_DEFAULT == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.d3d11.render_view == null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.d3d11.depth_stencil_view == null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.d3d11.resolve_view == null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET, 1, null, __line__);
             }
         }
         return _sg_validate_end();
@@ -39835,7 +39835,7 @@ void _sapp_macos_gl_init(NSRect window_rect) {
             attrs[i++] = NSOpenGLProfileVersion4_1Core;
         }
         default: {
-            _sapp_log(SAPP_LOGITEM_MACOS_INVALID_NSOPENGL_PROFILE, 0, null, 3246);
+            _sapp_log(SAPP_LOGITEM_MACOS_INVALID_NSOPENGL_PROFILE, 0, null, __line__);
         }
     }
     attrs[i++] = NSOpenGLPFAColorSize;
@@ -41090,72 +41090,72 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
         _sg_validate_begin();
         if desc._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, __line__);
         }
         if desc._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, __line__);
         }
         if is_compute_shader != 0 {
             if null != desc.compute_func.source == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE, 1, null, __line__);
             }
         } else {
             if null != desc.vertex_func.source == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE, 1, null, __line__);
             }
             if null != desc.fragment_func.source == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE, 1, null, __line__);
             }
         }
         if is_compute_shader != 0 {
             if (null == desc.vertex_func.source && null == desc.vertex_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
             if (null == desc.fragment_func.source && null == desc.fragment_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
         } else {
             if (null == desc.compute_func.source && null == desc.compute_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
         }
         for u64 i = 0; i < cast(u64, SG_MAX_VERTEX_ATTRIBUTES); i++ {
             if desc.attrs[i].glsl_name != null {
                 if strlen(desc.attrs[i].glsl_name) < cast(u64, _SG_STRING_SIZE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, __line__);
                 }
             }
             if desc.attrs[i].hlsl_sem_name != null {
                 if strlen(desc.attrs[i].hlsl_sem_name) < cast(u64, _SG_STRING_SIZE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, __line__);
                 }
             }
         }
         if null != desc.vertex_func.bytecode.ptr {
             if desc.vertex_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         if null != desc.fragment_func.bytecode.ptr {
             if desc.fragment_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         if null != desc.compute_func.bytecode.ptr {
             if desc.compute_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         _sg_u128_t glsl_sbuf_bnd_bits = _sg_u128();
@@ -41167,7 +41167,7 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             }
             if ub_desc.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO, 1, null, __line__);
             }
             bool uniforms_continuous = true;
             u32 uniform_offset = 0;
@@ -41177,16 +41177,16 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 if u_desc.type != SG_UNIFORMTYPE_INVALID {
                     if uniforms_continuous == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_CONT_MEMBERS;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_CONT_MEMBERS, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_CONT_MEMBERS, 1, null, __line__);
                     }
                     if u_desc.glsl_name == null {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_UNIFORM_GLSL_NAME;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_UNIFORM_GLSL_NAME, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_UNIFORM_GLSL_NAME, 1, null, __line__);
                     }
                     var array_count = cast(i32, u_desc.array_count);
                     if array_count > 0 == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_ARRAY_COUNT;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_ARRAY_COUNT, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_ARRAY_COUNT, 1, null, __line__);
                     }
                     u32 u_align = _sg_uniform_alignment(u_desc.type, array_count, ub_desc.layout);
                     u32 u_size = _sg_uniform_size(u_desc.type, array_count, ub_desc.layout);
@@ -41197,7 +41197,7 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                         if array_count > 1 {
                             if (u_desc.type == SG_UNIFORMTYPE_FLOAT4 || u_desc.type == SG_UNIFORMTYPE_INT4 || u_desc.type == SG_UNIFORMTYPE_MAT4) == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_STD140_ARRAY_TYPE;
-                                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_STD140_ARRAY_TYPE, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_STD140_ARRAY_TYPE, 1, null, __line__);
                             }
                         }
                     }
@@ -41210,11 +41210,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             }
             if cast(u64, uniform_offset) == ub_desc.size == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_MISMATCH;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_MISMATCH, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_MISMATCH, 1, null, __line__);
             }
             if num_uniforms > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_MEMBERS;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_MEMBERS, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_MEMBERS, 1, null, __line__);
             }
         }
         u32 texview_slot_mask = 0;
@@ -41228,18 +41228,18 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 sg_shader_storage_buffer_view* sbuf_desc = &view_desc.storage_buffer;
                 if _sg_validate_slot_bits(glsl_sbuf_bnd_bits, SG_SHADERSTAGE_NONE, sbuf_desc.glsl_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_GLSL_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_GLSL_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_GLSL_BINDING_COLLISION, 1, null, __line__);
                 }
                 glsl_sbuf_bnd_bits = _sg_validate_set_slot_bit(glsl_sbuf_bnd_bits, SG_SHADERSTAGE_NONE, sbuf_desc.glsl_binding_n);
             } else if view_desc.storage_image.stage != SG_SHADERSTAGE_NONE {
                 sg_shader_storage_image_view* simg_desc = &view_desc.storage_image;
                 if simg_desc.stage == SG_SHADERSTAGE_COMPUTE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE, 1, null, __line__);
                 }
                 if _sg_validate_slot_bits(glsl_simg_bnd_bits, SG_SHADERSTAGE_NONE, simg_desc.glsl_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_GLSL_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_GLSL_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_GLSL_BINDING_COLLISION, 1, null, __line__);
                 }
                 glsl_simg_bnd_bits = _sg_validate_set_slot_bit(glsl_simg_bnd_bits, SG_SHADERSTAGE_NONE, simg_desc.glsl_binding_n);
             }
@@ -41261,17 +41261,17 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             }
             if tex_smp_desc.glsl_name != null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_GLSL_NAME;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_GLSL_NAME, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_GLSL_NAME, 1, null, __line__);
             }
             bool view_slot_in_range = cast(i32, tex_smp_desc.view_slot) < SG_MAX_VIEW_BINDSLOTS;
             bool smp_slot_in_range = cast(i32, tex_smp_desc.sampler_slot) < SG_MAX_SAMPLER_BINDSLOTS;
             if view_slot_in_range == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE, 1, null, __line__);
             }
             if smp_slot_in_range == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, __line__);
             }
             if view_slot_in_range && smp_slot_in_range {
                 ref_texview_slot_mask |= cast(u32, 1 << cast(i32, tex_smp_desc.view_slot));
@@ -41280,39 +41280,39 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 sg_shader_sampler* smp_desc = &desc.samplers[tex_smp_desc.sampler_slot];
                 if view_desc.texture.stage != SG_SHADERSTAGE_NONE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW, 1, null, __line__);
                 }
                 if view_desc.texture.stage == tex_smp_desc.stage == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH, 1, null, __line__);
                 }
                 if smp_desc.stage == tex_smp_desc.stage == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH, 1, null, __line__);
                 }
                 bool needs_nonfiltering = view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_UINT || view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_SINT || view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_UNFILTERABLE_FLOAT;
                 bool needs_comparison = view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_DEPTH;
                 if needs_nonfiltering != 0 {
                     if (needs_nonfiltering && smp_desc.sampler_type == SG_SAMPLERTYPE_NONFILTERING) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED, 1, null, __line__);
                     }
                 }
                 if needs_comparison != 0 {
                     if (needs_comparison && smp_desc.sampler_type == SG_SAMPLERTYPE_COMPARISON) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED, 1, null, __line__);
                     }
                 }
             }
         }
         if texview_slot_mask == ref_texview_slot_mask == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, __line__);
         }
         if smp_slot_mask == ref_smp_slot_mask == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -41335,34 +41335,34 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
         _sg_validate_begin();
         if pass._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, __line__);
         }
         if pass._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, __line__);
         }
         if is_compute_pass != 0 {
             if _sg_attachments_empty(&pass.attachments) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS, 1, null, __line__);
             }
         } else if is_invalid_swapchain_pass != 0 {
         } else if is_swapchain_pass != 0 {
             if pass.swapchain.width > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH, 1, null, __line__);
             }
             if pass.swapchain.height > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT, 1, null, __line__);
             }
             if pass.swapchain.sample_count > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT, 1, null, __line__);
             }
             if pass.swapchain.color_format > SG_PIXELFORMAT_NONE == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT, 1, null, __line__);
             }
         } else {
             bool has_color_atts = false;
@@ -41379,32 +41379,32 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 has_color_atts = true;
                 if atts_cont == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS, 1, null, __line__);
                 }
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.colors[att_index].id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_COLORATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width == -1 {
@@ -41414,15 +41414,15 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                                 } else {
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_sample_count == img.cmn.sample_count == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL, 1, null, __line__);
                                     }
                                 }
                             }
@@ -41436,46 +41436,46 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 }
                 if pass.attachments.colors[att_index].id != cast(u32, SG_INVALID_ID) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW, 1, null, __line__);
                 }
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.resolves[att_index].id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_RESOLVEATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width != -1 {
                                     if color_sample_count > 1 == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT, 1, null, __line__);
                                     }
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                 }
                             }
@@ -41488,41 +41488,41 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.depth_stencil.id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_DEPTHSTENCILATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width != -1 {
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_sample_count == img.cmn.sample_count == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT, 1, null, __line__);
                                     }
                                 }
                             }
@@ -41532,33 +41532,33 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
             }
             if (has_color_atts || has_depth_stencil_atts) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED, 1, null, __line__);
             }
         }
         if is_compute_pass || is_offscreen_pass || is_invalid_swapchain_pass {
             if pass.swapchain.width == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.height == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.sample_count == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.color_format == _SG_PIXELFORMAT_DEFAULT == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.depth_format == _SG_PIXELFORMAT_DEFAULT == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.gl.framebuffer == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_GL_EXPECT_FRAMEBUFFER_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_GL_EXPECT_FRAMEBUFFER_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_GL_EXPECT_FRAMEBUFFER_NOTSET, 1, null, __line__);
             }
         }
         return _sg_validate_end();
@@ -46674,7 +46674,7 @@ void _sapp_x11_query_system_dpi() {
     }
     if dpi_ok == 0 {
         _sapp.x11.dpi = 96.0f;
-        _sapp_log(SAPP_LOGITEM_LINUX_X11_QUERY_SYSTEM_DPI_FAILED, 2, null, 3248);
+        _sapp_log(SAPP_LOGITEM_LINUX_X11_QUERY_SYSTEM_DPI_FAILED, 2, null, __line__);
     }
 }
 
@@ -46724,7 +46724,7 @@ void _sapp_glx_init() {
         }
     }
     if _sapp.glx.libgl == null {
-        _sapp_log(SAPP_LOGITEM_LINUX_GLX_LOAD_LIBGL_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_GLX_LOAD_LIBGL_FAILED, 0, null, __line__);
     }
     _sapp.glx.GetFBConfigs = cast(PFNGLXGETFBCONFIGSPROC, dlsym(_sapp.glx.libgl, "glXGetFBConfigs"));
     _sapp.glx.GetFBConfigAttrib = cast(PFNGLXGETFBCONFIGATTRIBPROC, dlsym(_sapp.glx.libgl, "glXGetFBConfigAttrib"));
@@ -46741,16 +46741,16 @@ void _sapp_glx_init() {
     _sapp.glx.GetProcAddressARB = cast(PFNGLXGETPROCADDRESSPROC, dlsym(_sapp.glx.libgl, "glXGetProcAddressARB"));
     _sapp.glx.GetVisualFromFBConfig = cast(PFNGLXGETVISUALFROMFBCONFIGPROC, dlsym(_sapp.glx.libgl, "glXGetVisualFromFBConfig"));
     if !_sapp.glx.GetFBConfigs || !_sapp.glx.GetFBConfigAttrib || !_sapp.glx.GetClientString || !_sapp.glx.QueryExtension || !_sapp.glx.QueryVersion || !_sapp.glx.DestroyContext || !_sapp.glx.MakeCurrent || !_sapp.glx.SwapBuffers || !_sapp.glx.QueryExtensionsString || !_sapp.glx.CreateWindow || !_sapp.glx.DestroyWindow || !_sapp.glx.GetProcAddress || !_sapp.glx.GetProcAddressARB || !_sapp.glx.GetVisualFromFBConfig {
-        _sapp_log(SAPP_LOGITEM_LINUX_GLX_LOAD_ENTRY_POINTS_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_GLX_LOAD_ENTRY_POINTS_FAILED, 0, null, __line__);
     }
     if _sapp.glx.QueryExtension(_sapp.x11.display, &_sapp.glx.error_base, &_sapp.glx.event_base) == 0 {
-        _sapp_log(SAPP_LOGITEM_LINUX_GLX_EXTENSION_NOT_FOUND, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_GLX_EXTENSION_NOT_FOUND, 0, null, __line__);
     }
     if _sapp.glx.QueryVersion(_sapp.x11.display, &_sapp.glx.major, &_sapp.glx.minor) == 0 {
-        _sapp_log(SAPP_LOGITEM_LINUX_GLX_QUERY_VERSION_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_GLX_QUERY_VERSION_FAILED, 0, null, __line__);
     }
     if _sapp.glx.major == 1 && _sapp.glx.minor < 3 {
-        _sapp_log(SAPP_LOGITEM_LINUX_GLX_VERSION_TOO_LOW, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_GLX_VERSION_TOO_LOW, 0, null, __line__);
     }
     u8* exts = _sapp.glx.QueryExtensionsString(_sapp.x11.display, _sapp.x11.screen);
     if _sapp_glx_extsupported("GLX_EXT_swap_control", exts) != 0 {
@@ -46791,7 +46791,7 @@ GLXFBConfig _sapp_glx_choosefbconfig() {
     }
     native_configs = _sapp.glx.GetFBConfigs(_sapp.x11.display, _sapp.x11.screen, &native_count);
     if !native_configs || !native_count {
-        _sapp_log(SAPP_LOGITEM_LINUX_GLX_NO_GLXFBCONFIGS, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_GLX_NO_GLXFBCONFIGS, 0, null, __line__);
     }
     usable_configs = cast(_sapp_gl_fbconfig*, _sapp_malloc_clear(cast(u64, native_count) * cast(u64, sizeof(_sapp_gl_fbconfig))));
     usable_count = 0;
@@ -46863,11 +46863,11 @@ GLXFBConfig _sapp_glx_choosefbconfig() {
 void _sapp_glx_choose_visual(Visual** visual, i32* depth) {
     GLXFBConfig native = _sapp_glx_choosefbconfig();
     if null == native {
-        _sapp_log(SAPP_LOGITEM_LINUX_GLX_NO_SUITABLE_GLXFBCONFIG, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_GLX_NO_SUITABLE_GLXFBCONFIG, 0, null, __line__);
     }
     XVisualInfo* result = _sapp.glx.GetVisualFromFBConfig(_sapp.x11.display, native);
     if result == null {
-        _sapp_log(SAPP_LOGITEM_LINUX_GLX_GET_VISUAL_FROM_FBCONFIG_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_GLX_GET_VISUAL_FROM_FBCONFIG_FAILED, 0, null, __line__);
     }
     *visual = result.visual;
     *depth = result.depth;
@@ -46882,10 +46882,10 @@ void _sapp_glx_make_current() {
 void _sapp_glx_create_context() {
     GLXFBConfig native = _sapp_glx_choosefbconfig();
     if null == native {
-        _sapp_log(SAPP_LOGITEM_LINUX_GLX_NO_SUITABLE_GLXFBCONFIG, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_GLX_NO_SUITABLE_GLXFBCONFIG, 0, null, __line__);
     }
     if (_sapp.glx.ARB_create_context && _sapp.glx.ARB_create_context_profile) == 0 {
-        _sapp_log(SAPP_LOGITEM_LINUX_GLX_REQUIRED_EXTENSIONS_MISSING, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_GLX_REQUIRED_EXTENSIONS_MISSING, 0, null, __line__);
     }
     _sapp_x11_grab_error_handler();
     i32[10] attribs = {
@@ -46894,12 +46894,12 @@ void _sapp_glx_create_context() {
     };
     _sapp.glx.ctx = _sapp.glx.CreateContextAttribsARB(_sapp.x11.display, native, null, True, attribs);
     if _sapp.glx.ctx == null {
-        _sapp_log(SAPP_LOGITEM_LINUX_GLX_CREATE_CONTEXT_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_GLX_CREATE_CONTEXT_FAILED, 0, null, __line__);
     }
     _sapp_x11_release_error_handler();
     _sapp.glx.window = _sapp.glx.CreateWindow(_sapp.x11.display, native, _sapp.x11.window, null);
     if _sapp.glx.window == 0 {
-        _sapp_log(SAPP_LOGITEM_LINUX_GLX_CREATE_WINDOW_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_GLX_CREATE_WINDOW_FAILED, 0, null, __line__);
     }
     _sapp_glx_make_current();
 }
@@ -47145,11 +47145,11 @@ void _sapp_x11_set_clipboard_string(u8* str_var) {
     assert(_sapp.clipboard.enabled && _sapp.clipboard.buffer);
     _sapp.clipboard.buffer[0] = 0;
     if strlen(str_var) >= cast(u64, _sapp.clipboard.buf_size) {
-        _sapp_log(SAPP_LOGITEM_CLIPBOARD_STRING_TOO_BIG, 1, null, 3247);
+        _sapp_log(SAPP_LOGITEM_CLIPBOARD_STRING_TOO_BIG, 1, null, __line__);
     }
     XSetSelectionOwner(_sapp.x11.display, _sapp.x11.CLIPBOARD, _sapp.x11.window, CurrentTime);
     if XGetSelectionOwner(_sapp.x11.display, _sapp.x11.CLIPBOARD) != _sapp.x11.window {
-        _sapp_log(SAPP_LOGITEM_LINUX_X11_FAILED_TO_BECOME_OWNER_OF_CLIPBOARD, 1, null, 3247);
+        _sapp_log(SAPP_LOGITEM_LINUX_X11_FAILED_TO_BECOME_OWNER_OF_CLIPBOARD, 1, null, __line__);
     }
 }
 
@@ -47181,7 +47181,7 @@ u8* _sapp_x11_get_clipboard_string() {
         return _sapp.clipboard.buffer;
     }
     if actualType == incremental || itemCount >= cast(u64, _sapp.clipboard.buf_size) {
-        _sapp_log(SAPP_LOGITEM_CLIPBOARD_STRING_TOO_BIG, 1, null, 3247);
+        _sapp_log(SAPP_LOGITEM_CLIPBOARD_STRING_TOO_BIG, 1, null, __line__);
         XFree(data);
         return _sapp.clipboard.buffer;
     }
@@ -47192,8 +47192,8 @@ u8* _sapp_x11_get_clipboard_string() {
 
 void _sapp_x11_update_window_title() {
     Xutf8SetWMProperties(_sapp.x11.display, _sapp.x11.window, _sapp.window_title, _sapp.window_title, null, 0, null, null, null);
-    XChangeProperty(_sapp.x11.display, _sapp.x11.window, _sapp.x11.NET_WM_NAME, _sapp.x11.UTF8_STRING, 8, PropModeReplace, cast(u8*, _sapp.window_title), strlen(_sapp.window_title));
-    XChangeProperty(_sapp.x11.display, _sapp.x11.window, _sapp.x11.NET_WM_ICON_NAME, _sapp.x11.UTF8_STRING, 8, PropModeReplace, cast(u8*, _sapp.window_title), strlen(_sapp.window_title));
+    XChangeProperty(_sapp.x11.display, _sapp.x11.window, _sapp.x11.NET_WM_NAME, _sapp.x11.UTF8_STRING, 8, PropModeReplace, _sapp.window_title, strlen(_sapp.window_title));
+    XChangeProperty(_sapp.x11.display, _sapp.x11.window, _sapp.x11.NET_WM_ICON_NAME, _sapp.x11.UTF8_STRING, 8, PropModeReplace, _sapp.window_title, strlen(_sapp.window_title));
     XFlush(_sapp.x11.display);
 }
 
@@ -47249,7 +47249,7 @@ void _sapp_x11_create_window(Visual* visual_or_null, i32 depth) {
     _sapp.x11.window = XCreateWindow(_sapp.x11.display, _sapp.x11.root, 0, 0, cast(u32, x11_window_width), cast(u32, x11_window_height), 0, depth, InputOutput, visual, wamask, &wa);
     _sapp_x11_release_error_handler();
     if _sapp.x11.window == 0 {
-        _sapp_log(SAPP_LOGITEM_LINUX_X11_CREATE_WINDOW_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_X11_CREATE_WINDOW_FAILED, 0, null, __line__);
     }
     Atom[1] protocols = {_sapp.x11.WM_DELETE_WINDOW};
     XSetWMProtocols(_sapp.x11.display, _sapp.x11.window, protocols, 1);
@@ -47526,7 +47526,7 @@ bool _sapp_x11_parse_dropped_files_list(u8* src) {
         u8 dst_chr = 0;
         if src_count <= 7 {
             if src_count == 1 && src_chr != 102 || src_count == 2 && src_chr != 105 || src_count == 3 && src_chr != 108 || src_count == 4 && src_chr != 101 || src_count == 5 && src_chr != 58 || src_count == 6 && src_chr != 47 || src_count == 7 && src_chr != 47 {
-                _sapp_log(SAPP_LOGITEM_LINUX_X11_DROPPED_FILE_URI_WRONG_SCHEME, 1, null, 3247);
+                _sapp_log(SAPP_LOGITEM_LINUX_X11_DROPPED_FILE_URI_WRONG_SCHEME, 1, null, __line__);
                 err = true;
                 break;
             }
@@ -47550,7 +47550,7 @@ bool _sapp_x11_parse_dropped_files_list(u8* src) {
             if dst_ptr < dst_end_ptr {
                 *dst_ptr++ = dst_chr;
             } else {
-                _sapp_log(SAPP_LOGITEM_DROPPED_FILE_PATH_TOO_LONG, 1, null, 3247);
+                _sapp_log(SAPP_LOGITEM_DROPPED_FILE_PATH_TOO_LONG, 1, null, __line__);
                 err = true;
                 break;
             }
@@ -47761,7 +47761,7 @@ void _sapp_x11_on_clientmessage(XEvent* event) {
             count = cast(u32, _sapp_x11_get_window_property(_sapp.x11.xdnd.source, _sapp.x11.xdnd.XdndTypeList, XA_ATOM, cast(u8**, &formats)));
         } else {
             count = 3;
-            formats = cast(Atom*, event.xclient.data.l) + 2;
+            formats = cast(Atom*, &event.xclient.data.l[0]) + 2;
         }
         for u32 i = 0; i < count; i++ {
             if formats[i] == _sapp.x11.xdnd.text_uri_list {
@@ -47907,7 +47907,7 @@ void _sapp_linux_run(sapp_desc* desc) {
     XrmInitialize();
     _sapp.x11.display = XOpenDisplay(null);
     if _sapp.x11.display == null {
-        _sapp_log(SAPP_LOGITEM_LINUX_X11_OPEN_DISPLAY_FAILED, 0, null, 3246);
+        _sapp_log(SAPP_LOGITEM_LINUX_X11_OPEN_DISPLAY_FAILED, 0, null, __line__);
     }
     _sapp.x11.screen = DefaultScreen(_sapp.x11.display);
     _sapp.x11.root = DefaultRootWindow(_sapp.x11.display);
@@ -49983,7 +49983,7 @@ i32 _sapp_android_input_cb(i32 fd, i32 events, void* data) {
     ignore fd;
     ignore data;
     if (events & ALOOPER_EVENT_INPUT) == 0 {
-        _sapp_log(SAPP_LOGITEM_ANDROID_UNSUPPORTED_INPUT_EVENT_INPUT_CB, 1, null, 3247);
+        _sapp_log(SAPP_LOGITEM_ANDROID_UNSUPPORTED_INPUT_EVENT_INPUT_CB, 1, null, __line__);
         return 1;
     }
     assert(cast(i64, _sapp.android.current.input));
@@ -50007,19 +50007,19 @@ i32 _sapp_android_input_cb(i32 fd, i32 events, void* data) {
 i32 _sapp_android_main_cb(i32 fd, i32 events, void* data) {
     ignore data;
     if (events & ALOOPER_EVENT_INPUT) == 0 {
-        _sapp_log(SAPP_LOGITEM_ANDROID_UNSUPPORTED_INPUT_EVENT_MAIN_CB, 1, null, 3247);
+        _sapp_log(SAPP_LOGITEM_ANDROID_UNSUPPORTED_INPUT_EVENT_MAIN_CB, 1, null, __line__);
         return 1;
     }
     _sapp_android_msg_t msg;
     if read(fd, &msg, sizeof(msg)) != sizeof(msg) {
-        _sapp_log(SAPP_LOGITEM_ANDROID_READ_MSG_FAILED, 1, null, 3247);
+        _sapp_log(SAPP_LOGITEM_ANDROID_READ_MSG_FAILED, 1, null, __line__);
         return 1;
     }
     pthread_mutex_lock(&_sapp.android.pt.mutex);
     switch msg {
         case _SOKOL_ANDROID_MSG_CREATE: {
             {
-                _sapp_log(SAPP_LOGITEM_ANDROID_MSG_CREATE, 3, null, 3249);
+                _sapp_log(SAPP_LOGITEM_ANDROID_MSG_CREATE, 3, null, __line__);
                 assert(cast(i64, !_sapp.valid));
                 bool result = _sapp_android_init_egl();
                 assert(cast(i64, result));
@@ -50029,25 +50029,25 @@ i32 _sapp_android_main_cb(i32 fd, i32 events, void* data) {
             }
         }
         case _SOKOL_ANDROID_MSG_RESUME: {
-            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_RESUME, 3, null, 3249);
+            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_RESUME, 3, null, __line__);
             _sapp.android.has_resumed = true;
             _sapp_android_app_event(SAPP_EVENTTYPE_RESUMED);
         }
         case _SOKOL_ANDROID_MSG_PAUSE: {
-            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_PAUSE, 3, null, 3249);
+            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_PAUSE, 3, null, __line__);
             _sapp.android.has_resumed = false;
             _sapp_android_app_event(SAPP_EVENTTYPE_SUSPENDED);
         }
         case _SOKOL_ANDROID_MSG_FOCUS: {
-            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_FOCUS, 3, null, 3249);
+            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_FOCUS, 3, null, __line__);
             _sapp.android.has_focus = true;
         }
         case _SOKOL_ANDROID_MSG_NO_FOCUS: {
-            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_NO_FOCUS, 3, null, 3249);
+            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_NO_FOCUS, 3, null, __line__);
             _sapp.android.has_focus = false;
         }
         case _SOKOL_ANDROID_MSG_SET_NATIVE_WINDOW: {
-            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_SET_NATIVE_WINDOW, 3, null, 3249);
+            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_SET_NATIVE_WINDOW, 3, null, __line__);
             if _sapp.android.current.window != _sapp.android.pending.window {
                 if _sapp.android.current.window != null {
                     _sapp_android_cleanup_egl_surface();
@@ -50063,7 +50063,7 @@ i32 _sapp_android_main_cb(i32 fd, i32 events, void* data) {
             _sapp.android.current.window = _sapp.android.pending.window;
         }
         case _SOKOL_ANDROID_MSG_SET_INPUT_QUEUE: {
-            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_SET_INPUT_QUEUE, 3, null, 3249);
+            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_SET_INPUT_QUEUE, 3, null, __line__);
             if _sapp.android.current.input != _sapp.android.pending.input {
                 if _sapp.android.current.input != null {
                     AInputQueue_detachLooper(_sapp.android.current.input);
@@ -50075,13 +50075,13 @@ i32 _sapp_android_main_cb(i32 fd, i32 events, void* data) {
             _sapp.android.current.input = _sapp.android.pending.input;
         }
         case _SOKOL_ANDROID_MSG_DESTROY: {
-            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_DESTROY, 3, null, 3249);
+            _sapp_log(SAPP_LOGITEM_ANDROID_MSG_DESTROY, 3, null, __line__);
             _sapp_android_cleanup();
             _sapp.valid = false;
             _sapp.android.is_thread_stopping = true;
         }
         default: {
-            _sapp_log(SAPP_LOGITEM_ANDROID_UNKNOWN_MSG, 2, null, 3248);
+            _sapp_log(SAPP_LOGITEM_ANDROID_UNKNOWN_MSG, 2, null, __line__);
         }
     }
     pthread_cond_broadcast(&_sapp.android.pt.cond);
@@ -50106,10 +50106,10 @@ void _sapp_android_show_keyboard(bool shown) {
 
 void* _sapp_android_loop(void* arg) {
     ignore arg;
-    _sapp_log(SAPP_LOGITEM_ANDROID_LOOP_THREAD_STARTED, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_LOOP_THREAD_STARTED, 3, null, __line__);
     _sapp.android.looper = ALooper_prepare(0);
     ALooper_addFd(_sapp.android.looper, _sapp.android.pt.read_from_main_fd, -2, ALOOPER_EVENT_INPUT, _sapp_android_main_cb, null);
-    _sapp_log(SAPP_LOGITEM_ANDROID_CHOREOGRAPHER_UNAVAILABLE, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_CHOREOGRAPHER_UNAVAILABLE, 3, null, __line__);
     pthread_mutex_lock(&_sapp.android.pt.mutex);
     _sapp.android.is_thread_started = true;
     pthread_cond_broadcast(&_sapp.android.pt.cond);
@@ -50131,38 +50131,38 @@ void* _sapp_android_loop(void* arg) {
     _sapp.android.is_thread_stopped = true;
     pthread_cond_broadcast(&_sapp.android.pt.cond);
     pthread_mutex_unlock(&_sapp.android.pt.mutex);
-    _sapp_log(SAPP_LOGITEM_ANDROID_LOOP_THREAD_DONE, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_LOOP_THREAD_DONE, 3, null, __line__);
     return null;
 }
 
 /* android main/ui thread */
 void _sapp_android_msg(_sapp_android_msg_t msg) {
     if write(_sapp.android.pt.write_from_main_fd, &msg, sizeof(msg)) != sizeof(msg) {
-        _sapp_log(SAPP_LOGITEM_ANDROID_WRITE_MSG_FAILED, 1, null, 3247);
+        _sapp_log(SAPP_LOGITEM_ANDROID_WRITE_MSG_FAILED, 1, null, __line__);
     }
 }
 
 void _sapp_android_on_start(ANativeActivity* activity) {
     ignore activity;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONSTART, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONSTART, 3, null, __line__);
 }
 
 void _sapp_android_on_resume(ANativeActivity* activity) {
     ignore activity;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONRESUME, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONRESUME, 3, null, __line__);
     _sapp_android_msg(_SOKOL_ANDROID_MSG_RESUME);
 }
 
 void* _sapp_android_on_save_instance_state(ANativeActivity* activity, u64* out_size) {
     ignore activity;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONSAVEINSTANCESTATE, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONSAVEINSTANCESTATE, 3, null, __line__);
     *out_size = 0;
     return null;
 }
 
 void _sapp_android_on_window_focus_changed(ANativeActivity* activity, i32 has_focus) {
     ignore activity;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONWINDOWFOCUSCHANGED, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONWINDOWFOCUSCHANGED, 3, null, __line__);
     if has_focus != 0 {
         _sapp_android_msg(_SOKOL_ANDROID_MSG_FOCUS);
     } else {
@@ -50172,13 +50172,13 @@ void _sapp_android_on_window_focus_changed(ANativeActivity* activity, i32 has_fo
 
 void _sapp_android_on_pause(ANativeActivity* activity) {
     ignore activity;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONPAUSE, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONPAUSE, 3, null, __line__);
     _sapp_android_msg(_SOKOL_ANDROID_MSG_PAUSE);
 }
 
 void _sapp_android_on_stop(ANativeActivity* activity) {
     ignore activity;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONSTOP, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONSTOP, 3, null, __line__);
 }
 
 void _sapp_android_msg_set_native_window(ANativeWindow* window) {
@@ -50193,14 +50193,14 @@ void _sapp_android_msg_set_native_window(ANativeWindow* window) {
 
 void _sapp_android_on_native_window_created(ANativeActivity* activity, ANativeWindow* window) {
     ignore activity;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONNATIVEWINDOWCREATED, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONNATIVEWINDOWCREATED, 3, null, __line__);
     _sapp_android_msg_set_native_window(window);
 }
 
 void _sapp_android_on_native_window_destroyed(ANativeActivity* activity, ANativeWindow* window) {
     ignore activity;
     ignore window;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONNATIVEWINDOWDESTROYED, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONNATIVEWINDOWDESTROYED, 3, null, __line__);
     _sapp_android_msg_set_native_window(null);
 }
 
@@ -50216,30 +50216,30 @@ void _sapp_android_msg_set_input_queue(AInputQueue* input) {
 
 void _sapp_android_on_input_queue_created(ANativeActivity* activity, AInputQueue* queue) {
     ignore activity;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONINPUTQUEUECREATED, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONINPUTQUEUECREATED, 3, null, __line__);
     _sapp_android_msg_set_input_queue(queue);
 }
 
 void _sapp_android_on_input_queue_destroyed(ANativeActivity* activity, AInputQueue* queue) {
     ignore activity;
     ignore queue;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONINPUTQUEUEDESTROYED, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONINPUTQUEUEDESTROYED, 3, null, __line__);
     _sapp_android_msg_set_input_queue(null);
 }
 
 void _sapp_android_on_config_changed(ANativeActivity* activity) {
     ignore activity;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONCONFIGURATIONCHANGED, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONCONFIGURATIONCHANGED, 3, null, __line__);
 }
 
 void _sapp_android_on_low_memory(ANativeActivity* activity) {
     ignore activity;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONLOWMEMORY, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONLOWMEMORY, 3, null, __line__);
 }
 
 void _sapp_android_on_destroy(ANativeActivity* activity) {
     ignore activity;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONDESTROY, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONDESTROY, 3, null, __line__);
     pthread_mutex_lock(&_sapp.android.pt.mutex);
     _sapp_android_msg(_SOKOL_ANDROID_MSG_DESTROY);
     while _sapp.android.is_thread_stopped == 0 {
@@ -50250,7 +50250,7 @@ void _sapp_android_on_destroy(ANativeActivity* activity) {
     pthread_mutex_destroy(&_sapp.android.pt.mutex);
     close(_sapp.android.pt.read_from_main_fd);
     close(_sapp.android.pt.write_from_main_fd);
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_DONE, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_DONE, 3, null, __line__);
     exit(0);
 }
 }
@@ -50258,7 +50258,7 @@ void _sapp_android_on_destroy(ANativeActivity* activity) {
 void ANativeActivity_onCreate(ANativeActivity* activity, void* saved_state, u64 saved_state_size) {
     ignore saved_state;
     ignore saved_state_size;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONCREATE, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_ONCREATE, 3, null, __line__);
     _sapp_clear(&_sapp, cast(u64, sizeof(_sapp)));
     _sapp.android.activity = activity;
     sapp_desc desc = sokol_main();
@@ -50266,7 +50266,7 @@ void ANativeActivity_onCreate(ANativeActivity* activity, void* saved_state, u64 
     _sapp.android.activity = activity;
     noinit i32[2] pipe_fd;
     if pipe(pipe_fd) != 0 {
-        _sapp_log(SAPP_LOGITEM_ANDROID_CREATE_THREAD_PIPE_FAILED, 1, null, 3247);
+        _sapp_log(SAPP_LOGITEM_ANDROID_CREATE_THREAD_PIPE_FAILED, 1, null, __line__);
         return;
     }
     _sapp.android.pt.read_from_main_fd = pipe_fd[0];
@@ -50301,7 +50301,7 @@ void ANativeActivity_onCreate(ANativeActivity* activity, void* saved_state, u64 
     activity.callbacks.onInputQueueCreated = _sapp_android_on_input_queue_created;
     activity.callbacks.onInputQueueDestroyed = _sapp_android_on_input_queue_destroyed;
     activity.callbacks.onLowMemory = _sapp_android_on_low_memory;
-    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_CREATE_SUCCESS, 3, null, 3249);
+    _sapp_log(SAPP_LOGITEM_ANDROID_NATIVE_ACTIVITY_CREATE_SUCCESS, 3, null, __line__);
 }
 // ██      ██ ███    ██ ██    ██ ██   ██
 // ██      ██ ████   ██ ██    ██  ██ ██
@@ -51294,22 +51294,22 @@ bool _sg_gl_check_framebuffer_status() {
     if fb_status != GL_FRAMEBUFFER_COMPLETE {
         switch fb_status {
             case 0x8219: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNDEFINED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNDEFINED, 1, null, __line__);
             }
             case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_ATTACHMENT, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_ATTACHMENT, 1, null, __line__);
             }
             case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MISSING_ATTACHMENT, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MISSING_ATTACHMENT, 1, null, __line__);
             }
             case GL_FRAMEBUFFER_UNSUPPORTED: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNSUPPORTED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNSUPPORTED, 1, null, __line__);
             }
             case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MULTISAMPLE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MULTISAMPLE, 1, null, __line__);
             }
             default: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNKNOWN, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNKNOWN, 1, null, __line__);
             }
         }
         return false;
@@ -52920,35 +52920,35 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
         _sg_validate_begin();
         if desc._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY, 1, null, __line__);
         }
         if desc._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_CANARY, 1, null, __line__);
         }
         if desc.shader.id != cast(u32, SG_INVALID_ID) == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER;
-            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, __line__);
         }
         _sg_shader_t* shd = _sg_lookup_shader(desc.shader.id);
         if null != shd == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER;
-            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, __line__);
         }
         if shd != null {
             if shd.slot.state == SG_RESOURCESTATE_VALID == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER;
-                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER, 1, null, __line__);
             }
             if desc.compute != 0 {
                 if shd.cmn.is_compute == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_COMPUTE_SHADER_EXPECTED;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_COMPUTE_SHADER_EXPECTED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_COMPUTE_SHADER_EXPECTED, 1, null, __line__);
                 }
             } else {
                 if !shd.cmn.is_compute == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_COMPUTE_SHADER_EXPECTED;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_COMPUTE_SHADER_EXPECTED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_COMPUTE_SHADER_EXPECTED, 1, null, __line__);
                 }
                 bool attrs_cont = true;
                 for u64 attr_index = 0; attr_index < cast(u64, SG_MAX_VERTEX_ATTRIBUTES); attr_index++ {
@@ -52959,31 +52959,31 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
                     }
                     if attrs_cont == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_CONT_ATTRS;
-                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_CONT_ATTRS, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_NO_CONT_ATTRS, 1, null, __line__);
                     }
                     assert(a_state.buffer_index < SG_MAX_VERTEXBUFFER_BINDSLOTS);
                     if shd.cmn.attrs[attr_index].base_type != SG_SHADERATTRBASETYPE_UNDEFINED {
                         if _sg_vertexformat_basetype(a_state.format) != shd.cmn.attrs[attr_index].base_type {
                             if false == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH;
-                                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 1, null, __line__);
                             }
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, "attr format:", 7225);
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, _sg_vertexformat_to_string(a_state.format), 7225);
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, "shader attr base type:", 7225);
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, _sg_shaderattrbasetype_to_string(shd.cmn.attrs[attr_index].base_type), 7225);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, "attr format:", __line__);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, _sg_vertexformat_to_string(a_state.format), __line__);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, "shader attr base type:", __line__);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_BASETYPE_MISMATCH, 3, _sg_shaderattrbasetype_to_string(shd.cmn.attrs[attr_index].base_type), __line__);
                         }
                     }
                     if a_state.format == SG_VERTEXFORMAT_INT10_N2 {
                         if _sg.features.vertexformat_int10_n2 == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_VERTEXFORMAT_INT10_N2_NOT_SUPPORTED;
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_VERTEXFORMAT_INT10_N2_NOT_SUPPORTED, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_VERTEXFORMAT_INT10_N2_NOT_SUPPORTED, 1, null, __line__);
                         }
                     }
                     when defined(SOKOL_D3D11) {
                         if !_sg_strempty(&shd.d3d11.attrs[attr_index].sem_name) == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_SEMANTICS;
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_SEMANTICS, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_ATTR_SEMANTICS, 1, null, __line__);
                         }
                     }
                 }
@@ -52991,7 +52991,7 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
                     if shd.cmn.views[i].view_type == SG_VIEWTYPE_STORAGEBUFFER {
                         if shd.cmn.views[i].sbuf_readonly == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER_READONLY_STORAGEBUFFERS;
-                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER_READONLY_STORAGEBUFFERS, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_SHADER_READONLY_STORAGEBUFFERS, 1, null, __line__);
                         }
                     }
                 }
@@ -53002,7 +53002,7 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
                     }
                     if _sg_multiple_u64(cast(u64, l_state.stride), 4) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_LAYOUT_STRIDE4;
-                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_LAYOUT_STRIDE4, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_LAYOUT_STRIDE4, 1, null, __line__);
                     }
                 }
             }
@@ -53010,11 +53010,11 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
         if desc.depth.pixel_format == SG_PIXELFORMAT_NONE {
             if desc.depth.write_enabled == false == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_BUT_DEPTH_WRITE_ENABLED;
-                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_BUT_DEPTH_WRITE_ENABLED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_BUT_DEPTH_WRITE_ENABLED, 1, null, __line__);
             }
             if (desc.depth.compare == SG_COMPAREFUNC_ALWAYS || desc.depth.compare == SG_COMPAREFUNC_NEVER) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_COMPARE_FUNC_MISMATCH;
-                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_COMPARE_FUNC_MISMATCH, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DEPTH_FORMAT_NONE_COMPARE_FUNC_MISMATCH, 1, null, __line__);
             }
         }
         for u64 color_index = 0; color_index < cast(u64, desc.color_count); color_index++ {
@@ -53023,20 +53023,20 @@ bool _sg_validate_pipeline_desc(sg_pipeline_desc* desc) {
             if bs.op_rgb == SG_BLENDOP_MIN || bs.op_rgb == SG_BLENDOP_MAX {
                 if (bs.src_factor_rgb == SG_BLENDFACTOR_ONE && bs.dst_factor_rgb == SG_BLENDFACTOR_ONE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE, 1, null, __line__);
                 }
             }
             if bs.op_alpha == SG_BLENDOP_MIN || bs.op_alpha == SG_BLENDOP_MAX {
                 if (bs.src_factor_alpha == SG_BLENDFACTOR_ONE && bs.dst_factor_alpha == SG_BLENDFACTOR_ONE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_BLENDOP_MINMAX_REQUIRES_BLENDFACTOR_ONE, 1, null, __line__);
                 }
             }
             bool needs_dualsource_blending = _sg_is_dualsource_blendfactor(bs.src_factor_rgb) || _sg_is_dualsource_blendfactor(bs.dst_factor_rgb) || _sg_is_dualsource_blendfactor(bs.src_factor_alpha) || _sg_is_dualsource_blendfactor(bs.dst_factor_alpha);
             if needs_dualsource_blending != 0 {
                 if _sg.features.dual_source_blending == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_PIPELINEDESC_DUAL_SOURCE_BLENDING_NOT_SUPPORTED;
-                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DUAL_SOURCE_BLENDING_NOT_SUPPORTED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_PIPELINEDESC_DUAL_SOURCE_BLENDING_NOT_SUPPORTED, 1, null, __line__);
                 }
             }
         }
@@ -56666,7 +56666,7 @@ _sg_wgpu_bindgroup_handle_t _sg_wgpu_alloc_bindgroup() {
         res.id = _sg_slot_alloc(&p.pool, &p.bindgroups[slot_index].slot, slot_index);
     } else {
         res.id = cast(u32, SG_INVALID_ID);
-        _sg_log(SG_LOGITEM_WGPU_BINDGROUPS_POOL_EXHAUSTED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_WGPU_BINDGROUPS_POOL_EXHAUSTED, 1, null, __line__);
     }
     return res;
 }
@@ -56869,7 +56869,7 @@ _sg_wgpu_bindgroup_t* _sg_wgpu_create_bindgroup(_sg_bindings_ptrs_t* bnd) {
     bg_desc.entries = bg_entries;
     bg.bindgroup = wgpuDeviceCreateBindGroup(_sg.wgpu.dev, &bg_desc);
     if bg.bindgroup == null {
-        _sg_log(SG_LOGITEM_WGPU_CREATEBINDGROUP_FAILED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_WGPU_CREATEBINDGROUP_FAILED, 1, null, __line__);
         bg.slot.state = SG_RESOURCESTATE_FAILED;
         return bg;
     }
@@ -56916,10 +56916,10 @@ void _sg_wgpu_bindgroups_cache_init(sg_desc* desc) {
     assert(_sg.wgpu.bindgroups_cache.items == null);
     i32 num = desc.wgpu.bindgroups_cache_size;
     if num <= 1 {
-        _sg_log(SG_LOGITEM_WGPU_BINDGROUPSCACHE_SIZE_GREATER_ONE, 0, null, 7221);
+        _sg_log(SG_LOGITEM_WGPU_BINDGROUPSCACHE_SIZE_GREATER_ONE, 0, null, __line__);
     }
     if (num & num - 1) == 0 == 0 {
-        _sg_log(SG_LOGITEM_WGPU_BINDGROUPSCACHE_SIZE_POW2, 0, null, 7221);
+        _sg_log(SG_LOGITEM_WGPU_BINDGROUPSCACHE_SIZE_POW2, 0, null, __line__);
     }
     _sg.wgpu.bindgroups_cache.num = cast(u32, desc.wgpu.bindgroups_cache_size);
     _sg.wgpu.bindgroups_cache.index_mask = _sg.wgpu.bindgroups_cache.num - 1;
@@ -57241,7 +57241,7 @@ sg_resource_state _sg_wgpu_create_buffer(_sg_buffer_t* buf, sg_buffer_desc* desc
         wgpu_buf_desc.label = _sg_wgpu_stringview(desc.label);
         buf.wgpu.buf = wgpuDeviceCreateBuffer(_sg.wgpu.dev, &wgpu_buf_desc);
         if null == buf.wgpu.buf {
-            _sg_log(SG_LOGITEM_WGPU_CREATE_BUFFER_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_WGPU_CREATE_BUFFER_FAILED, 1, null, __line__);
             return SG_RESOURCESTATE_FAILED;
         }
         if map_at_creation != 0 {
@@ -57366,7 +57366,7 @@ sg_resource_state _sg_wgpu_create_image(_sg_image_t* img, sg_image_desc* desc) {
         wgpu_tex_desc.sampleCount = cast(u32, img.cmn.sample_count);
         img.wgpu.tex = wgpuDeviceCreateTexture(_sg.wgpu.dev, &wgpu_tex_desc);
         if null == img.wgpu.tex {
-            _sg_log(SG_LOGITEM_WGPU_CREATE_TEXTURE_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_WGPU_CREATE_TEXTURE_FAILED, 1, null, __line__);
             return SG_RESOURCESTATE_FAILED;
         }
         if desc.data.mip_levels[0].ptr != null {
@@ -57414,7 +57414,7 @@ sg_resource_state _sg_wgpu_create_sampler(_sg_sampler_t* smp, sg_sampler_desc* d
         wgpu_desc.maxAnisotropy = cast(u16, desc.max_anisotropy);
         smp.wgpu.smp = wgpuDeviceCreateSampler(_sg.wgpu.dev, &wgpu_desc);
         if null == smp.wgpu.smp {
-            _sg_log(SG_LOGITEM_WGPU_CREATE_SAMPLER_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_WGPU_CREATE_SAMPLER_FAILED, 1, null, __line__);
             return SG_RESOURCESTATE_FAILED;
         }
     }
@@ -57444,7 +57444,7 @@ _sg_wgpu_shader_func_t _sg_wgpu_create_shader_func(sg_shader_function* func, u8*
     wgpu_shdmod_desc.label = _sg_wgpu_stringview(label);
     res.module = wgpuDeviceCreateShaderModule(_sg.wgpu.dev, &wgpu_shdmod_desc);
     if null == res.module {
-        _sg_log(SG_LOGITEM_WGPU_CREATE_SHADER_MODULE_FAILED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_WGPU_CREATE_SHADER_MODULE_FAILED, 1, null, __line__);
     }
     return res;
 }
@@ -57473,7 +57473,7 @@ bool _sg_wgpu_ensure_wgsl_bindslot_ranges(sg_shader_desc* desc) {
         sg_shader_uniform_block* ub = &desc.uniform_blocks[i];
         if ub.stage != SG_SHADERSTAGE_NONE {
             if cast(i32, ub.wgsl_group0_binding_n) >= 2 * SG_MAX_UNIFORMBLOCK_BINDSLOTS {
-                _sg_log(SG_LOGITEM_WGPU_UNIFORMBLOCK_WGSL_GROUP0_BINDING_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_WGPU_UNIFORMBLOCK_WGSL_GROUP0_BINDING_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
@@ -57482,19 +57482,19 @@ bool _sg_wgpu_ensure_wgsl_bindslot_ranges(sg_shader_desc* desc) {
         sg_shader_view* view = &desc.views[i];
         if view.texture.stage != SG_SHADERSTAGE_NONE {
             if view.texture.wgsl_group1_binding_n >= 128 {
-                _sg_log(SG_LOGITEM_WGPU_TEXTURE_WGSL_GROUP1_BINDING_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_WGPU_TEXTURE_WGSL_GROUP1_BINDING_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
         if view.storage_buffer.stage != SG_SHADERSTAGE_NONE {
             if view.storage_buffer.wgsl_group1_binding_n >= 128 {
-                _sg_log(SG_LOGITEM_WGPU_STORAGEBUFFER_WGSL_GROUP1_BINDING_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_WGPU_STORAGEBUFFER_WGSL_GROUP1_BINDING_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
         if view.storage_image.stage != SG_SHADERSTAGE_NONE {
             if view.storage_image.wgsl_group1_binding_n >= 128 {
-                _sg_log(SG_LOGITEM_WGPU_STORAGEIMAGE_WGSL_GROUP1_BINDING_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_WGPU_STORAGEIMAGE_WGSL_GROUP1_BINDING_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
@@ -57503,7 +57503,7 @@ bool _sg_wgpu_ensure_wgsl_bindslot_ranges(sg_shader_desc* desc) {
         sg_shader_sampler* smp = &desc.samplers[i];
         if smp.stage != SG_SHADERSTAGE_NONE {
             if smp.wgsl_group1_binding_n >= 128 {
-                _sg_log(SG_LOGITEM_WGPU_SAMPLER_WGSL_GROUP1_BINDING_OUT_OF_RANGE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_WGPU_SAMPLER_WGSL_GROUP1_BINDING_OUT_OF_RANGE, 1, null, __line__);
                 return false;
             }
         }
@@ -57633,7 +57633,7 @@ sg_resource_state _sg_wgpu_create_shader(_sg_shader_t* shd, sg_shader_desc* desc
     bgl_desc.entries = bgl_entries;
     shd.wgpu.bgl_view_smp = wgpuDeviceCreateBindGroupLayout(_sg.wgpu.dev, &bgl_desc);
     if shd.wgpu.bgl_view_smp == null {
-        _sg_log(SG_LOGITEM_WGPU_SHADER_CREATE_BINDGROUP_LAYOUT_FAILED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_WGPU_SHADER_CREATE_BINDGROUP_LAYOUT_FAILED, 1, null, __line__);
         return SG_RESOURCESTATE_FAILED;
     }
     return SG_RESOURCESTATE_VALID;
@@ -57676,7 +57676,7 @@ sg_resource_state _sg_wgpu_create_pipeline(_sg_pipeline_t* pip, sg_pipeline_desc
     wgpu_pl_desc.bindGroupLayouts = &wgpu_bgl[0];
     WGPUPipelineLayout wgpu_pip_layout = wgpuDeviceCreatePipelineLayout(_sg.wgpu.dev, &wgpu_pl_desc);
     if null == wgpu_pip_layout {
-        _sg_log(SG_LOGITEM_WGPU_CREATE_PIPELINE_LAYOUT_FAILED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_WGPU_CREATE_PIPELINE_LAYOUT_FAILED, 1, null, __line__);
         return SG_RESOURCESTATE_FAILED;
     }
     assert(cast(i64, wgpu_pip_layout));
@@ -57689,7 +57689,7 @@ sg_resource_state _sg_wgpu_create_pipeline(_sg_pipeline_t* pip, sg_pipeline_desc
         pip.wgpu.cpip = wgpuDeviceCreateComputePipeline(_sg.wgpu.dev, &wgpu_pip_desc);
         wgpuPipelineLayoutRelease(wgpu_pip_layout);
         if null == pip.wgpu.cpip {
-            _sg_log(SG_LOGITEM_WGPU_CREATE_COMPUTE_PIPELINE_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_WGPU_CREATE_COMPUTE_PIPELINE_FAILED, 1, null, __line__);
             return SG_RESOURCESTATE_FAILED;
         }
     } else {
@@ -57781,7 +57781,7 @@ sg_resource_state _sg_wgpu_create_pipeline(_sg_pipeline_t* pip, sg_pipeline_desc
         pip.wgpu.rpip = wgpuDeviceCreateRenderPipeline(_sg.wgpu.dev, &wgpu_pip_desc);
         wgpuPipelineLayoutRelease(wgpu_pip_layout);
         if null == pip.wgpu.rpip {
-            _sg_log(SG_LOGITEM_WGPU_CREATE_RENDER_PIPELINE_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_WGPU_CREATE_RENDER_PIPELINE_FAILED, 1, null, __line__);
             return SG_RESOURCESTATE_FAILED;
         }
     }
@@ -57828,7 +57828,7 @@ sg_resource_state _sg_wgpu_create_view(_sg_view_t* view, sg_view_desc* desc) {
         }
         view.wgpu.view = wgpuTextureCreateView(img.wgpu.tex, &wgpu_texview_desc);
         if null == view.wgpu.view {
-            _sg_log(SG_LOGITEM_WGPU_CREATE_TEXTURE_VIEW_FAILED, 1, null, 7222);
+            _sg_log(SG_LOGITEM_WGPU_CREATE_TEXTURE_VIEW_FAILED, 1, null, __line__);
             return SG_RESOURCESTATE_FAILED;
         }
     }
@@ -58272,40 +58272,40 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
         _sg_validate_begin();
         if desc._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, __line__);
         }
         if desc._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, __line__);
         }
         if is_compute_shader != 0 {
             if null != desc.compute_func.source == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE, 1, null, __line__);
             }
         } else {
             if null != desc.vertex_func.source == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE, 1, null, __line__);
             }
             if null != desc.fragment_func.source == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE, 1, null, __line__);
             }
         }
         if is_compute_shader != 0 {
             if (null == desc.vertex_func.source && null == desc.vertex_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
             if (null == desc.fragment_func.source && null == desc.fragment_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
         } else {
             if (null == desc.compute_func.source && null == desc.compute_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
         }
         when defined(SOKOL_METAL) {
@@ -58315,11 +58315,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 i32 z = desc.mtl_threads_per_threadgroup.z;
                 if (x > 0 && y > 0 && z > 0) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED, 1, null, __line__);
                 }
                 if (x * y * z & 31) == 0 == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32, 1, null, __line__);
                 }
             }
         }
@@ -58327,32 +58327,32 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             if desc.attrs[i].glsl_name != null {
                 if strlen(desc.attrs[i].glsl_name) < cast(u64, _SG_STRING_SIZE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, __line__);
                 }
             }
             if desc.attrs[i].hlsl_sem_name != null {
                 if strlen(desc.attrs[i].hlsl_sem_name) < cast(u64, _SG_STRING_SIZE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, __line__);
                 }
             }
         }
         if null != desc.vertex_func.bytecode.ptr {
             if desc.vertex_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         if null != desc.fragment_func.bytecode.ptr {
             if desc.fragment_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         if null != desc.compute_func.bytecode.ptr {
             if desc.compute_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         _sg_u128_t wgsl_group0_bits = _sg_u128();
@@ -58364,11 +58364,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             }
             if ub_desc.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO, 1, null, __line__);
             }
             if _sg_validate_slot_bits(wgsl_group0_bits, SG_SHADERSTAGE_NONE, ub_desc.wgsl_group0_binding_n) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_WGSL_GROUP0_BINDING_COLLISION;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_WGSL_GROUP0_BINDING_COLLISION, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_WGSL_GROUP0_BINDING_COLLISION, 1, null, __line__);
             }
             wgsl_group0_bits = _sg_validate_set_slot_bit(wgsl_group0_bits, SG_SHADERSTAGE_NONE, ub_desc.wgsl_group0_binding_n);
         }
@@ -58380,25 +58380,25 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 texview_slot_mask |= cast(u32, 1 << view_idx);
                 if _sg_validate_slot_bits(wgsl_group1_bits, SG_SHADERSTAGE_NONE, tex_desc.wgsl_group1_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_TEXTURE_WGSL_GROUP1_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_TEXTURE_WGSL_GROUP1_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_TEXTURE_WGSL_GROUP1_BINDING_COLLISION, 1, null, __line__);
                 }
                 wgsl_group1_bits = _sg_validate_set_slot_bit(wgsl_group1_bits, SG_SHADERSTAGE_NONE, tex_desc.wgsl_group1_binding_n);
             } else if view_desc.storage_buffer.stage != SG_SHADERSTAGE_NONE {
                 sg_shader_storage_buffer_view* sbuf_desc = &view_desc.storage_buffer;
                 if _sg_validate_slot_bits(wgsl_group1_bits, SG_SHADERSTAGE_NONE, sbuf_desc.wgsl_group1_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_WGSL_GROUP1_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_WGSL_GROUP1_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_WGSL_GROUP1_BINDING_COLLISION, 1, null, __line__);
                 }
                 wgsl_group1_bits = _sg_validate_set_slot_bit(wgsl_group1_bits, SG_SHADERSTAGE_NONE, sbuf_desc.wgsl_group1_binding_n);
             } else if view_desc.storage_image.stage != SG_SHADERSTAGE_NONE {
                 sg_shader_storage_image_view* simg_desc = &view_desc.storage_image;
                 if simg_desc.stage == SG_SHADERSTAGE_COMPUTE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE, 1, null, __line__);
                 }
                 if _sg_validate_slot_bits(wgsl_group1_bits, SG_SHADERSTAGE_NONE, simg_desc.wgsl_group1_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_WGSL_GROUP1_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_WGSL_GROUP1_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_WGSL_GROUP1_BINDING_COLLISION, 1, null, __line__);
                 }
                 wgsl_group1_bits = _sg_validate_set_slot_bit(wgsl_group1_bits, SG_SHADERSTAGE_NONE, simg_desc.wgsl_group1_binding_n);
             }
@@ -58412,7 +58412,7 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             smp_slot_mask |= cast(u32, 1 << smp_idx);
             if _sg_validate_slot_bits(wgsl_group1_bits, SG_SHADERSTAGE_NONE, smp_desc.wgsl_group1_binding_n) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_WGSL_GROUP1_BINDING_COLLISION;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_WGSL_GROUP1_BINDING_COLLISION, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_WGSL_GROUP1_BINDING_COLLISION, 1, null, __line__);
             }
             wgsl_group1_bits = _sg_validate_set_slot_bit(wgsl_group1_bits, SG_SHADERSTAGE_NONE, smp_desc.wgsl_group1_binding_n);
         }
@@ -58427,11 +58427,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             bool smp_slot_in_range = cast(i32, tex_smp_desc.sampler_slot) < SG_MAX_SAMPLER_BINDSLOTS;
             if view_slot_in_range == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE, 1, null, __line__);
             }
             if smp_slot_in_range == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, __line__);
             }
             if view_slot_in_range && smp_slot_in_range {
                 ref_texview_slot_mask |= cast(u32, 1 << cast(i32, tex_smp_desc.view_slot));
@@ -58440,39 +58440,39 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 sg_shader_sampler* smp_desc = &desc.samplers[tex_smp_desc.sampler_slot];
                 if view_desc.texture.stage != SG_SHADERSTAGE_NONE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW, 1, null, __line__);
                 }
                 if view_desc.texture.stage == tex_smp_desc.stage == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH, 1, null, __line__);
                 }
                 if smp_desc.stage == tex_smp_desc.stage == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH, 1, null, __line__);
                 }
                 bool needs_nonfiltering = view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_UINT || view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_SINT || view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_UNFILTERABLE_FLOAT;
                 bool needs_comparison = view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_DEPTH;
                 if needs_nonfiltering != 0 {
                     if (needs_nonfiltering && smp_desc.sampler_type == SG_SAMPLERTYPE_NONFILTERING) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED, 1, null, __line__);
                     }
                 }
                 if needs_comparison != 0 {
                     if (needs_comparison && smp_desc.sampler_type == SG_SAMPLERTYPE_COMPARISON) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED, 1, null, __line__);
                     }
                 }
             }
         }
         if texview_slot_mask == ref_texview_slot_mask == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, __line__);
         }
         if smp_slot_mask == ref_smp_slot_mask == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -58495,59 +58495,59 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
         _sg_validate_begin();
         if pass._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, __line__);
         }
         if pass._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, __line__);
         }
         if is_compute_pass != 0 {
             if _sg_attachments_empty(&pass.attachments) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS, 1, null, __line__);
             }
         } else if is_invalid_swapchain_pass != 0 {
         } else if is_swapchain_pass != 0 {
             if pass.swapchain.width > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH, 1, null, __line__);
             }
             if pass.swapchain.height > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT, 1, null, __line__);
             }
             if pass.swapchain.sample_count > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT, 1, null, __line__);
             }
             if pass.swapchain.color_format > SG_PIXELFORMAT_NONE == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT, 1, null, __line__);
             }
             if pass.swapchain.wgpu.render_view != null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW, 1, null, __line__);
             }
             if pass.swapchain.depth_format == SG_PIXELFORMAT_NONE {
                 if pass.swapchain.wgpu.depth_stencil_view == null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, __line__);
                 }
             } else {
                 if pass.swapchain.wgpu.depth_stencil_view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW, 1, null, __line__);
                 }
             }
             if pass.swapchain.sample_count > 1 {
                 if pass.swapchain.wgpu.resolve_view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW, 1, null, __line__);
                 }
             } else {
                 if pass.swapchain.wgpu.resolve_view == null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET, 1, null, __line__);
                 }
             }
         } else {
@@ -58565,32 +58565,32 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 has_color_atts = true;
                 if atts_cont == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS, 1, null, __line__);
                 }
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.colors[att_index].id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_COLORATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width == -1 {
@@ -58600,15 +58600,15 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                                 } else {
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_sample_count == img.cmn.sample_count == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL, 1, null, __line__);
                                     }
                                 }
                             }
@@ -58622,46 +58622,46 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 }
                 if pass.attachments.colors[att_index].id != cast(u32, SG_INVALID_ID) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW, 1, null, __line__);
                 }
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.resolves[att_index].id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_RESOLVEATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width != -1 {
                                     if color_sample_count > 1 == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT, 1, null, __line__);
                                     }
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                 }
                             }
@@ -58674,41 +58674,41 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.depth_stencil.id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_DEPTHSTENCILATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width != -1 {
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_sample_count == img.cmn.sample_count == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT, 1, null, __line__);
                                     }
                                 }
                             }
@@ -58718,41 +58718,41 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
             }
             if (has_color_atts || has_depth_stencil_atts) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED, 1, null, __line__);
             }
         }
         if is_compute_pass || is_offscreen_pass || is_invalid_swapchain_pass {
             if pass.swapchain.width == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.height == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.sample_count == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.color_format == _SG_PIXELFORMAT_DEFAULT == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.depth_format == _SG_PIXELFORMAT_DEFAULT == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.wgpu.render_view == null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.wgpu.depth_stencil_view == null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.wgpu.resolve_view == null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET, 1, null, __line__);
             }
         }
         return _sg_validate_end();
@@ -62107,7 +62107,7 @@ sg_resource_state _sg_gl_create_image(_sg_image_t* img, sg_image_desc* desc) {
     }
     img.gl.injected = 0 != desc.gl_textures[0];
     if _sg_gl_supported_texture_format(img.cmn.pixel_format) == 0 {
-        _sg_log(SG_LOGITEM_GL_TEXTURE_FORMAT_NOT_SUPPORTED, 1, null, 7222);
+        _sg_log(SG_LOGITEM_GL_TEXTURE_FORMAT_NOT_SUPPORTED, 1, null, __line__);
         return SG_RESOURCESTATE_FAILED;
     }
     if img.gl.injected != 0 {
@@ -62276,8 +62276,8 @@ u32 _sg_gl_compile_shader(sg_shader_stage stage, u8* src) {
         if log_len > 0 {
             var log_buf = cast(u8*, _sg_malloc(cast(u64, log_len)));
             glGetShaderInfoLog(gl_shd, log_len, &log_len, log_buf);
-            _sg_log(SG_LOGITEM_GL_SHADER_COMPILATION_FAILED, 1, null, 7222);
-            _sg_log(SG_LOGITEM_GL_SHADER_COMPILATION_FAILED, 3, log_buf, 7225);
+            _sg_log(SG_LOGITEM_GL_SHADER_COMPILATION_FAILED, 1, null, __line__);
+            _sg_log(SG_LOGITEM_GL_SHADER_COMPILATION_FAILED, 3, log_buf, __line__);
             _sg_free(log_buf);
         }
         glDeleteShader(gl_shd);
@@ -62364,8 +62364,8 @@ sg_resource_state _sg_gl_create_shader(_sg_shader_t* shd, sg_shader_desc* desc) 
         if log_len > 0 {
             var log_buf = cast(u8*, _sg_malloc(cast(u64, log_len)));
             glGetProgramInfoLog(gl_prog, log_len, &log_len, log_buf);
-            _sg_log(SG_LOGITEM_GL_SHADER_LINKING_FAILED, 1, null, 7222);
-            _sg_log(SG_LOGITEM_GL_SHADER_LINKING_FAILED, 3, log_buf, 7225);
+            _sg_log(SG_LOGITEM_GL_SHADER_LINKING_FAILED, 1, null, __line__);
+            _sg_log(SG_LOGITEM_GL_SHADER_LINKING_FAILED, 3, log_buf, __line__);
             _sg_free(log_buf);
         }
         glDeleteProgram(gl_prog);
@@ -62401,8 +62401,8 @@ sg_resource_state _sg_gl_create_shader(_sg_shader_t* shd, sg_shader_desc* desc) 
             assert(cast(i64, u_desc.glsl_name));
             u.gl_loc = glGetUniformLocation(gl_prog, u_desc.glsl_name);
             if u.gl_loc == -1 {
-                _sg_log(SG_LOGITEM_GL_UNIFORMBLOCK_NAME_NOT_FOUND_IN_SHADER, 2, null, 7223);
-                _sg_log(SG_LOGITEM_GL_UNIFORMBLOCK_NAME_NOT_FOUND_IN_SHADER, 3, u_desc.glsl_name, 7225);
+                _sg_log(SG_LOGITEM_GL_UNIFORMBLOCK_NAME_NOT_FOUND_IN_SHADER, 2, null, __line__);
+                _sg_log(SG_LOGITEM_GL_UNIFORMBLOCK_NAME_NOT_FOUND_IN_SHADER, 3, u_desc.glsl_name, __line__);
             }
             cur_uniform_offset += u_size;
             ub.num_uniforms++;
@@ -62444,8 +62444,8 @@ sg_resource_state _sg_gl_create_shader(_sg_shader_t* shd, sg_shader_desc* desc) 
             shd.gl.tex_slot[tex_smp_index] = cast(i8, gl_tex_slot++);
         } else {
             shd.gl.tex_slot[tex_smp_index] = -1;
-            _sg_log(SG_LOGITEM_GL_IMAGE_SAMPLER_NAME_NOT_FOUND_IN_SHADER, 2, null, 7223);
-            _sg_log(SG_LOGITEM_GL_IMAGE_SAMPLER_NAME_NOT_FOUND_IN_SHADER, 3, tex_smp_desc.glsl_name, 7225);
+            _sg_log(SG_LOGITEM_GL_IMAGE_SAMPLER_NAME_NOT_FOUND_IN_SHADER, 2, null, __line__);
+            _sg_log(SG_LOGITEM_GL_IMAGE_SAMPLER_NAME_NOT_FOUND_IN_SHADER, 3, tex_smp_desc.glsl_name, __line__);
         }
     }
     glUseProgram(cur_prog);
@@ -62532,8 +62532,8 @@ sg_resource_state _sg_gl_create_pipeline(_sg_pipeline_t* pip, sg_pipeline_desc* 
             gl_attr.base_type = _sg_vertexformat_basetype(a_state.format);
             pip.cmn.vertex_buffer_layout_active[a_state.buffer_index] = true;
         } else {
-            _sg_log(SG_LOGITEM_GL_VERTEX_ATTRIBUTE_NOT_FOUND_IN_SHADER, 2, null, 7223);
-            _sg_log(SG_LOGITEM_GL_VERTEX_ATTRIBUTE_NOT_FOUND_IN_SHADER, 3, _sg_strptr(&shd.gl.attrs[attr_index].name), 7225);
+            _sg_log(SG_LOGITEM_GL_VERTEX_ATTRIBUTE_NOT_FOUND_IN_SHADER, 2, null, __line__);
+            _sg_log(SG_LOGITEM_GL_VERTEX_ATTRIBUTE_NOT_FOUND_IN_SHADER, 3, _sg_strptr(&shd.gl.attrs[attr_index].name), __line__);
         }
     }
     return SG_RESOURCESTATE_VALID;
@@ -62578,22 +62578,22 @@ bool _sg_gl_check_framebuffer_status() {
     if fb_status != GL_FRAMEBUFFER_COMPLETE {
         switch fb_status {
             case 0x8219: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNDEFINED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNDEFINED, 1, null, __line__);
             }
             case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_ATTACHMENT, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_ATTACHMENT, 1, null, __line__);
             }
             case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MISSING_ATTACHMENT, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MISSING_ATTACHMENT, 1, null, __line__);
             }
             case GL_FRAMEBUFFER_UNSUPPORTED: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNSUPPORTED, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNSUPPORTED, 1, null, __line__);
             }
             case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MULTISAMPLE, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_INCOMPLETE_MULTISAMPLE, 1, null, __line__);
             }
             default: {
-                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNKNOWN, 1, null, 7222);
+                _sg_log(SG_LOGITEM_GL_FRAMEBUFFER_STATUS_UNKNOWN, 1, null, __line__);
             }
         }
         return false;
@@ -63633,40 +63633,40 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
         _sg_validate_begin();
         if desc._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, __line__);
         }
         if desc._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_CANARY, 1, null, __line__);
         }
         if is_compute_shader != 0 {
             if null != desc.compute_func.source == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPUTE_SOURCE, 1, null, __line__);
             }
         } else {
             if null != desc.vertex_func.source == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VERTEX_SOURCE, 1, null, __line__);
             }
             if null != desc.fragment_func.source == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_FRAGMENT_SOURCE, 1, null, __line__);
             }
         }
         if is_compute_shader != 0 {
             if (null == desc.vertex_func.source && null == desc.vertex_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
             if (null == desc.fragment_func.source && null == desc.fragment_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
         } else {
             if (null == desc.compute_func.source && null == desc.compute_func.bytecode.ptr) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_INVALID_SHADER_COMBO, 1, null, __line__);
             }
         }
         when defined(SOKOL_METAL) {
@@ -63676,11 +63676,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 i32 z = desc.mtl_threads_per_threadgroup.z;
                 if (x > 0 && y > 0 && z > 0) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_INITIALIZED, 1, null, __line__);
                 }
                 if (x * y * z & 31) == 0 == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_METAL_THREADS_PER_THREADGROUP_MULTIPLE_32, 1, null, __line__);
                 }
             }
         }
@@ -63688,32 +63688,32 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             if desc.attrs[i].glsl_name != null {
                 if strlen(desc.attrs[i].glsl_name) < cast(u64, _SG_STRING_SIZE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, __line__);
                 }
             }
             if desc.attrs[i].hlsl_sem_name != null {
                 if strlen(desc.attrs[i].hlsl_sem_name) < cast(u64, _SG_STRING_SIZE) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_ATTR_STRING_TOO_LONG, 1, null, __line__);
                 }
             }
         }
         if null != desc.vertex_func.bytecode.ptr {
             if desc.vertex_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         if null != desc.fragment_func.bytecode.ptr {
             if desc.fragment_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         if null != desc.compute_func.bytecode.ptr {
             if desc.compute_func.bytecode.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NO_BYTECODE_SIZE, 1, null, __line__);
             }
         }
         _sg_u128_t glsl_sbuf_bnd_bits = _sg_u128();
@@ -63725,30 +63725,30 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             }
             if ub_desc.size > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_IS_ZERO, 1, null, __line__);
             }
             when defined(SOKOL_METAL) {
                 if _sg_validate_slot_bits(msl_buf_bits, ub_desc.stage, ub_desc.msl_buffer_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_METAL_BUFFER_SLOT_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_METAL_BUFFER_SLOT_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_METAL_BUFFER_SLOT_COLLISION, 1, null, __line__);
                 }
                 msl_buf_bits = _sg_validate_set_slot_bit(msl_buf_bits, ub_desc.stage, ub_desc.msl_buffer_n);
             } else when defined(SOKOL_D3D11) {
                 if _sg_validate_slot_bits(hlsl_buf_bits, ub_desc.stage, ub_desc.hlsl_register_b_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_HLSL_REGISTER_B_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_HLSL_REGISTER_B_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_HLSL_REGISTER_B_COLLISION, 1, null, __line__);
                 }
                 hlsl_buf_bits = _sg_validate_set_slot_bit(hlsl_buf_bits, ub_desc.stage, ub_desc.hlsl_register_b_n);
             } else when defined(SOKOL_WGPU) {
                 if _sg_validate_slot_bits(wgsl_group0_bits, SG_SHADERSTAGE_NONE, ub_desc.wgsl_group0_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_WGSL_GROUP0_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_WGSL_GROUP0_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_WGSL_GROUP0_BINDING_COLLISION, 1, null, __line__);
                 }
                 wgsl_group0_bits = _sg_validate_set_slot_bit(wgsl_group0_bits, SG_SHADERSTAGE_NONE, ub_desc.wgsl_group0_binding_n);
             } else when defined(SOKOL_VULKAN) {
                 if _sg_validate_slot_bits(spirv_set0_bits, SG_SHADERSTAGE_NONE, ub_desc.spirv_set0_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SPIRV_SET0_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SPIRV_SET0_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SPIRV_SET0_BINDING_COLLISION, 1, null, __line__);
                 }
                 spirv_set0_bits = _sg_validate_set_slot_bit(spirv_set0_bits, SG_SHADERSTAGE_NONE, ub_desc.spirv_set0_binding_n);
             }
@@ -63760,16 +63760,16 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 if u_desc.type != SG_UNIFORMTYPE_INVALID {
                     if uniforms_continuous == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_CONT_MEMBERS;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_CONT_MEMBERS, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_CONT_MEMBERS, 1, null, __line__);
                     }
                     if u_desc.glsl_name == null {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_UNIFORM_GLSL_NAME;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_UNIFORM_GLSL_NAME, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_UNIFORM_GLSL_NAME, 1, null, __line__);
                     }
                     var array_count = cast(i32, u_desc.array_count);
                     if array_count > 0 == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_ARRAY_COUNT;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_ARRAY_COUNT, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_ARRAY_COUNT, 1, null, __line__);
                     }
                     u32 u_align = _sg_uniform_alignment(u_desc.type, array_count, ub_desc.layout);
                     u32 u_size = _sg_uniform_size(u_desc.type, array_count, ub_desc.layout);
@@ -63780,7 +63780,7 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                         if array_count > 1 {
                             if (u_desc.type == SG_UNIFORMTYPE_FLOAT4 || u_desc.type == SG_UNIFORMTYPE_INT4 || u_desc.type == SG_UNIFORMTYPE_MAT4) == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_STD140_ARRAY_TYPE;
-                                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_STD140_ARRAY_TYPE, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_STD140_ARRAY_TYPE, 1, null, __line__);
                             }
                         }
                     }
@@ -63793,11 +63793,11 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             }
             if cast(u64, uniform_offset) == ub_desc.size == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_MISMATCH;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_MISMATCH, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_SIZE_MISMATCH, 1, null, __line__);
             }
             if num_uniforms > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_MEMBERS;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_MEMBERS, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_UNIFORMBLOCK_NO_MEMBERS, 1, null, __line__);
             }
         }
         u32 texview_slot_mask = 0;
@@ -63811,18 +63811,18 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 sg_shader_storage_buffer_view* sbuf_desc = &view_desc.storage_buffer;
                 if _sg_validate_slot_bits(glsl_sbuf_bnd_bits, SG_SHADERSTAGE_NONE, sbuf_desc.glsl_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_GLSL_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_GLSL_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEBUFFER_GLSL_BINDING_COLLISION, 1, null, __line__);
                 }
                 glsl_sbuf_bnd_bits = _sg_validate_set_slot_bit(glsl_sbuf_bnd_bits, SG_SHADERSTAGE_NONE, sbuf_desc.glsl_binding_n);
             } else if view_desc.storage_image.stage != SG_SHADERSTAGE_NONE {
                 sg_shader_storage_image_view* simg_desc = &view_desc.storage_image;
                 if simg_desc.stage == SG_SHADERSTAGE_COMPUTE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_EXPECT_COMPUTE_STAGE, 1, null, __line__);
                 }
                 if _sg_validate_slot_bits(glsl_simg_bnd_bits, SG_SHADERSTAGE_NONE, simg_desc.glsl_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_GLSL_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_GLSL_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_VIEW_STORAGEIMAGE_GLSL_BINDING_COLLISION, 1, null, __line__);
                 }
                 glsl_simg_bnd_bits = _sg_validate_set_slot_bit(glsl_simg_bnd_bits, SG_SHADERSTAGE_NONE, simg_desc.glsl_binding_n);
             }
@@ -63837,25 +63837,25 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             when defined(SOKOL_METAL) {
                 if _sg_validate_slot_bits(msl_smp_bits, smp_desc.stage, smp_desc.msl_sampler_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_METAL_SAMPLER_SLOT_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_METAL_SAMPLER_SLOT_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_METAL_SAMPLER_SLOT_COLLISION, 1, null, __line__);
                 }
                 msl_smp_bits = _sg_validate_set_slot_bit(msl_smp_bits, smp_desc.stage, smp_desc.msl_sampler_n);
             } else when defined(SOKOL_D3D11) {
                 if _sg_validate_slot_bits(hlsl_smp_bits, smp_desc.stage, smp_desc.hlsl_register_s_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_HLSL_REGISTER_S_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_HLSL_REGISTER_S_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_HLSL_REGISTER_S_COLLISION, 1, null, __line__);
                 }
                 hlsl_smp_bits = _sg_validate_set_slot_bit(hlsl_smp_bits, smp_desc.stage, smp_desc.hlsl_register_s_n);
             } else when defined(SOKOL_WGPU) {
                 if _sg_validate_slot_bits(wgsl_group1_bits, SG_SHADERSTAGE_NONE, smp_desc.wgsl_group1_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_WGSL_GROUP1_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_WGSL_GROUP1_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_WGSL_GROUP1_BINDING_COLLISION, 1, null, __line__);
                 }
                 wgsl_group1_bits = _sg_validate_set_slot_bit(wgsl_group1_bits, SG_SHADERSTAGE_NONE, smp_desc.wgsl_group1_binding_n);
             } else when defined(SOKOL_VULKAN) {
                 if _sg_validate_slot_bits(spirv_set1_bits, SG_SHADERSTAGE_NONE, smp_desc.spirv_set1_binding_n) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_SPIRV_SET1_BINDING_COLLISION;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_SPIRV_SET1_BINDING_COLLISION, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_SPIRV_SET1_BINDING_COLLISION, 1, null, __line__);
                 }
                 spirv_set1_bits = _sg_validate_set_slot_bit(spirv_set1_bits, SG_SHADERSTAGE_NONE, smp_desc.spirv_set1_binding_n);
             }
@@ -63869,17 +63869,17 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
             }
             if tex_smp_desc.glsl_name != null == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_GLSL_NAME;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_GLSL_NAME, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_GLSL_NAME, 1, null, __line__);
             }
             bool view_slot_in_range = cast(i32, tex_smp_desc.view_slot) < SG_MAX_VIEW_BINDSLOTS;
             bool smp_slot_in_range = cast(i32, tex_smp_desc.sampler_slot) < SG_MAX_SAMPLER_BINDSLOTS;
             if view_slot_in_range == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_VIEW_SLOT_OUT_OF_RANGE, 1, null, __line__);
             }
             if smp_slot_in_range == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE;
-                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_SLOT_OUT_OF_RANGE, 1, null, __line__);
             }
             if view_slot_in_range && smp_slot_in_range {
                 ref_texview_slot_mask |= cast(u32, 1 << cast(i32, tex_smp_desc.view_slot));
@@ -63888,39 +63888,39 @@ bool _sg_validate_shader_desc(sg_shader_desc* desc) {
                 sg_shader_sampler* smp_desc = &desc.samplers[tex_smp_desc.sampler_slot];
                 if view_desc.texture.stage != SG_SHADERSTAGE_NONE == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_EXPECT_TEXTURE_VIEW, 1, null, __line__);
                 }
                 if view_desc.texture.stage == tex_smp_desc.stage == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_TEXTURE_STAGE_MISMATCH, 1, null, __line__);
                 }
                 if smp_desc.stage == tex_smp_desc.stage == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH;
-                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXTURE_SAMPLER_PAIR_SAMPLER_STAGE_MISMATCH, 1, null, __line__);
                 }
                 bool needs_nonfiltering = view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_UINT || view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_SINT || view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_UNFILTERABLE_FLOAT;
                 bool needs_comparison = view_desc.texture.sample_type == SG_IMAGESAMPLETYPE_DEPTH;
                 if needs_nonfiltering != 0 {
                     if (needs_nonfiltering && smp_desc.sampler_type == SG_SAMPLERTYPE_NONFILTERING) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_NONFILTERING_SAMPLER_REQUIRED, 1, null, __line__);
                     }
                 }
                 if needs_comparison != 0 {
                     if (needs_comparison && smp_desc.sampler_type == SG_SAMPLERTYPE_COMPARISON) == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED;
-                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_COMPARISON_SAMPLER_REQUIRED, 1, null, __line__);
                     }
                 }
             }
         }
         if texview_slot_mask == ref_texview_slot_mask == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_TEXVIEW_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, __line__);
         }
         if smp_slot_mask == ref_smp_slot_mask == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS;
-            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_SHADERDESC_SAMPLER_NOT_REFERENCED_BY_TEXTURE_SAMPLER_PAIRS, 1, null, __line__);
         }
         return _sg_validate_end();
     }
@@ -63943,170 +63943,170 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
         _sg_validate_begin();
         if pass._start_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, __line__);
         }
         if pass._end_canary == 0 == 0 {
             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_CANARY;
-            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, 7226);
+            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_CANARY, 1, null, __line__);
         }
         if is_compute_pass != 0 {
             if _sg_attachments_empty(&pass.attachments) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COMPUTEPASS_EXPECT_NO_ATTACHMENTS, 1, null, __line__);
             }
         } else if is_invalid_swapchain_pass != 0 {
         } else if is_swapchain_pass != 0 {
             if pass.swapchain.width > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH, 1, null, __line__);
             }
             if pass.swapchain.height > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT, 1, null, __line__);
             }
             if pass.swapchain.sample_count > 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT, 1, null, __line__);
             }
             if pass.swapchain.color_format > SG_PIXELFORMAT_NONE == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT, 1, null, __line__);
             }
             when defined(SOKOL_METAL) {
                 if pass.swapchain.metal.current_drawable != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_CURRENTDRAWABLE, 1, null, __line__);
                 }
                 if pass.swapchain.depth_format == SG_PIXELFORMAT_NONE {
                     if pass.swapchain.metal.depth_stencil_texture == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE_NOTSET, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.metal.depth_stencil_texture != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_DEPTHSTENCILTEXTURE, 1, null, __line__);
                     }
                 }
                 if pass.swapchain.sample_count > 1 {
                     if pass.swapchain.metal.msaa_color_texture != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.metal.msaa_color_texture == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_METAL_EXPECT_MSAACOLORTEXTURE_NOTSET, 1, null, __line__);
                     }
                 }
             } else when defined(SOKOL_D3D11) {
                 if pass.swapchain.d3d11.render_view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RENDERVIEW, 1, null, __line__);
                 }
                 if pass.swapchain.depth_format == SG_PIXELFORMAT_NONE {
                     if pass.swapchain.d3d11.depth_stencil_view == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.d3d11.depth_stencil_view != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_DEPTHSTENCILVIEW, 1, null, __line__);
                     }
                 }
                 if pass.swapchain.sample_count > 1 {
                     if pass.swapchain.d3d11.resolve_view != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.d3d11.resolve_view == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_D3D11_EXPECT_RESOLVEVIEW_NOTSET, 1, null, __line__);
                     }
                 }
             } else when defined(SOKOL_WGPU) {
                 if pass.swapchain.wgpu.render_view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RENDERVIEW, 1, null, __line__);
                 }
                 if pass.swapchain.depth_format == SG_PIXELFORMAT_NONE {
                     if pass.swapchain.wgpu.depth_stencil_view == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.wgpu.depth_stencil_view != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_DEPTHSTENCILVIEW, 1, null, __line__);
                     }
                 }
                 if pass.swapchain.sample_count > 1 {
                     if pass.swapchain.wgpu.resolve_view != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.wgpu.resolve_view == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_WGPU_EXPECT_RESOLVEVIEW_NOTSET, 1, null, __line__);
                     }
                 }
             } else when defined(SOKOL_VULKAN) {
                 if pass.swapchain.vulkan.render_image != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERIMAGE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERIMAGE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERIMAGE, 1, null, __line__);
                 }
                 if pass.swapchain.vulkan.render_view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERVIEW, 1, null, __line__);
                 }
                 if pass.swapchain.depth_format == SG_PIXELFORMAT_NONE {
                     if pass.swapchain.vulkan.depth_stencil_image == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILIMAGE_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILIMAGE_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILIMAGE_NOTSET, 1, null, __line__);
                     }
                     if pass.swapchain.vulkan.depth_stencil_view == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILVIEW_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILVIEW_NOTSET, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.vulkan.depth_stencil_image != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILIMAGE;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILIMAGE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILIMAGE, 1, null, __line__);
                     }
                     if pass.swapchain.vulkan.depth_stencil_view != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILVIEW;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILVIEW, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_DEPTHSTENCILVIEW, 1, null, __line__);
                     }
                 }
                 if pass.swapchain.sample_count > 1 {
                     if pass.swapchain.vulkan.resolve_image != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEIMAGE;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEIMAGE, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEIMAGE, 1, null, __line__);
                     }
                     if pass.swapchain.vulkan.resolve_view != null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEVIEW;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEVIEW, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEVIEW, 1, null, __line__);
                     }
                 } else {
                     if pass.swapchain.vulkan.resolve_image == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEIMAGE_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEIMAGE_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEIMAGE_NOTSET, 1, null, __line__);
                     }
                     if pass.swapchain.vulkan.resolve_view == null == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEVIEW_NOTSET;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEVIEW_NOTSET, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RESOLVEVIEW_NOTSET, 1, null, __line__);
                     }
                 }
                 if pass.swapchain.vulkan.render_finished_semaphore != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERFINISHEDSEMAPHORE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERFINISHEDSEMAPHORE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_RENDERFINISHEDSEMAPHORE, 1, null, __line__);
                 }
                 if pass.swapchain.vulkan.present_complete_semaphore != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_PRESENTCOMPLETESEMAPHORE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_PRESENTCOMPLETESEMAPHORE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_VULKAN_EXPECT_PRESENTCOMPLETESEMAPHORE, 1, null, __line__);
                 }
             }
         } else {
@@ -64124,32 +64124,32 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 has_color_atts = true;
                 if atts_cont == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEWS_CONTINUOUS, 1, null, __line__);
                 }
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.colors[att_index].id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_COLORATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width == -1 {
@@ -64159,15 +64159,15 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                                 } else {
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_sample_count == img.cmn.sample_count == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNTS_EQUAL, 1, null, __line__);
                                     }
                                 }
                             }
@@ -64181,46 +64181,46 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 }
                 if pass.attachments.colors[att_index].id != cast(u32, SG_INVALID_ID) == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_NO_COLORATTACHMENTVIEW, 1, null, __line__);
                 }
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.resolves[att_index].id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_RESOLVEATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width != -1 {
                                     if color_sample_count > 1 == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_COLORATTACHMENTVIEW_SAMPLECOUNT, 1, null, __line__);
                                     }
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_RESOLVEATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                 }
                             }
@@ -64233,41 +64233,41 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
                 _sg_view_t* view = _sg_lookup_view(pass.attachments.depth_stencil.id);
                 if view != null == 0 {
                     _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE;
-                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE, 1, null, 7226);
+                    _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_ALIVE, 1, null, __line__);
                 }
                 if view != null {
                     if view.slot.state == SG_RESOURCESTATE_VALID == 0 {
                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID;
-                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID, 1, null, 7226);
+                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_VALID, 1, null, __line__);
                     }
                     if view.slot.state == SG_RESOURCESTATE_VALID {
                         if view.cmn.type == SG_VIEWTYPE_DEPTHSTENCILATTACHMENT == 0 {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_TYPE, 1, null, __line__);
                         }
                         _sg_image_t* img = _sg_image_ref_ptr_or_null(&view.cmn.img.ref);
                         if img == null {
                             _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE;
-                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE, 1, null, 7226);
+                            _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_ALIVE, 1, null, __line__);
                         }
                         if img != null {
                             if img.slot.state == SG_RESOURCESTATE_VALID == 0 {
                                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID;
-                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID, 1, null, 7226);
+                                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_IMAGE_VALID, 1, null, __line__);
                             }
                             if img.slot.state == SG_RESOURCESTATE_VALID {
                                 if color_width != -1 {
                                     if color_width == _sg_image_view_dim(view).width == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_height == _sg_image_view_dim(view).height == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SIZES, 1, null, __line__);
                                     }
                                     if color_sample_count == img.cmn.sample_count == 0 {
                                         _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT;
-                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT, 1, null, 7226);
+                                        _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_DEPTHSTENCILATTACHMENTVIEW_SAMPLECOUNT, 1, null, __line__);
                                     }
                                 }
                             }
@@ -64277,33 +64277,33 @@ bool _sg_validate_begin_pass(sg_pass* pass) {
             }
             if (has_color_atts || has_depth_stencil_atts) == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_ATTACHMENTS_EXPECTED, 1, null, __line__);
             }
         }
         if is_compute_pass || is_offscreen_pass || is_invalid_swapchain_pass {
             if pass.swapchain.width == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_WIDTH_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.height == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_HEIGHT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.sample_count == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_SAMPLECOUNT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.color_format == _SG_PIXELFORMAT_DEFAULT == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_COLORFORMAT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.depth_format == _SG_PIXELFORMAT_DEFAULT == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_EXPECT_DEPTHFORMAT_NOTSET, 1, null, __line__);
             }
             if pass.swapchain.gl.framebuffer == 0 == 0 {
                 _sg.validate_error = SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_GL_EXPECT_FRAMEBUFFER_NOTSET;
-                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_GL_EXPECT_FRAMEBUFFER_NOTSET, 1, null, 7226);
+                _sg_log(SG_LOGITEM_VALIDATE_BEGINPASS_SWAPCHAIN_GL_EXPECT_FRAMEBUFFER_NOTSET, 1, null, __line__);
             }
         }
         return _sg_validate_end();

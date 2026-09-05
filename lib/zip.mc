@@ -109,8 +109,10 @@ void zip_abort(ZipWriter* z) {
     return;
 }
 
-bool zip_add(ZipWriter* z, str name, u8* data, i32 len, bool compress) {
+bool zip_add(ZipWriter* z, str name, u8* data, i64 nbytes, bool compress) {
     if z.err { return false; }
+    if nbytes > 2147483647 { z.err = true; return false; }
+    i32 len = cast(i32, nbytes);
     if name.len <= 0 || name.len > 65535 || len < 0 || (len > 0 && data == null) {
         z.err = true;
         return false;

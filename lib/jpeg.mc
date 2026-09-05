@@ -944,7 +944,9 @@ private JpegImage jd_fail(JDec* d, u8* msg) {
 }
 
 // Decode JPEG from raw bytes in memory.
-JpegImage jpeg_decode(u8* data, i32 len) {
+JpegImage jpeg_decode(u8* data, i64 nbytes) {
+    if nbytes > 2147483647 { return jpeg_error("image larger than 2 GB"); }
+    i32 len = cast(i32, nbytes);
     if len < 4 { return jpeg_error("invalid SOI marker"); }
     if cast(i32, *(data + 0)) != 255 || cast(i32, *(data + 1)) != 216 {
         return jpeg_error("invalid SOI marker");

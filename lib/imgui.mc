@@ -26050,7 +26050,7 @@ ImU64 ImFileWrite(void* _0, ImU64 _1, ImU64 _2, ImFileHandle _3) {
 when !(defined(IMGUI_DISABLE_DEFAULT_MATH_FUNCTIONS)) {
 
 f32 ImPow(f32 x, f32 y) {
-    return cast(f32, powf(x, y));
+    return pow(x, y);
 }
 
 f64 ImPow(f64 x, f64 y) {
@@ -26058,7 +26058,7 @@ f64 ImPow(f64 x, f64 y) {
 }
 
 f32 ImLog(f32 x) {
-    return cast(f32, logf(x));
+    return log(x);
 }
 
 f64 ImLog(f64 x) {
@@ -26070,7 +26070,7 @@ i32 ImAbs(i32 x) {
 }
 
 f32 ImAbs(f32 x) {
-    return cast(f32, fabsf(x));
+    return fabs(x);
 }
 
 f64 ImAbs(f64 x) {
@@ -26086,7 +26086,7 @@ f64 ImSign(f64 x) {
 }
 
 f32 ImRsqrt(f32 x) {
-    return 1.0f / cast(f32, sqrtf(x));
+    return 1.0f / sqrt(x);
 }
 
 f64 ImRsqrt(f64 x) {
@@ -26306,7 +26306,7 @@ f32 ImExponentialMovingAverage(f32 avg, f32 sample, i32 n) {
 }
 
 f32 ImTriangleArea(ImVec2 a, ImVec2 b, ImVec2 c) {
-    return cast(f32, fabsf(a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y))) * 0.5f;
+    return fabs(a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) * 0.5f;
 }
 
 bool ImTriangleIsClockwise(ImVec2 a, ImVec2 b, ImVec2 c) {
@@ -30493,7 +30493,7 @@ void ImGui_ColorConvertRGBtoHSV(f32 r, f32 g, f32 b, f32* out_h, f32* out_s, f32
         K = -2.0f / 6.0f - K;
     }
     f32 chroma = r - (g < b ? g : b);
-    *out_h = fabsf(K + (g - b) / (6.0f * chroma + 1.0e-20f));
+    *out_h = fabs(K + (g - b) / (6.0f * chroma + 1.0e-20f));
     *out_s = chroma / (r + 1.0e-20f);
     *out_v = r;
 }
@@ -30507,7 +30507,7 @@ void ImGui_ColorConvertHSVtoRGB(f32 h, f32 s, f32 v, f32* out_r, f32* out_g, f32
         *out_r = *out_g;
         return;
     }
-    h = cast(f32, fmodf(h, 1.0f)) / (60.0f / 360.0f);
+    h = fmod(h, 1.0f) / (60.0f / 360.0f);
     var i = cast(i32, h);
     f32 f = h - cast(f32, i);
     f32 p = v * (1.0f - s);
@@ -31149,7 +31149,7 @@ bool ImGuiListClipper_Step(ImGuiListClipper* self) {
 // Generic helper, equivalent to old ImGui::CalcListClipping() but stateless
 void ImGui_CalcClipRectVisibleItemsY(ImRect clip_rect, ImVec2 pos, f32 items_height, i32* out_visible_start, i32* out_visible_end) {
     *out_visible_start = ImMax(cast(i32, (clip_rect.Min.y - pos.y) / items_height), 0);
-    *out_visible_end = ImMax(cast(i32, ceilf((clip_rect.Max.y - pos.y) / items_height)), *out_visible_start);
+    *out_visible_end = ImMax(cast(i32, ceil((clip_rect.Max.y - pos.y) / items_height)), *out_visible_start);
 }
 
 //-----------------------------------------------------------------------------
@@ -31915,7 +31915,7 @@ void ImGui_RenderMouseCursor(ImVec2 base_pos, f32 base_scale, ImGuiMouseCursor m
             ImDrawList_AddImage(draw_list, tex_ref, pos, op_add_ImVec2_ImVec2(pos, op_mul_ImVec2_float(size, scale)), uv[2], uv[3], col_border);
             ImDrawList_AddImage(draw_list, tex_ref, pos, op_add_ImVec2_ImVec2(pos, op_mul_ImVec2_float(size, scale)), uv[0], uv[1], col_fill);
             if mouse_cursor == ImGuiMouseCursor_Wait || mouse_cursor == ImGuiMouseCursor_Progress {
-                f32 a_min = fmodf(cast(f32, g.Time) * 5.0f, 2.0f * 3.141592653589793f);
+                f32 a_min = fmod(cast(f32, g.Time) * 5.0f, 2.0f * 3.141592653589793f);
                 f32 a_max = a_min + 3.141592653589793f * 1.65f;
                 ImDrawList_PathArcTo(draw_list, op_add_ImVec2_ImVec2(pos, op_mul_ImVec2_float(ImVec2{14.0f, -1.0f}, scale)), 6.0f * scale, a_min, a_max, 0);
                 ImDrawList_PathStroke(draw_list, col_fill, 3.0f * scale, 0);
@@ -35254,7 +35254,7 @@ void ImGui_RenderWindowTitleBarContents(ImGuiWindow* window, ImRect title_bar_re
         pad_r += g.Style.ItemInnerSpacing.x;
     }
     if style.WindowTitleAlign.x > 0.0f && style.WindowTitleAlign.x < 1.0f {
-        f32 centerness = ImSaturate(1.0f - cast(f32, fabsf(style.WindowTitleAlign.x - 0.5f)) * 2.0f);
+        f32 centerness = ImSaturate(1.0f - fabs(style.WindowTitleAlign.x - 0.5f) * 2.0f);
         f32 pad_extend = ImMin(ImMax(pad_l, pad_r), ImRect_GetWidth(&title_bar_rect) - pad_l - pad_r - text_size.x);
         pad_l = ImMax(pad_l, pad_extend * centerness);
         pad_r = ImMax(pad_r, pad_extend * centerness);
@@ -40923,7 +40923,7 @@ void ImGui_SetFocusID(ImGuiID id, ImGuiWindow* window) {
 
 private {
 ImGuiDir ImGetDirQuadrantFromDelta(f32 dx, f32 dy) {
-    if fabsf(dx) > fabsf(dy) {
+    if fabs(dx) > fabs(dy) {
         return dx > 0.0f ? ImGuiDir_Right : ImGuiDir_Left;
     }
     return dy > 0.0f ? ImGuiDir_Down : ImGuiDir_Up;
@@ -40961,10 +40961,10 @@ bool ImGui_NavScoreItem(ImGuiNavItemData* result, ImRect nav_bb) {
     if dby != 0.0f && dbx != 0.0f {
         dbx = dbx / 1000.0f + (dbx > 0.0f ? 1.0f : -1.0f);
     }
-    f32 dist_box = fabsf(dbx) + fabsf(dby);
+    f32 dist_box = fabs(dbx) + fabs(dby);
     f32 dcx = cand.Min.x + cand.Max.x - (curr.Min.x + curr.Max.x);
     f32 dcy = cand.Min.y + cand.Max.y - (curr.Min.y + curr.Max.y);
-    f32 dist_center = fabsf(dcx) + fabsf(dcy);
+    f32 dist_center = fabs(dcx) + fabs(dcy);
     ImGuiDir quadrant;
     f32 dax = 0.0f;
     f32 day = 0.0f;
@@ -52015,8 +52015,8 @@ i32 stbtt__GetGlyphShapeTT(stbtt_fontinfo* info, i32 glyph_index, stbtt_vertex**
                 mtx[3] = cast(f32, ttSHORT(comp)) / 16384.0f;
                 comp += 2;
             }
-            m = cast(f32, sqrt(mtx[0] * mtx[0] + mtx[1] * mtx[1]));
-            n = cast(f32, sqrt(mtx[2] * mtx[2] + mtx[3] * mtx[3]));
+            m = sqrt(mtx[0] * mtx[0] + mtx[1] * mtx[1]);
+            n = sqrt(mtx[2] * mtx[2] + mtx[3] * mtx[3]);
             comp_num_verts = stbtt_GetGlyphShape(info, cast(i32, gidx), &comp_verts);
             if comp_num_verts > 0 {
                 for i = 0; i < comp_num_verts; ++i {
@@ -52455,7 +52455,7 @@ i32 stbtt__run_charstring(stbtt_fontinfo* info, i32 glyph_index, stbtt__csctx* c
                             dx6 = dy6;
                             dx = dx1 + dx2 + dx3 + dx4 + dx5;
                             dy = dy1 + dy2 + dy3 + dy4 + dy5;
-                            if fabs(dx) > fabs(dy) {
+                            if fabs(dx) > cast(f64, fabs(dy)) {
                                 dy6 = -dy;
                             } else {
                                 dx6 = -dx;
@@ -53326,7 +53326,7 @@ void stbtt__rasterize_sorted_edges(stbtt__bitmap* result, stbtt__edge* e, i32 n,
                 i32 m;
                 sum += scanline2[i];
                 k = scanline[i] + sum;
-                k = cast(f32, fabs(k)) * 255.0f + 0.5f;
+                k = fabs(k) * 255.0f + 0.5f;
                 m = cast(i32, k);
                 if m > 255 {
                     m = 255;
@@ -53518,8 +53518,8 @@ void stbtt__tesselate_cubic(stbtt__point* points, i32* num_points, f32 x0, f32 y
     f32 dy2 = y3 - y2;
     f32 dx = x3 - x0;
     f32 dy = y3 - y0;
-    var longlen = cast(f32, sqrt(dx0 * dx0 + dy0 * dy0) + sqrt(dx1 * dx1 + dy1 * dy1) + sqrt(dx2 * dx2 + dy2 * dy2));
-    var shortlen = cast(f32, sqrt(dx * dx + dy * dy));
+    var longlen = cast(f32, sqrt(dx0 * dx0 + dy0 * dy0) + cast(f64, sqrt(dx1 * dx1 + dy1 * dy1)) + cast(f64, sqrt(dx2 * dx2 + dy2 * dy2)));
+    var shortlen = sqrt(dx * dx + dy * dy);
     f32 flatness_squared = longlen * longlen - shortlen * shortlen;
     if n > 16 {
         return;
@@ -54215,7 +54215,7 @@ i32 stbtt__ray_intersect_bezier(f32* orig, f32* ray, f32* q0, f32* q1, f32* q2, 
         f32 discr = b * b - a * c;
         if discr > 0.0 {
             f32 rcpna = -1.0f / a;
-            var d = cast(f32, sqrt(discr));
+            var d = sqrt(discr);
             s0 = (b + d) * rcpna;
             s1 = (b - d) * rcpna;
             if s0 >= 0.0 && s0 <= 1.0 {
@@ -54269,7 +54269,7 @@ i32 stbtt__compute_crossings_x(f32 x, f32 y, i32 nverts, stbtt_vertex* verts) {
     f32[2] ray = {1.0f, 0.0f};
     f32 y_frac;
     i32 winding = 0;
-    y_frac = cast(f32, fmod(y, 1.0f));
+    y_frac = fmod(y, 1.0f);
     if y_frac < 0.01f {
         y += 0.01f;
     } else if y_frac > 0.99f {
@@ -54343,9 +54343,9 @@ i32 stbtt__compute_crossings_x(f32 x, f32 y, i32 nverts, stbtt_vertex* verts) {
 
 f32 stbtt__cuberoot(f32 x) {
     if x < 0.0f {
-        return -cast(f32, pow(-x, 1.0f / 3.0f));
+        return -cast(f32, pow(cast(f64, -x), cast(f64, 1.0f / 3.0f)));
     } else {
-        return cast(f32, pow(x, 1.0f / 3.0f));
+        return cast(f32, pow(cast(f64, x), cast(f64, 1.0f / 3.0f)));
     }
 }
 
@@ -54357,7 +54357,7 @@ i32 stbtt__solve_cubic(f32 a, f32 b, f32 c, f32* r) {
     f32 p3 = p * p * p;
     f32 d = q * q + 4.0f * p3 / 27.0f;
     if d >= 0.0f {
-        var z = cast(f32, sqrt(d));
+        var z = sqrt(d);
         f32 u = (-q + z) / 2.0f;
         f32 v = (-q - z) / 2.0f;
         u = stbtt__cuberoot(u);
@@ -54365,9 +54365,9 @@ i32 stbtt__solve_cubic(f32 a, f32 b, f32 c, f32* r) {
         r[0] = s + u + v;
         return 1;
     } else {
-        var u = cast(f32, sqrt(-p / 3.0f));
+        var u = sqrt(-p / 3.0f);
         f32 v = cast(f32, acos(-sqrt(-27.0f / p3) * q / 2.0)) / 3.0f;
-        var m = cast(f32, cos(v));
+        var m = cast(f32, cos(cast(f64, v)));
         f32 n = cast(f32, cos(v - 3.141592 / 2.0)) * 1.7320508079999999f;
         r[0] = s + u * 2.0f * m;
         r[1] = s - u * (m + n);
@@ -54432,7 +54432,7 @@ u8* stbtt_GetGlyphSDF(stbtt_fontinfo* info, f32 scale, i32 glyph, i32 padding, u
                     f32 y0 = cast(f32, verts[i].y) * scale_y;
                     f32 x1 = cast(f32, verts[j].x) * scale_x;
                     f32 y1 = cast(f32, verts[j].y) * scale_y;
-                    var dist = cast(f32, sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)));
+                    var dist = sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
                     precompute[i] = dist == 0.0f ? 0.0f : 1.0f / dist;
                 } else if cast(i32, verts[i].type) == STBTT_vcurve {
                     f32 x2 = cast(f32, verts[j].x) * scale_x;
@@ -54472,9 +54472,9 @@ u8* stbtt_GetGlyphSDF(stbtt_fontinfo* info, f32 scale, i32 glyph, i32 padding, u
                         f32 dist;
                         f32 dist2 = (x0 - sx) * (x0 - sx) + (y0 - sy) * (y0 - sy);
                         if dist2 < min_dist * min_dist {
-                            min_dist = cast(f32, sqrt(dist2));
+                            min_dist = sqrt(dist2);
                         }
-                        dist = cast(f32, fabs((x1 - x0) * (y0 - sy) - (y1 - y0) * (x0 - sx))) * precompute[i];
+                        dist = fabs((x1 - x0) * (y0 - sy) - (y1 - y0) * (x0 - sx)) * precompute[i];
                         assert(i != 0);
                         if dist < min_dist {
                             f32 dx = x1 - x0;
@@ -54523,7 +54523,7 @@ u8* stbtt_GetGlyphSDF(stbtt_fontinfo* info, f32 scale, i32 glyph, i32 padding, u
                                     if discriminant < 0.0f {
                                         num = 0;
                                     } else {
-                                        var root = cast(f32, sqrt(discriminant));
+                                        var root = sqrt(discriminant);
                                         res[0] = (-b - root) / (2.0f * a);
                                         res[1] = (-b + root) / (2.0f * a);
                                         num = 2;
@@ -54537,7 +54537,7 @@ u8* stbtt_GetGlyphSDF(stbtt_fontinfo* info, f32 scale, i32 glyph, i32 padding, u
                             }
                             dist2 = (x0 - sx) * (x0 - sx) + (y0 - sy) * (y0 - sy);
                             if dist2 < min_dist * min_dist {
-                                min_dist = cast(f32, sqrt(dist2));
+                                min_dist = sqrt(dist2);
                             }
                             if num >= 1 && res[0] >= 0.0f && res[0] <= 1.0f {
                                 t = res[0];
@@ -54546,7 +54546,7 @@ u8* stbtt_GetGlyphSDF(stbtt_fontinfo* info, f32 scale, i32 glyph, i32 padding, u
                                 py = it * it * y0 + 2.0f * t * it * y1 + t * t * y2;
                                 dist2 = (px - sx) * (px - sx) + (py - sy) * (py - sy);
                                 if dist2 < min_dist * min_dist {
-                                    min_dist = cast(f32, sqrt(dist2));
+                                    min_dist = sqrt(dist2);
                                 }
                             }
                             if num >= 2 && res[1] >= 0.0f && res[1] <= 1.0f {
@@ -54556,7 +54556,7 @@ u8* stbtt_GetGlyphSDF(stbtt_fontinfo* info, f32 scale, i32 glyph, i32 padding, u
                                 py = it * it * y0 + 2.0f * t * it * y1 + t * t * y2;
                                 dist2 = (px - sx) * (px - sx) + (py - sy) * (py - sy);
                                 if dist2 < min_dist * min_dist {
-                                    min_dist = cast(f32, sqrt(dist2));
+                                    min_dist = sqrt(dist2);
                                 }
                             }
                             if num >= 3 && res[2] >= 0.0f && res[2] <= 1.0f {
@@ -54566,7 +54566,7 @@ u8* stbtt_GetGlyphSDF(stbtt_fontinfo* info, f32 scale, i32 glyph, i32 padding, u
                                 py = it * it * y0 + 2.0f * t * it * y1 + t * t * y2;
                                 dist2 = (px - sx) * (px - sx) + (py - sy) * (py - sy);
                                 if dist2 < min_dist * min_dist {
-                                    min_dist = cast(f32, sqrt(dist2));
+                                    min_dist = sqrt(dist2);
                                 }
                             }
                         }
@@ -55037,7 +55037,7 @@ void ImDrawListSharedData_init(ImDrawListSharedData* self) {
     self.InitialFringeScale = 1.0f;
     for i32 i = 0; i < cast(i32, sizeof(self.ArcFastVtx) / sizeof(*self.ArcFastVtx)); i++ {
         f32 a = cast(f32, i) * 2.0f * 3.141592653589793f / cast(f32, cast(i32, sizeof(self.ArcFastVtx) / sizeof(*self.ArcFastVtx)));
-        self.ArcFastVtx[i] = ImVec2{cosf(a), sinf(a)};
+        self.ArcFastVtx[i] = ImVec2{cos(a), sin(a)};
     }
 }
 
@@ -55053,9 +55053,9 @@ void ImDrawListSharedData_SetCircleTessellationMaxError(ImDrawListSharedData* se
     self.CircleTessellationMaxError = max_error;
     for i32 i = 0; i < cast(i32, sizeof(self.CircleSegmentCounts) / sizeof(*self.CircleSegmentCounts)); i++ {
         var radius = cast(f32, i);
-        self.CircleSegmentCounts[i] = cast(ImU8, i > 0 ? ImClamp((cast(i32, ceilf(3.141592653589793f / cast(f32, acosf(1.0f - ImMin(self.CircleTessellationMaxError, radius) / radius)))) + 1) / 2 * 2, 4, 512) : 48);
+        self.CircleSegmentCounts[i] = cast(ImU8, i > 0 ? ImClamp((cast(i32, ceil(3.141592653589793f / acos(1.0f - ImMin(self.CircleTessellationMaxError, radius) / radius))) + 1) / 2 * 2, 4, 512) : 48);
     }
-    self.ArcFastRadiusCutoff = self.CircleTessellationMaxError / cast(f32, 1.0f - cosf(3.141592653589793f / ImMax(cast(f32, 48), 3.141592653589793f)));
+    self.ArcFastRadiusCutoff = self.CircleTessellationMaxError / (1.0f - cos(3.141592653589793f / ImMax(cast(f32, 48), 3.141592653589793f)));
 }
 
 void ImDrawList_init(ImDrawList* self, ImDrawListSharedData* shared_data) {
@@ -55245,7 +55245,7 @@ i32 ImDrawList__CalcCircleAutoSegmentCount(ImDrawList* self, f32 radius) {
     if radius_idx >= 0 && radius_idx < cast(i32, sizeof(self._Data.CircleSegmentCounts) / sizeof(*self._Data.CircleSegmentCounts)) {
         return cast(i32, self._Data.CircleSegmentCounts[radius_idx]);
     } else {
-        return ImClamp((cast(i32, ceilf(3.141592653589793f / cast(f32, acosf(1.0f - ImMin(self._Data.CircleTessellationMaxError, radius) / radius)))) + 1) / 2 * 2, 4, 512);
+        return ImClamp((cast(i32, ceil(3.141592653589793f / acos(1.0f - ImMin(self._Data.CircleTessellationMaxError, radius) / radius))) + 1) / 2 * 2, 4, 512);
     }
 }
 
@@ -55877,9 +55877,7 @@ void ImDrawList__PathArcToN(ImDrawList* self, ImVec2 center, f32 radius, f32 a_m
     ImVector_ImVec2_reserve(&self._Path, self._Path.Size + (num_segments + 1));
     for i32 i = 0; i <= num_segments; i++ {
         f32 a = a_min + cast(f32, i) / cast(f32, num_segments) * (a_max - a_min);
-        ImVector_ImVec2_push_back(&self._Path, ImVec2{
-            center.x + cast(f32, cosf(a)) * radius, center.y + cast(f32, sinf(a)) * radius,
-        });
+        ImVector_ImVec2_push_back(&self._Path, ImVec2{center.x + cos(a) * radius, center.y + sin(a) * radius});
     }
 }
 
@@ -55905,8 +55903,8 @@ void ImDrawList_PathArcTo(ImDrawList* self, ImVec2 center, f32 radius, f32 a_min
         bool a_is_reverse = a_max < a_min;
         f32 a_min_sample_f = 48.0f * a_min / (3.141592653589793f * 2.0f);
         f32 a_max_sample_f = 48.0f * a_max / (3.141592653589793f * 2.0f);
-        i32 a_min_sample = a_is_reverse != 0 ? cast(i32, ImFloor(a_min_sample_f)) : cast(i32, ceilf(a_min_sample_f));
-        i32 a_max_sample = a_is_reverse != 0 ? cast(i32, ceilf(a_max_sample_f)) : cast(i32, ImFloor(a_max_sample_f));
+        i32 a_min_sample = a_is_reverse != 0 ? cast(i32, ImFloor(a_min_sample_f)) : cast(i32, ceil(a_min_sample_f));
+        i32 a_max_sample = a_is_reverse != 0 ? cast(i32, ceil(a_max_sample_f)) : cast(i32, ImFloor(a_max_sample_f));
         i32 a_mid_samples = a_is_reverse != 0 ? ImMax(a_min_sample - a_max_sample, 0) : ImMax(a_max_sample - a_min_sample, 0);
         f32 a_min_segment_angle = cast(f32, a_min_sample) * 3.141592653589793f * 2.0f / 48.0f;
         f32 a_max_segment_angle = cast(f32, a_max_sample) * 3.141592653589793f * 2.0f / 48.0f;
@@ -55915,8 +55913,7 @@ void ImDrawList_PathArcTo(ImDrawList* self, ImVec2 center, f32 radius, f32 a_min
         ImVector_ImVec2_reserve(&self._Path, self._Path.Size + (a_mid_samples + 1 + (a_emit_start != 0 ? 1 : 0) + (a_emit_end != 0 ? 1 : 0)));
         if a_emit_start != 0 {
             ImVector_ImVec2_push_back(&self._Path, ImVec2{
-                center.x + cast(f32, cosf(a_min)) * radius,
-                center.y + cast(f32, sinf(a_min)) * radius,
+                center.x + cos(a_min) * radius, center.y + sin(a_min) * radius,
             });
         }
         if a_mid_samples > 0 {
@@ -55924,14 +55921,13 @@ void ImDrawList_PathArcTo(ImDrawList* self, ImVec2 center, f32 radius, f32 a_min
         }
         if a_emit_end != 0 {
             ImVector_ImVec2_push_back(&self._Path, ImVec2{
-                center.x + cast(f32, cosf(a_max)) * radius,
-                center.y + cast(f32, sinf(a_max)) * radius,
+                center.x + cos(a_max) * radius, center.y + sin(a_max) * radius,
             });
         }
     } else {
         f32 arc_length = ImAbs(a_max - a_min);
         i32 circle_segment_count = ImDrawList__CalcCircleAutoSegmentCount(self, radius);
-        i32 arc_segment_count = ImMax(cast(i32, ceilf(cast(f32, circle_segment_count) * arc_length / (3.141592653589793f * 2.0f))), 1);
+        i32 arc_segment_count = ImMax(cast(i32, ceil(cast(f32, circle_segment_count) * arc_length / (3.141592653589793f * 2.0f))), 1);
         ImDrawList__PathArcToN(self, center, radius, a_min, a_max, arc_segment_count);
     }
 }
@@ -55941,12 +55937,12 @@ void ImDrawList_PathEllipticalArcTo(ImDrawList* self, ImVec2 center, ImVec2 radi
         num_segments = ImDrawList__CalcCircleAutoSegmentCount(self, ImMax(radius.x, radius.y));
     }
     ImVector_ImVec2_reserve(&self._Path, self._Path.Size + (num_segments + 1));
-    f32 cos_rot = cosf(rot);
-    f32 sin_rot = sinf(rot);
+    f32 cos_rot = cos(rot);
+    f32 sin_rot = sin(rot);
     for i32 i = 0; i <= num_segments; i++ {
         f32 a = a_min + cast(f32, i) / cast(f32, num_segments) * (a_max - a_min);
         ImVec2 point;
-        ImVec2_init(&point, cast(f32, cosf(a)) * radius.x, cast(f32, sinf(a)) * radius.y);
+        ImVec2_init(&point, cos(a) * radius.x, sin(a) * radius.y);
         ImVec2 rel;
         ImVec2_init(&rel, point.x * cos_rot - point.y * sin_rot, point.x * sin_rot + point.y * cos_rot);
         point.x = rel.x + center.x;
@@ -56054,8 +56050,8 @@ void ImDrawList_PathRect(ImDrawList* self, ImVec2 a, ImVec2 b, f32 rounding, ImD
         if (flags & ImDrawFlags_RoundCornersMask_) == 0 {
             flags |= ImDrawFlags_RoundCornersAll;
         }
-        rounding = ImMin(rounding, fabsf(b.x - a.x) * ((flags & ImDrawFlags_RoundCornersTop) == ImDrawFlags_RoundCornersTop || (flags & ImDrawFlags_RoundCornersBottom) == ImDrawFlags_RoundCornersBottom ? 0.5f : 1.0f) - 1.0f);
-        rounding = ImMin(rounding, fabsf(b.y - a.y) * ((flags & ImDrawFlags_RoundCornersLeft) == ImDrawFlags_RoundCornersLeft || (flags & ImDrawFlags_RoundCornersRight) == ImDrawFlags_RoundCornersRight ? 0.5f : 1.0f) - 1.0f);
+        rounding = ImMin(rounding, fabs(b.x - a.x) * ((flags & ImDrawFlags_RoundCornersTop) == ImDrawFlags_RoundCornersTop || (flags & ImDrawFlags_RoundCornersBottom) == ImDrawFlags_RoundCornersBottom ? 0.5f : 1.0f) - 1.0f);
+        rounding = ImMin(rounding, fabs(b.y - a.y) * ((flags & ImDrawFlags_RoundCornersLeft) == ImDrawFlags_RoundCornersLeft || (flags & ImDrawFlags_RoundCornersRight) == ImDrawFlags_RoundCornersRight ? 0.5f : 1.0f) - 1.0f);
     }
     if rounding < 0.5f || (flags & ImDrawFlags_RoundCornersMask_) == ImDrawFlags_RoundCornersNone {
         ImDrawList_PathLineTo(self, a);
@@ -58680,7 +58676,7 @@ ImVec2i ImFontAtlasTextureGetSizeEstimate(ImFontAtlas* atlas) {
     min_w = ImMax(ImUpperPowerOfTwo(builder.MaxRectSize.x), min_w);
     min_h = ImMax(ImUpperPowerOfTwo(builder.MaxRectSize.y), min_h);
     i32 surface_approx = builder.RectsPackedSurface - builder.RectsDiscardedSurface;
-    var surface_sqrt = cast(i32, sqrtf(cast(f32, surface_approx)));
+    var surface_sqrt = cast(i32, sqrt(cast(f32, surface_approx)));
     i32 new_tex_w;
     i32 new_tex_h;
     if min_w >= min_h {
@@ -59150,7 +59146,7 @@ bool ImGui_ImplStbTrueType_FontBakedInit(ImFontAtlas* atlas, ImFontConfig* src, 
         i32 unscaled_descent;
         i32 unscaled_line_gap;
         stbtt_GetFontVMetrics(&bd_font_data.FontInfo, &unscaled_ascent, &unscaled_descent, &unscaled_line_gap);
-        baked.Ascent = ceilf(cast(f32, unscaled_ascent) * scale_for_layout);
+        baked.Ascent = ceil(cast(f32, unscaled_ascent) * scale_for_layout);
         baked.Descent = ImFloor(cast(f32, unscaled_descent) * scale_for_layout);
     }
     return true;
@@ -60117,7 +60113,7 @@ f32 ImAcos01(f32 x) {
     if x >= 1.0f {
         return 0.0f;
     }
-    return cast(f32, acosf(x));
+    return acos(x);
 }
 }
 
@@ -60849,7 +60845,7 @@ u8[9583] proggy_clean_ttf_compressed_data = {
 
 u8* ImGui_GetDefaultCompressedFontDataProggyClean(i32* out_size) {
     *out_size = cast(i32, proggy_clean_ttf_compressed_size);
-    return cast(u8*, proggy_clean_ttf_compressed_data);
+    return proggy_clean_ttf_compressed_data;
 }
 //-----------------------------------------------------------------------------
 // [SECTION] Default font data (ProggyForever-Regular-minimal.ttf)
@@ -61478,7 +61474,7 @@ u8[14562] proggy_forever_minimal_ttf_compressed_data = {
 
 u8* ImGui_GetDefaultCompressedFontDataProggyForever(i32* out_size) {
     *out_size = cast(i32, proggy_forever_minimal_ttf_compressed_size);
-    return cast(u8*, proggy_forever_minimal_ttf_compressed_data);
+    return proggy_forever_minimal_ttf_compressed_data;
 }
 
 void ImGui_StyleColorsDark() {
@@ -62987,7 +62983,7 @@ void ImGui_ProgressBar(f32 fraction, ImVec2 size_arg, u8* overlay) {
     f32 fill_n1 = fraction == fraction ? fraction : 0.0f;
     if is_indeterminate != 0 {
         f32 fill_width_n = 0.2f;
-        fill_n0 = cast(f32, fmodf(-fraction, 1.0f)) * (1.0f + fill_width_n) - fill_width_n;
+        fill_n0 = fmod(-fraction, 1.0f) * (1.0f + fill_width_n) - fill_width_n;
         fill_n1 = ImSaturate(fill_n0 + fill_width_n);
         fill_n0 = ImSaturate(fill_n0);
     }
@@ -63074,7 +63070,7 @@ bool ImGui_TextLink(u8* label) {
         ImGui_ColorConvertRGBtoHSV(text_colf.x, text_colf.y, text_colf.z, &h, &s, &v);
         if held || hovered {
             v = ImSaturate(v + (held != 0 ? 0.4f : 0.3f));
-            h = fmodf(h + 0.02f, 1.0f);
+            h = fmod(h + 0.02f, 1.0f);
         }
         ImGui_ColorConvertHSVtoRGB(h, s, v, &text_colf.x, &text_colf.y, &text_colf.z);
         v = ImSaturate(v - 0.2f);
@@ -67618,12 +67614,12 @@ void imstb_textedit__ImStb_stb_textedit_discard_redo(StbUndoState* state) {
             }
         }
         var move_size = cast(u64, (99 - state.redo_point - 1) * sizeof(state.undo_rec[0]));
-        var buf_begin = cast(u8*, state.undo_rec);
+        var buf_begin = cast(u8*, &state.undo_rec[0]);
         ignore buf_begin;
-        u8* buf_end = cast(u8*, state.undo_rec) + sizeof(state.undo_rec);
+        u8* buf_end = cast(u8*, &state.undo_rec[0]) + sizeof(state.undo_rec);
         ignore buf_end;
-        assert(cast(u8*, state.undo_rec + state.redo_point) >= buf_begin);
-        assert(cast(u8*, state.undo_rec + state.redo_point + 1) + move_size <= buf_end);
+        assert(cast(u8*, &(state.undo_rec + state.redo_point)[0]) >= buf_begin);
+        assert(cast(u8*, &(state.undo_rec + state.redo_point + 1)[0]) + move_size <= buf_end);
         memmove(state.undo_rec + state.redo_point + 1, state.undo_rec + state.redo_point, move_size);
         ++state.redo_point;
     }
@@ -69003,7 +68999,7 @@ bool ImGui_InputTextEx(u8* label, u8* hint, u8* buf, i32 buf_size, ImVec2 size_a
     }
     if render_cursor != 0 {
         state.CursorAnim += io.DeltaTime;
-        bool cursor_is_visible = !g.IO.ConfigInputTextCursorBlink || state.CursorAnim <= 0.0f || cast(f32, fmodf(state.CursorAnim, 1.2f)) <= 0.8f;
+        bool cursor_is_visible = !g.IO.ConfigInputTextCursorBlink || state.CursorAnim <= 0.0f || fmod(state.CursorAnim, 1.2f) <= 0.8f;
         ImVec2 cursor_screen_pos = ImTrunc(op_sub_ImVec2_ImVec2(op_add_ImVec2_ImVec2(draw_pos, cursor_offset), draw_scroll));
         ImRect cursor_screen_rect;
         ImRect_init(&cursor_screen_rect, cursor_screen_pos.x, cursor_screen_pos.y - g.FontSize + 0.5f, cursor_screen_pos.x + 1.0f, cursor_screen_pos.y - 1.5f);
@@ -69431,15 +69427,15 @@ bool ImGui_ColorPicker4(u8* label, f32* col, ImGuiColorEditFlags flags, f32* ref
             ImVec2 current_off = op_sub_ImVec2_ImVec2(g.IO.MousePos, wheel_center);
             f32 initial_dist2 = ImLengthSqr(initial_off);
             if initial_dist2 >= (wheel_r_inner - 1.0f) * (wheel_r_inner - 1.0f) && initial_dist2 <= (wheel_r_outer + 1.0f) * (wheel_r_outer + 1.0f) {
-                H = cast(f32, atan2f(current_off.y, current_off.x)) / 3.141592653589793f * 0.5f;
+                H = atan2(current_off.y, current_off.x) / 3.141592653589793f * 0.5f;
                 if H < 0.0f {
                     H += 1.0f;
                 }
                 value_changed_h = true;
                 value_changed = value_changed_h;
             }
-            f32 cos_hue_angle = triangle_rotate != 0 ? cast(f32, cosf(-H * 2.0f * 3.141592653589793f)) : 1.0f;
-            f32 sin_hue_angle = triangle_rotate != 0 ? cast(f32, sinf(-H * 2.0f * 3.141592653589793f)) : 0.0f;
+            f32 cos_hue_angle = triangle_rotate != 0 ? cos(-H * 2.0f * 3.141592653589793f) : 1.0f;
+            f32 sin_hue_angle = triangle_rotate != 0 ? sin(-H * 2.0f * 3.141592653589793f) : 0.0f;
             if ImTriangleContainsPoint(triangle_pa, triangle_pb, triangle_pc, ImRotate(initial_off, cos_hue_angle, sin_hue_angle)) != 0 {
                 ImVec2 current_off_unrotated = ImRotate(current_off, cos_hue_angle, sin_hue_angle);
                 if ImTriangleContainsPoint(triangle_pa, triangle_pb, triangle_pc, current_off_unrotated) == 0 {
@@ -69610,13 +69606,13 @@ bool ImGui_ColorPicker4(u8* label, f32* col, ImGuiColorEditFlags flags, f32* ref
             ImDrawList_PathStroke(draw_list, col_white, wheel_thickness, 0);
             i32 vert_end_idx = draw_list.VtxBuffer.Size;
             ImVec2 gradient_p0;
-            ImVec2_init(&gradient_p0, wheel_center.x + cast(f32, cosf(a0)) * wheel_r_inner, wheel_center.y + cast(f32, sinf(a0)) * wheel_r_inner);
+            ImVec2_init(&gradient_p0, wheel_center.x + cos(a0) * wheel_r_inner, wheel_center.y + sin(a0) * wheel_r_inner);
             ImVec2 gradient_p1;
-            ImVec2_init(&gradient_p1, wheel_center.x + cast(f32, cosf(a1)) * wheel_r_inner, wheel_center.y + cast(f32, sinf(a1)) * wheel_r_inner);
+            ImVec2_init(&gradient_p1, wheel_center.x + cos(a1) * wheel_r_inner, wheel_center.y + sin(a1) * wheel_r_inner);
             ImGui_ShadeVertsLinearColorGradientKeepAlpha(draw_list, vert_start_idx, vert_end_idx, gradient_p0, gradient_p1, col_hues[n], col_hues[n + 1]);
         }
-        f32 cos_hue_angle = cosf(H * 2.0f * 3.141592653589793f);
-        f32 sin_hue_angle = sinf(H * 2.0f * 3.141592653589793f);
+        f32 cos_hue_angle = cos(H * 2.0f * 3.141592653589793f);
+        f32 sin_hue_angle = sin(H * 2.0f * 3.141592653589793f);
         ImVec2 hue_cursor_pos;
         ImVec2_init(&hue_cursor_pos, wheel_center.x + cos_hue_angle * (wheel_r_inner + wheel_r_outer) * 0.5f, wheel_center.y + sin_hue_angle * (wheel_r_inner + wheel_r_outer) * 0.5f);
         f32 hue_cursor_rad = value_changed_h != 0 ? wheel_thickness * 0.65f : wheel_thickness * 0.55f;
@@ -72329,7 +72325,7 @@ bool ImGui_BeginMenuEx(u8* label, u8* icon, bool enabled) {
             ImVec2 ta = op_sub_ImVec2_ImVec2(g.IO.MousePos, g.IO.MouseDelta);
             ImVec2 tb = child_dir > 0.0f ? ImRect_GetTL(&next_window_rect) : ImRect_GetTR(&next_window_rect);
             ImVec2 tc = child_dir > 0.0f ? ImRect_GetBL(&next_window_rect) : ImRect_GetBR(&next_window_rect);
-            f32 pad_farmost_h = ImClamp(cast(f32, fabsf(ta.x - tb.x)) * 0.3f, ref_unit * 0.5f, ref_unit * 2.5f);
+            f32 pad_farmost_h = ImClamp(fabs(ta.x - tb.x) * 0.3f, ref_unit * 0.5f, ref_unit * 2.5f);
             ta.x += child_dir * -0.5f;
             tb.x += child_dir * ref_unit;
             tc.x += child_dir * ref_unit;
@@ -72928,7 +72924,7 @@ void ImGui_TabBarLayout(ImGuiTabBar* tab_bar) {
     tab_bar.ScrollingTarget = ImGui_TabBarScrollClamp(tab_bar, tab_bar.ScrollingTarget);
     if tab_bar.ScrollingAnim != tab_bar.ScrollingTarget {
         tab_bar.ScrollingSpeed = ImMax(tab_bar.ScrollingSpeed, 70.0f * g.FontSize);
-        tab_bar.ScrollingSpeed = ImMax(tab_bar.ScrollingSpeed, cast(f32, fabsf(tab_bar.ScrollingTarget - tab_bar.ScrollingAnim)) / 0.3f);
+        tab_bar.ScrollingSpeed = ImMax(tab_bar.ScrollingSpeed, fabs(tab_bar.ScrollingTarget - tab_bar.ScrollingAnim) / 0.3f);
         bool teleport = tab_bar.PrevFrameVisible + 1 < g.FrameCount || tab_bar.ScrollingTargetDistToVisibility > 10.0f * g.FontSize;
         tab_bar.ScrollingAnim = teleport != 0 ? tab_bar.ScrollingTarget : ImLinearSweep(tab_bar.ScrollingAnim, tab_bar.ScrollingTarget, g.IO.DeltaTime * tab_bar.ScrollingSpeed);
     } else {
@@ -73529,7 +73525,7 @@ bool ImGui_TabItemEx(ImGuiTabBar* tab_bar, u8* label, bool* p_open, ImGuiTabItem
             if undocking_tab == 0 {
                 f32 threshold_base = g.FontSize;
                 f32 threshold_x = threshold_base * 2.2f;
-                f32 threshold_y = threshold_base * 1.5f + ImClamp((cast(f32, fabsf(g.IO.MouseDragMaxDistanceAbs[0].x)) - threshold_base * 2.0f) * 0.2f, 0.0f, threshold_base * 4.0f);
+                f32 threshold_y = threshold_base * 1.5f + ImClamp((fabs(g.IO.MouseDragMaxDistanceAbs[0].x) - threshold_base * 2.0f) * 0.2f, 0.0f, threshold_base * 4.0f);
                 f32 distance_from_edge_y = ImMax(bb.Min.y - g.IO.MousePos.y, g.IO.MousePos.y - bb.Max.y);
                 if distance_from_edge_y >= threshold_y {
                     undocking_tab = true;
@@ -76331,7 +76327,7 @@ void ImGui_EndTable() {
     inner_window.DC.PrevLineSize = temp_data.HostBackupPrevLineSize;
     inner_window.DC.CurrLineSize = temp_data.HostBackupCurrLineSize;
     inner_window.DC.CursorMaxPos = temp_data.HostBackupCursorMaxPos;
-    f32 inner_content_max_y = ceilf(table.RowPosY2);
+    f32 inner_content_max_y = ceil(table.RowPosY2);
     assert(table.RowPosY2 == inner_window.DC.CursorPos.y);
     if inner_window != outer_window {
         inner_window.DC.CursorMaxPos.y = inner_content_max_y;
@@ -78108,13 +78104,13 @@ void ImGui_TableAngledHeadersRowEx(ImGuiID row_id, f32 angle, f32 max_label_widt
     }
     bool flip_label = angle < 0.0f;
     angle -= 3.141592653589793f * 0.5f;
-    f32 cos_a = cosf(angle);
-    f32 sin_a = sinf(angle);
-    f32 label_cos_a = flip_label != 0 ? cast(f32, cosf(angle + 3.141592653589793f)) : cos_a;
-    f32 label_sin_a = flip_label != 0 ? cast(f32, sinf(angle + 3.141592653589793f)) : sin_a;
+    f32 cos_a = cos(angle);
+    f32 sin_a = sin(angle);
+    f32 label_cos_a = flip_label != 0 ? cos(angle + 3.141592653589793f) : cos_a;
+    f32 label_sin_a = flip_label != 0 ? sin(angle + 3.141592653589793f) : sin_a;
     var unit_right = ImVec2{cos_a, sin_a};
     f32 header_height = g.FontSize + g.Style.CellPadding.x * 2.0f;
-    f32 row_height = ImTrunc(fabsf(ImRotate(ImVec2{
+    f32 row_height = ImTrunc(fabs(ImRotate(ImVec2{
         max_label_width, flip_label != 0 ? header_height : -header_height,
     }, cos_a, sin_a).y));
     table.AngledHeadersHeight = row_height;
@@ -78161,7 +78157,7 @@ void ImGui_TableAngledHeadersRowEx(ImGuiID row_id, f32 angle, f32 max_label_widt
                 f32 line_off_curr_x = flip_label != 0 ? cast(f32, label_lines - 1) * line_off_step_x : 0.0f;
                 f32 line_off_for_align_x = ImFloor(ImMax(column.MaxX - column.MinX - padding.x * 2.0f - cast(f32, label_lines) * line_off_step_x, 0.0f) * align.x);
                 line_off_curr_x += line_off_for_align_x - line_off_for_ascent_x;
-                column.ContentMaxXHeadersIdeal = column.WorkMinX + cast(f32, ceilf(cast(f32, label_lines) * line_off_step_x - line_off_for_align_x));
+                column.ContentMaxXHeadersIdeal = column.WorkMinX + ceil(cast(f32, label_lines) * line_off_step_x - line_off_for_align_x);
                 column.ContentMaxXHeadersUsed = column.ContentMaxXHeadersIdeal;
                 while label_name < label_name_end {
                     u8* label_name_eol = strchr(label_name, 10);
@@ -78362,7 +78358,7 @@ void ImGui_TableDrawDefaultContextMenu(ImGuiTable* table, ImGuiTableFlags flags_
                 if ImGui_IsItemHovered(0) == 0 {
                     i32 reorder_dir = g.IO.MousePos.y < (g.LastItemData.Rect.Min.y + g.LastItemData.Rect.Max.y) * 0.5f ? -1 : 1;
                     f32 reorder_amount = (reorder_dir < 0 ? g.LastItemData.Rect.Min.y - g.IO.MousePos.y : g.IO.MousePos.y - g.LastItemData.Rect.Max.y) / ImRect_GetHeight(&g.LastItemData.Rect);
-                    i32 dst_order = column.DisplayOrder + cast(i32, ceilf(reorder_amount)) * reorder_dir;
+                    i32 dst_order = column.DisplayOrder + cast(i32, ceil(reorder_amount)) * reorder_dir;
                     ImGui_TableQueueSetColumnDisplayOrder(table, column_n, dst_order);
                 }
             }

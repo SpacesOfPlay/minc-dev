@@ -21,11 +21,11 @@ float3 cross(float3 a, float3 b) {
 
 // float4 cross(float4, float4) is a compiler builtin.
 
-f32 length(float2 v) { return sqrtf(v.x * v.x + v.y * v.y); }
-f32 length(float3 v) { return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z); }
+f32 length(float2 v) { return sqrt(v.x * v.x + v.y * v.y); }
+f32 length(float3 v) { return sqrt(v.x * v.x + v.y * v.y + v.z * v.z); }
 
 // dot(float4, float4) is a compiler builtin with SIMD support.
-f32 length(float4 v) { return sqrtf(dot(v, v)); }
+f32 length(float4 v) { return sqrt(dot(v, v)); }
 
 float2 normalize(float2 v) {
     f32 len = length(v);
@@ -57,7 +57,7 @@ float4x4 identity() {
 float4x4 perspective(f32 fovy, f32 aspect, f32 near, f32 far) {
     float4x4 out;
     f32* p = cast(f32*, &out);
-    f32 f = cosf(fovy * 0.5f) / sinf(fovy * 0.5f);
+    f32 f = cos(fovy * 0.5f) / sin(fovy * 0.5f);
     *(p + 0) = f / aspect;
     *(p + 5) = f;
     when os(windows) || os(macos) || os(ios) {
@@ -95,7 +95,7 @@ float4x4 look_at(float3 eye, float3 target, float3 up) {
 float4x4 rotate_x(f32 angle) {
     float4x4 out = identity();
     f32* p = cast(f32*, &out);
-    f32 c = cosf(angle); f32 s = sinf(angle);
+    f32 c = cos(angle); f32 s = sin(angle);
     *(p + 5) = c;  *(p + 6) = s;
     *(p + 9) = -s; *(p + 10) = c;
     return out;
@@ -104,7 +104,7 @@ float4x4 rotate_x(f32 angle) {
 float4x4 rotate_y(f32 angle) {
     float4x4 out = identity();
     f32* p = cast(f32*, &out);
-    f32 c = cosf(angle); f32 s = sinf(angle);
+    f32 c = cos(angle); f32 s = sin(angle);
     *(p + 0) = c;   *(p + 2) = -s;
     *(p + 8) = s;   *(p + 10) = c;
     return out;
@@ -113,7 +113,7 @@ float4x4 rotate_y(f32 angle) {
 float4x4 rotate_z(f32 angle) {
     float4x4 out = identity();
     f32* p = cast(f32*, &out);
-    f32 c = cosf(angle); f32 s = sinf(angle);
+    f32 c = cos(angle); f32 s = sin(angle);
     *(p + 0) = c;  *(p + 1) = s;
     *(p + 4) = -s; *(p + 5) = c;
     return out;
@@ -126,9 +126,9 @@ float4 quat_identity() { return float4{0.0f, 0.0f, 0.0f, 1.0f}; }
 
 float4 quat_axis_angle(float3 axis, f32 angle) {
     f32 half = angle * 0.5f;
-    f32 s = sinf(half);
+    f32 s = sin(half);
     float3 n = normalize(axis);
-    return float4{ n.x * s, n.y * s, n.z * s, cosf(half) };
+    return float4{ n.x * s, n.y * s, n.z * s, cos(half) };
 }
 
 float4 quat_mul(float4 a, float4 b) {
@@ -191,9 +191,9 @@ float4 quat_slerp(float4 a, float4 b, f32 t) {
         });
     }
     f32 theta = cast(f32, acos(cast(f64, d)));
-    f32 sin_theta = sinf(theta);
-    f32 wa = sinf((1.0f - t) * theta) / sin_theta;
-    f32 wb = sinf(t * theta) / sin_theta;
+    f32 sin_theta = sin(theta);
+    f32 wa = sin((1.0f - t) * theta) / sin_theta;
+    f32 wb = sin(t * theta) / sin_theta;
     return float4{
         wa * a.x + wb * bx,
         wa * a.y + wb * by,

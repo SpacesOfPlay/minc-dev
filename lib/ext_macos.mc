@@ -675,7 +675,7 @@ void* _objc_block_setup(ObjcBlockLiteral* lit, void* invoke) {
     lit.reserved = 0;
     lit.invoke = invoke;
     lit.descriptor = cast(void*, &_objc_block_descriptor);
-    return cast(void*, lit);
+    return lit;
 }
 
 }

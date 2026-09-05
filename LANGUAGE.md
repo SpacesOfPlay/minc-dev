@@ -416,7 +416,7 @@ eprint("error: {}\n", msg);  // prints to stderr
 // Float formatting note: `{}` for f32/f64 is a *display* format, not
 // a round-trip format: up to 6 fractional digits, trailing zeros
 // trimmed (at least one digit kept: "3.0"), "nan"/"inf"/"-inf" for
-// specials, scientific notation from 1e12 up ("1.0e13").
+// specials, scientific notation outside the six-digit window.
 
 // For exact, shortest round-trip output, import the Ryu formatters:
 //   import format_f64;   string s = format_f64(0.1);  // "0.1"
@@ -867,6 +867,33 @@ statement form. `defer { free(a); free(b); }` does not mark `a` or
 `b` as defer-freed. Use one `defer free(x);` per resource for the
 tracking.
 
+### `@strict_float`
+
+`@strict_float` on a function pins its floating-point evaluation to
+exactly what the source says: the optimizer performs no FMA
+contraction and no float-loop vectorization or reduction reordering
+on its operations. Calls to it may still be inlined — the spliced
+operations keep their strict semantics at every call site. The result
+bits are identical on every target and at every optimization level.
+Use it for reproducible numeric kernels.
+
+```c
+@strict_float
+f64 kernel(f64 a, f64 b, f64 c) {
+    return a * b + c;   // always mul then add, on every target
+}
+```
+
+Without `@strict_float`, x64 and arm64 still agree with each other:
+they contract the same operations and split reductions the same way,
+so plain float arithmetic gives the same bits on both at a given
+optimization level. Those bits differ from the `@strict_float` result
+and from wasm. The estimate builtins (`rsqrt4_fast`, etc.) are
+target-defined.
+
+The annotation covers the function's own operations only. A kernel is 
+reproducible when every function it calls is `@strict_float` too.
+
 ### `@must_use` and `ignore`
 
 `@must_use` on a function declaration emits a warning when the
@@ -956,7 +983,7 @@ Available `arch` values: `x64`, `arm64`, `wasm32`.
 ### Compiler version
 
 ```c
-@minc_min_version "0.9.12"      // refuse to compile with anything older
+@minc_min_version "0.9.14"      // refuse to compile with anything older
 
 when MINC_VERSION >= 9011 { ... }   // gate on the running compiler
 ```
@@ -964,7 +991,7 @@ when MINC_VERSION >= 9011 { ... }   // gate on the running compiler
 `@minc_min_version` : the oldest compiler that can build the file.
 
 `MINC_VERSION` encoded as `major*1000000 + minor*1000 + patch`.
-0.9.12 is `9012`, 1.0.0 would be `1000000`.
+0.9.14 is `9014`, 1.0.0 would be `1000000`.
 
 ## Expressions
 
@@ -1373,6 +1400,11 @@ string string(str s)             // allocate + copy → owned string
 string move(string s)            // transfer ownership, invalidate source
 ```
 
+`alloc`, `new` and `realloc` return memory aligned to at least 16
+bytes on every target, which covers any scalar, any struct of them, and
+a 128-bit SIMD load. A stronger alignment needs an explicit aligned
+allocator.
+
 `alloc<T>(count)` and `new(T[count])` fold the `sizeof(T)` multiplication
 and the pointer cast into the builtin:
 
@@ -1415,9 +1447,39 @@ Supported format types: `i32`, `i64`, `u32`, `u64`, `f64`, `bool`, `str`, `strin
 
 ```c
 void exit(i32 code)
+void abort()                     // terminate abnormally, no status
 i32 get_argc()
 u8* get_arg(i32 index)           // null if out of range
 ```
+
+`exit` is a normal exit with return value `code`. 
+`abort` is a failure state, see below.
+
+| target | what happens | what the parent sees |
+|---|---|---|
+| linux, android | `kill(getpid(), SIGABRT)` | signal death, core dump |
+| macos, ios | `abort()` in libSystem | signal death, crash report |
+| windows | `__fastfail(FAST_FAIL_FATAL_APP_EXIT)` | status `0xC0000409` |
+| wasm | the `unreachable` instruction | module trap |
+| uefi | `ud2` | `#UD` to the trap handler |
+
+A debugger attached to the process breaks at the abort rather than
+watching it exit. Nothing is flushed and no cleanup runs: `defer`
+blocks in progress do not fire.
+
+Both are noreturn, so a function whose only exit path is `abort()`
+needs no return statement:
+
+```c
+i32 must_parse(u8* s) {
+    i32 v = 0;
+    if !parse(s, &v) { abort(); }
+    return v;
+}
+```
+
+A failed bounds check ends the program the same way as `abort`, after 
+writing `bounds check failed` to stderr.
 
 ### Bit manipulation
 
@@ -1449,7 +1511,16 @@ f64 sqrt(f64 x)                 // hardware sqrtsd
 f64 fabs(f64 x)                 // hardware sign-bit clear
 f32 sqrtf(f32 x)                // hardware sqrtss
 f32 fabsf(f32 x)                // hardware sign-bit clear (f32)
+f64 floor(f64 x)                // hardware round toward -inf
+f64 ceil(f64 x)                 // hardware round toward +inf
+f64 trunc(f64 x)                // hardware round toward zero
+f32 floorf(f32 x)               // f32 forms of the same
+f32 ceilf(f32 x)
+f32 truncf(f32 x)
 ```
+
+All of these are IEEE exactly-defined and bit-identical on every
+target.
 
 ### SIMD intrinsics
 
@@ -1636,7 +1707,7 @@ Include with `#include` or `import`:
 |-------------|------------------|------------------------------------------------------------------|
 | **Vec**     | `lib/vec.mc`     | Generic dynamic array `Vec<T>`                                   |
 | **String**  | `lib/str.mc`     | String operations (find, slice, trim, compare, builder)          |
-| **Math**    | `lib/math.mc`    | sin, cos, tan, exp, log, pow, floor, ceil, round + helpers       |
+| **Math**    | `lib/math.mc`    | sin, cos, tan, exp, log, pow, floor, ceil, trunc, round + helpers |
 | **Float fmt** | `lib/format_f64.mc` / `lib/format_f32.mc` | Ryu shortest-round-trip float-to-string (`format_f64`, `format_f32`) |
 | **File**    | `lib/file.mc`    | File read/write (whole file), file_exists                        |
 | **Memory**  | `lib/mem.mc`     | Arena allocator and pool allocator                               |
@@ -1698,10 +1769,11 @@ f64 r = sqrt(4.0);                  // 2.0 (builtin, hardware)
 f64 a = fabs(0.0 - 3.14);           // 3.14 (builtin, hardware)
 f64 s = sin(PI / 2.0);              // 1.0 (platform library)
 f64 c = cos(0.0);                   // 1.0
-f64 e = exp(1.0);                   // 2.718...
+f64 e = exp(1.0);                   // 2.718... (bit-identical on every target)
 f64 l = log(E);                     // 1.0
 f64 p = pow(2.0, 10.0);             // 1024.0
-f64 f = floor(3.7);                 // 3.0
+f64 f = floor(3.7);                 // 3.0 (builtin, hardware)
+f64 m = fmod(7.5, 2.0);             // 1.5 (exact on every target)
 
 i32 a = abs_i32(0 - 5);             // 5
 f64 c = clamp_f64(15.0, 0.0, 10.0); // 10.0
@@ -1751,7 +1823,13 @@ defer free(contents);
 
 file_write("output.txt", fd);
 file_write_str("output.txt", "hello");
+
+i64 n = file_size("input.txt");   // bytes, -1 if unknown
 ```
+
+`FileData.len` is an `i64`, so `file_read` handles files of any size.
+A `string` carries an `i32` length, so `file_read_str` returns empty
+for a file past 2 GB rather than a truncated string.
 
 ### Memory allocators
 

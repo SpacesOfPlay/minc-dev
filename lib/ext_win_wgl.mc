@@ -142,10 +142,8 @@ extern "user32.dll" {
 // etc.) by id. MAKEINTRESOURCEW in windows.h is just a cast.
 extern "user32.dll" void* LoadImageW(void* hInst, u16* name, u32 type, i32 cx, i32 cy, u32 fuLoad);
 u16* MAKEINTRESOURCEW(u32 id) { return cast(u16*, cast(u64, id)); }
-extern "kernel32.dll" {
-    i32 QueryPerformanceCounter(LARGE_INTEGER* lp);
-    i32 QueryPerformanceFrequency(LARGE_INTEGER* lp);
-}
+// QueryPerformanceCounter / QueryPerformanceFrequency: defined in
+// (ext_libc) over minc's qpc/qpf builtins. 
 extern "user32.dll" {
     void* WindowFromPoint(POINT pt);
     i32 PtInRect(RECT* lprc, POINT pt);

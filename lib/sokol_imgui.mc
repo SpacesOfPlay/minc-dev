@@ -650,7 +650,7 @@ void _simgui_log(simgui_log_item_t log_item, u32 log_level, u8* msg, u32 line_nr
     if _simgui.desc.logger.func != null {
         u8* filename = null;
         when defined(SOKOL_DEBUG) {
-            filename = "sokol_imgui.h";
+            filename = __file__;
             if null == msg {
                 msg = _simgui_log_messages[log_item];
             }
@@ -684,7 +684,7 @@ void* _simgui_malloc(u64 size) {
         ptr = alloc(cast(i64, size));
     }
     if null == ptr {
-        _simgui_log(SIMGUI_LOGITEM_MALLOC_FAILED, 0, null, 2084);
+        _simgui_log(SIMGUI_LOGITEM_MALLOC_FAILED, 0, null, __line__);
     }
     return ptr;
 }
@@ -1135,7 +1135,7 @@ void simgui_render() {
         u64 vtx_size = cast(u64, cl.VtxBuffer.Size) * cast(u64, sizeof(ImDrawVert));
         u64 idx_size = cast(u64, cl.IdxBuffer.Size) * cast(u64, sizeof(ImDrawIdx));
         if all_vtx_size + vtx_size > _simgui.vertices.size || all_idx_size + idx_size > _simgui.indices.size {
-            _simgui_log(SIMGUI_LOGITEM_BUFFER_OVERFLOW, 1, null, 2085);
+            _simgui_log(SIMGUI_LOGITEM_BUFFER_OVERFLOW, 1, null, __line__);
             break;
         }
         if vtx_size > 0 {
@@ -2282,7 +2282,7 @@ u8*[3] _simgui_log_messages = {
 void _simgui_log(simgui_log_item_t log_item, u32 log_level, u8* msg, u32 line_nr) {
     if _simgui.desc.logger.func != null {
         u8* filename = null;
-        filename = "sokol_imgui.h";
+        filename = __file__;
         if null == msg {
             msg = _simgui_log_messages[log_item];
         }
@@ -2315,7 +2315,7 @@ void* _simgui_malloc(u64 size) {
         ptr = alloc(cast(i64, size));
     }
     if null == ptr {
-        _simgui_log(SIMGUI_LOGITEM_MALLOC_FAILED, 0, null, 2084);
+        _simgui_log(SIMGUI_LOGITEM_MALLOC_FAILED, 0, null, __line__);
     }
     return ptr;
 }
@@ -2766,7 +2766,7 @@ void simgui_render() {
         u64 vtx_size = cast(u64, cl.VtxBuffer.Size) * cast(u64, sizeof(ImDrawVert));
         u64 idx_size = cast(u64, cl.IdxBuffer.Size) * cast(u64, sizeof(ImDrawIdx));
         if all_vtx_size + vtx_size > _simgui.vertices.size || all_idx_size + idx_size > _simgui.indices.size {
-            _simgui_log(SIMGUI_LOGITEM_BUFFER_OVERFLOW, 1, null, 2085);
+            _simgui_log(SIMGUI_LOGITEM_BUFFER_OVERFLOW, 1, null, __line__);
             break;
         }
         if vtx_size > 0 {

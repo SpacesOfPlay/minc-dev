@@ -46,7 +46,9 @@ private i32 png_paeth(i32 a, i32 b, i32 c) {
 }
 
 // Decode PNG from raw bytes in memory
-PngImage png_decode(u8* data, i32 len) {
+PngImage png_decode(u8* data, i64 nbytes) {
+    if nbytes > 2147483647 { return png_error("image larger than 2 GB"); }
+    i32 len = cast(i32, nbytes);
     // Check minimum size and PNG signature
     if len < 8 { return png_error("file too small"); }
     if *(data + 0) != 137 || *(data + 1) != 80 || *(data + 2) != 78 || *(data + 3) != 71 ||

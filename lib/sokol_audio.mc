@@ -756,7 +756,7 @@ void saudio_setup(saudio_desc* desc) {
     _saudio_fifo_init_mutex(&_saudio.fifo);
     if _saudio_backend_init() != 0 {
         if 0 != _saudio.buffer_frames % _saudio.packet_frames {
-            _saudio_log(SAUDIO_LOGITEM_BACKEND_BUFFER_SIZE_ISNT_MULTIPLE_OF_PACKET_SIZE, 1, 1068);
+            _saudio_log(SAUDIO_LOGITEM_BACKEND_BUFFER_SIZE_ISNT_MULTIPLE_OF_PACKET_SIZE, 1, __line__);
             _saudio_backend_shutdown();
             return;
         }
@@ -841,7 +841,7 @@ void _saudio_log(saudio_log_item log_item, u32 log_level, u32 line_nr) {
         u8* filename;
         u8* message;
         when defined(SOKOL_DEBUG) {
-            filename = "sokol_audio.h";
+            filename = __file__;
             message = _saudio_log_messages[log_item];
         } else {
             filename = null;
@@ -874,7 +874,7 @@ void* _saudio_malloc(u64 size) {
         ptr = alloc(cast(i64, size));
     }
     if null == ptr {
-        _saudio_log(SAUDIO_LOGITEM_MALLOC_FAILED, 0, 1067);
+        _saudio_log(SAUDIO_LOGITEM_MALLOC_FAILED, 0, __line__);
     }
     return ptr;
 }
@@ -1754,28 +1754,28 @@ bool _saudio_wasapi_backend_init() {
     }
     _saudio.backend.thread.buffer_end_event = CreateEvent(null, FALSE, FALSE, null);
     if null == _saudio.backend.thread.buffer_end_event {
-        _saudio_log(SAUDIO_LOGITEM_WASAPI_CREATE_EVENT_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_WASAPI_CREATE_EVENT_FAILED, 1, __line__);
         {
             _saudio_wasapi_release();
             return false;
         }
     }
     if CoCreateInstance(&_saudio_CLSID_IMMDeviceEnumerator, null, CLSCTX_ALL, &_saudio_IID_IMMDeviceEnumerator, cast(void**, &_saudio.backend.device_enumerator)) < 0 {
-        _saudio_log(SAUDIO_LOGITEM_WASAPI_CREATE_DEVICE_ENUMERATOR_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_WASAPI_CREATE_DEVICE_ENUMERATOR_FAILED, 1, __line__);
         {
             _saudio_wasapi_release();
             return false;
         }
     }
     if _saudio.backend.device_enumerator.lpVtbl.GetDefaultAudioEndpoint(_saudio.backend.device_enumerator, eRender, eConsole, cast(void**, &_saudio.backend.device)) < 0 {
-        _saudio_log(SAUDIO_LOGITEM_WASAPI_GET_DEFAULT_AUDIO_ENDPOINT_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_WASAPI_GET_DEFAULT_AUDIO_ENDPOINT_FAILED, 1, __line__);
         {
             _saudio_wasapi_release();
             return false;
         }
     }
     if _saudio.backend.device.lpVtbl.Activate(_saudio.backend.device, &_saudio_IID_IAudioClient, CLSCTX_ALL, null, cast(void**, &_saudio.backend.audio_client)) < 0 {
-        _saudio_log(SAUDIO_LOGITEM_WASAPI_DEVICE_ACTIVATE_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_WASAPI_DEVICE_ACTIVATE_FAILED, 1, __line__);
         {
             _saudio_wasapi_release();
             return false;
@@ -1799,28 +1799,28 @@ bool _saudio_wasapi_backend_init() {
     fmtex.SubFormat = _saudio_KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
     dur = cast(REFERENCE_TIME, cast(f64, _saudio.buffer_frames) / (cast(f64, _saudio.sample_rate) * (1.0 / 10000000.0)));
     if _saudio.backend.audio_client.lpVtbl.Initialize(_saudio.backend.audio_client, AUDCLNT_SHAREMODE_SHARED, cast(u32, AUDCLNT_STREAMFLAGS_EVENTCALLBACK | 0x80000000 | 0x08000000), dur, 0, cast(WAVEFORMATEX*, &fmtex), null) < 0 {
-        _saudio_log(SAUDIO_LOGITEM_WASAPI_AUDIO_CLIENT_INITIALIZE_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_WASAPI_AUDIO_CLIENT_INITIALIZE_FAILED, 1, __line__);
         {
             _saudio_wasapi_release();
             return false;
         }
     }
     if _saudio.backend.audio_client.lpVtbl.GetBufferSize(_saudio.backend.audio_client, &_saudio.backend.thread.dst_buffer_frames) < 0 {
-        _saudio_log(SAUDIO_LOGITEM_WASAPI_AUDIO_CLIENT_GET_BUFFER_SIZE_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_WASAPI_AUDIO_CLIENT_GET_BUFFER_SIZE_FAILED, 1, __line__);
         {
             _saudio_wasapi_release();
             return false;
         }
     }
     if _saudio.backend.audio_client.lpVtbl.GetService(_saudio.backend.audio_client, &_saudio_IID_IAudioRenderClient, cast(void**, &_saudio.backend.render_client)) < 0 {
-        _saudio_log(SAUDIO_LOGITEM_WASAPI_AUDIO_CLIENT_GET_SERVICE_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_WASAPI_AUDIO_CLIENT_GET_SERVICE_FAILED, 1, __line__);
         {
             _saudio_wasapi_release();
             return false;
         }
     }
     if _saudio.backend.audio_client.lpVtbl.SetEventHandle(_saudio.backend.audio_client, _saudio.backend.thread.buffer_end_event) < 0 {
-        _saudio_log(SAUDIO_LOGITEM_WASAPI_AUDIO_CLIENT_SET_EVENT_HANDLE_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_WASAPI_AUDIO_CLIENT_SET_EVENT_HANDLE_FAILED, 1, __line__);
         {
             _saudio_wasapi_release();
             return false;
@@ -1832,7 +1832,7 @@ bool _saudio_wasapi_backend_init() {
     _saudio.backend.thread.src_buffer = cast(f32*, _saudio_malloc(cast(u64, _saudio.backend.thread.src_buffer_byte_size)));
     _saudio.backend.thread.thread_handle = CreateThread(null, 0, cast(fn(void*): u32, _saudio_wasapi_thread_fn), null, 0, null);
     if null == _saudio.backend.thread.thread_handle {
-        _saudio_log(SAUDIO_LOGITEM_WASAPI_CREATE_THREAD_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_WASAPI_CREATE_THREAD_FAILED, 1, __line__);
         {
             _saudio_wasapi_release();
             return false;
@@ -2011,7 +2011,7 @@ bool _saudio_coreaudio_backend_init() {
     fmt.mBitsPerChannel = 32;
     OSStatus res = AudioQueueNewOutput(&fmt, _saudio_coreaudio_callback, 0, null, null, 0, &_saudio.backend.ca_audio_queue);
     if 0 != res {
-        _saudio_log(SAUDIO_LOGITEM_COREAUDIO_NEW_OUTPUT_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_COREAUDIO_NEW_OUTPUT_FAILED, 1, __line__);
         return false;
     }
     assert(cast(i64, _saudio.backend.ca_audio_queue));
@@ -2020,7 +2020,7 @@ bool _saudio_coreaudio_backend_init() {
         u32 buf_byte_size = cast(u32, _saudio.buffer_frames) * fmt.mBytesPerFrame;
         res = AudioQueueAllocateBuffer(_saudio.backend.ca_audio_queue, buf_byte_size, &buf);
         if 0 != res {
-            _saudio_log(SAUDIO_LOGITEM_COREAUDIO_ALLOCATE_BUFFER_FAILED, 1, 1068);
+            _saudio_log(SAUDIO_LOGITEM_COREAUDIO_ALLOCATE_BUFFER_FAILED, 1, __line__);
             _saudio_coreaudio_backend_shutdown();
             return false;
         }
@@ -2031,7 +2031,7 @@ bool _saudio_coreaudio_backend_init() {
     _saudio.bytes_per_frame = cast(i32, fmt.mBytesPerFrame);
     res = AudioQueueStart(_saudio.backend.ca_audio_queue, null);
     if 0 != res {
-        _saudio_log(SAUDIO_LOGITEM_COREAUDIO_START_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_COREAUDIO_START_FAILED, 1, __line__);
         _saudio_coreaudio_backend_shutdown();
         return false;
     }
@@ -2154,7 +2154,7 @@ aaudio_data_callback_result_t _saudio_aaudio_data_callback(AAudioStream* stream,
 
 bool _saudio_aaudio_start_stream() {
     if AAudioStreamBuilder_openStream(_saudio.backend.builder, &_saudio.backend.stream) != AAUDIO_OK {
-        _saudio_log(SAUDIO_LOGITEM_AAUDIO_STREAMBUILDER_OPEN_STREAM_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_AAUDIO_STREAMBUILDER_OPEN_STREAM_FAILED, 1, __line__);
         return false;
     }
     AAudioStream_requestStart(_saudio.backend.stream);
@@ -2171,7 +2171,7 @@ void _saudio_aaudio_stop_stream() {
 
 void* _saudio_aaudio_restart_stream_thread_fn(void* param) {
     ignore param;
-    _saudio_log(SAUDIO_LOGITEM_AAUDIO_RESTARTING_STREAM_AFTER_ERROR, 2, 1069);
+    _saudio_log(SAUDIO_LOGITEM_AAUDIO_RESTARTING_STREAM_AFTER_ERROR, 2, __line__);
     pthread_mutex_lock(&_saudio.backend.mutex);
     _saudio_aaudio_stop_stream();
     _saudio_aaudio_start_stream();
@@ -2184,7 +2184,7 @@ void _saudio_aaudio_error_callback(AAudioStream* stream, void* user_data, aaudio
     ignore user_data;
     if error == AAUDIO_ERROR_DISCONNECTED {
         if 0 != pthread_create(&_saudio.backend.thread, null, _saudio_aaudio_restart_stream_thread_fn, null) {
-            _saudio_log(SAUDIO_LOGITEM_AAUDIO_PTHREAD_CREATE_FAILED, 1, 1068);
+            _saudio_log(SAUDIO_LOGITEM_AAUDIO_PTHREAD_CREATE_FAILED, 1, __line__);
         }
     }
 }
@@ -2201,13 +2201,13 @@ void _saudio_aaudio_backend_shutdown() {
 }
 
 bool _saudio_aaudio_backend_init() {
-    _saudio_log(SAUDIO_LOGITEM_USING_AAUDIO_BACKEND, 3, 1070);
+    _saudio_log(SAUDIO_LOGITEM_USING_AAUDIO_BACKEND, 3, __line__);
     _saudio.bytes_per_frame = _saudio.num_channels * cast(i32, sizeof(f32));
     noinit pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
     pthread_mutex_init(&_saudio.backend.mutex, &attr);
     if AAudio_createStreamBuilder(&_saudio.backend.builder) != AAUDIO_OK {
-        _saudio_log(SAUDIO_LOGITEM_AAUDIO_CREATE_STREAMBUILDER_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_AAUDIO_CREATE_STREAMBUILDER_FAILED, 1, __line__);
         _saudio_aaudio_backend_shutdown();
         return false;
     }
@@ -2362,7 +2362,7 @@ bool _saudio_alsa_backend_init() {
     u32 rate;
     i32 rc = snd_pcm_open(&_saudio.backend.device, "default", SND_PCM_STREAM_PLAYBACK, 0);
     if rc < 0 {
-        _saudio_log(SAUDIO_LOGITEM_ALSA_SND_PCM_OPEN_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_ALSA_SND_PCM_OPEN_FAILED, 1, __line__);
         _keep = true;
         return false;
     }
@@ -2371,25 +2371,25 @@ bool _saudio_alsa_backend_init() {
     snd_pcm_hw_params_any(_saudio.backend.device, params);
     snd_pcm_hw_params_set_access(_saudio.backend.device, params, SND_PCM_ACCESS_RW_INTERLEAVED);
     if 0 > snd_pcm_hw_params_set_format(_saudio.backend.device, params, SND_PCM_FORMAT_FLOAT_LE) {
-        _saudio_log(SAUDIO_LOGITEM_ALSA_FLOAT_SAMPLES_NOT_SUPPORTED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_ALSA_FLOAT_SAMPLES_NOT_SUPPORTED, 1, __line__);
         return false;
     }
     if 0 > snd_pcm_hw_params_set_buffer_size(_saudio.backend.device, params, cast(snd_pcm_uframes_t, _saudio.buffer_frames)) {
-        _saudio_log(SAUDIO_LOGITEM_ALSA_REQUESTED_BUFFER_SIZE_NOT_SUPPORTED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_ALSA_REQUESTED_BUFFER_SIZE_NOT_SUPPORTED, 1, __line__);
         return false;
     }
     if 0 > snd_pcm_hw_params_set_channels(_saudio.backend.device, params, cast(u32, _saudio.num_channels)) {
-        _saudio_log(SAUDIO_LOGITEM_ALSA_REQUESTED_CHANNEL_COUNT_NOT_SUPPORTED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_ALSA_REQUESTED_CHANNEL_COUNT_NOT_SUPPORTED, 1, __line__);
         return false;
     }
     rate = cast(u32, _saudio.sample_rate);
     dir = 0;
     if 0 > snd_pcm_hw_params_set_rate_near(_saudio.backend.device, params, &rate, &dir) {
-        _saudio_log(SAUDIO_LOGITEM_ALSA_SND_PCM_HW_PARAMS_SET_RATE_NEAR_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_ALSA_SND_PCM_HW_PARAMS_SET_RATE_NEAR_FAILED, 1, __line__);
         return false;
     }
     if 0 > snd_pcm_hw_params(_saudio.backend.device, params) {
-        _saudio_log(SAUDIO_LOGITEM_ALSA_SND_PCM_HW_PARAMS_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_ALSA_SND_PCM_HW_PARAMS_FAILED, 1, __line__);
         return false;
     }
     _saudio.sample_rate = cast(i32, rate);
@@ -2398,7 +2398,7 @@ bool _saudio_alsa_backend_init() {
     _saudio.backend.buffer_frames = _saudio.buffer_frames;
     _saudio.backend.buffer = cast(f32*, _saudio_malloc_clear(cast(u64, _saudio.backend.buffer_byte_size)));
     if 0 != pthread_create(&_saudio.backend.thread, 0, _saudio_alsa_cb, 0) {
-        _saudio_log(SAUDIO_LOGITEM_ALSA_PTHREAD_CREATE_FAILED, 1, 1068);
+        _saudio_log(SAUDIO_LOGITEM_ALSA_PTHREAD_CREATE_FAILED, 1, __line__);
         return false;
     }
     _keep = true;
@@ -3195,7 +3195,7 @@ u8*[30] _saudio_log_messages = {
 
 void _saudio_log(saudio_log_item log_item, u32 log_level, u32 line_nr) {
     if _saudio.desc.logger.func != null {
-        u8* filename = "sokol_audio.h";
+        u8* filename = __file__;
         u8* message = _saudio_log_messages[log_item];
         _saudio.desc.logger.func("saudio", log_level, cast(u32, log_item), message, line_nr, filename, _saudio.desc.logger.user_data);
     } else {
@@ -3226,7 +3226,7 @@ void* _saudio_malloc(u64 size) {
         ptr = alloc(cast(i64, size));
     }
     if null == ptr {
-        _saudio_log(SAUDIO_LOGITEM_MALLOC_FAILED, 0, 1067);
+        _saudio_log(SAUDIO_LOGITEM_MALLOC_FAILED, 0, __line__);
     }
     return ptr;
 }
@@ -3455,7 +3455,9 @@ export i32 _saudio_emsc_pull(i32 num_frames) {
         } else {
             i32 num_bytes = num_frames * _saudio.bytes_per_frame;
             if 0 == _saudio_fifo_read(&_saudio.fifo, _saudio.backend.buffer, num_bytes) {
-                _saudio_clear(_saudio.backend.buffer, cast(u64, num_bytes));
+                // no data available: return null instead of a buffer of silence,
+                // so the caller can hold off rather than let the stream drift
+                return 0;
             }
         }
         var res = cast(i32, _saudio.backend.buffer);
@@ -3534,7 +3536,7 @@ void saudio_setup(saudio_desc* desc) {
     _saudio_fifo_init_mutex(&_saudio.fifo);
     if _saudio_backend_init() != 0 {
         if 0 != _saudio.buffer_frames % _saudio.packet_frames {
-            _saudio_log(SAUDIO_LOGITEM_BACKEND_BUFFER_SIZE_ISNT_MULTIPLE_OF_PACKET_SIZE, 1, 1068);
+            _saudio_log(SAUDIO_LOGITEM_BACKEND_BUFFER_SIZE_ISNT_MULTIPLE_OF_PACKET_SIZE, 1, __line__);
             _saudio_backend_shutdown();
             return;
         }
