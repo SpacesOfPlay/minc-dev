@@ -1,26 +1,33 @@
-// zip.mc — ZIP archive writer.
+// zip.mc: ZIP archive writer.
 // Depends on: lib/file.mc (FileData, file_read, file_write)
 //             lib/zlib.mc (crc32, deflate)
 //
-// Builds the archive in memory and writes it out in one file_write at
-// zip_end. Entries are deflate-compressed when that makes them smaller,
-// stored otherwise; pass compress=false to force stored (already-
-// compressed payloads, or APK members that must stay mmap-able).
+// Builds the archive in memory and writes it with one file_write in
+// zip_end. An entry is deflated when that shrinks it, stored otherwise.
+// Pass compress=false to force stored: payloads that are already
+// compressed, or APK members that must stay mmap-able.
 //
-// A zero-initialized ZipWriter is ready to use — just declare it.
-// zip_end and zip_abort free everything and reset the writer to that
-// state, so it can be reused for another archive.
+// Each entry has a Unix mode. zip_add and zip_add_file store 0644 for
+// files and 0755 for directory entries (names ending in '/').
+// zip_add_mode and zip_add_file_mode take the permission bits; 0x1ED
+// (0755) makes a binary executable after unzip on macOS and Linux.
+// Windows extractors ignore the mode.
+//
+// A zero-initialized ZipWriter is ready to use. zip_end and zip_abort
+// free everything and reset the writer to that state for reuse.
 //
 //   ZipWriter z;
 //   ignore zip_add(&z, "lib/arm64-v8a/libapp.so", data, len, true);
 //   ignore zip_add_file(&z, "assets/tex.png", "build/tex.png", false);
+//   ignore zip_add_file_mode(&z, "tool/bin/tool", "build/tool", true, 0x1ED);
 //   if !zip_end(&z, "build/app.apk") { /* failed */ }
 //
-// Errors are sticky: a failed zip_add poisons the writer and zip_end
+// Errors are sticky. A failed zip_add poisons the writer, zip_end then
 // returns false, so intermediate results can be ignored.
 //
-// Limits: no zip64 — at most 65535 entries, archive total under 2GB.
-// Backslashes in entry names are stored as forward slashes.
+// Limits: no zip64, at most 65535 entries, archive under 2GB.
+// Backslashes in entry names are stored as forward slashes. Names are
+// UTF-8 and get the UTF-8 flag when they contain bytes above 0x7F.
 
 #include "file.mc"
 #include "zlib.mc"
@@ -32,6 +39,8 @@ struct ZipEntry {
     i32 usize;
     i32 method;    // 0 = stored, 8 = deflate
     i32 offset;    // local header offset
+    u32 flags;     // general-purpose bits, both headers
+    u32 mode;      // Unix st_mode, high half of the external attrs
 }
 
 struct ZipWriter {
@@ -50,6 +59,15 @@ private {
     const u32 ZIP_DOS_DATE = 0x5C21;
     // Keeps len + appended sizes clear of i32 overflow.
     const i32 ZIP_MAX_SIZE = 0x7FF00000;
+    // "Version made by": host OS Unix in the high byte, so extractors
+    // read the mode; spec 2.0 in the low byte.
+    const u32 ZIP_MADE_BY = 0x0314;
+    const u32 ZIP_FLAG_UTF8 = 0x800;
+    const u32 ZIP_PERM_FILE = 0x1A4;     // 0644
+    const u32 ZIP_PERM_DIR = 0x1ED;      // 0755
+    const u32 ZIP_S_IFREG = 0x8000;
+    const u32 ZIP_S_IFDIR = 0x4000;
+    const u32 ZIP_DOS_DIR = 0x10;        // FAT directory attribute
 }
 
 private void zb_reserve(ZipWriter* z, i32 n) {
@@ -109,7 +127,16 @@ void zip_abort(ZipWriter* z) {
     return;
 }
 
+// Add an entry with the default mode: 0644, or 0755 for a directory
+// entry (name ending in '/').
 bool zip_add(ZipWriter* z, str name, u8* data, i64 nbytes, bool compress) {
+    bool is_dir = name.len > 0 && name.data[name.len - 1] == '/';
+    return zip_add_mode(z, name, data, nbytes, compress, is_dir ? ZIP_PERM_DIR : ZIP_PERM_FILE);
+}
+
+// Add an entry with explicit Unix permission bits (0x1ED = 0755,
+// 0x1A4 = 0644). The file-type bits are supplied by the writer.
+bool zip_add_mode(ZipWriter* z, str name, u8* data, i64 nbytes, bool compress, u32 perm) {
     if z.err { return false; }
     if nbytes > 2147483647 { z.err = true; return false; }
     i32 len = cast(i32, nbytes);
@@ -144,16 +171,20 @@ bool zip_add(ZipWriter* z, str name, u8* data, i64 nbytes, bool compress) {
 
     // Owned name copy, '\' stored as '/'.
     string nm = { .data = alloc<u8>(name.len), .len = name.len };
+    u32 flags = 0;
     for i32 i = 0; i < name.len; i++ {
         u8 c = name.data[i];
         if c == 92 { c = 47; }
+        if c >= 128 { flags = ZIP_FLAG_UTF8; }
         nm.data[i] = c;
     }
+    bool is_dir = nm.data[nm.len - 1] == '/';
+    u32 mode = (is_dir ? ZIP_S_IFDIR : ZIP_S_IFREG) | (perm & 0xFFF);
 
     i32 lho = z.len;
     zb_u32(z, 0x04034B50);           // local file header
     zb_u16(z, 20);                   // version needed
-    zb_u16(z, 0);                    // flags
+    zb_u16(z, flags);
     zb_u16(z, cast(u32, method));
     zb_u16(z, 0);                    // mod time
     zb_u16(z, ZIP_DOS_DATE);         // mod date
@@ -188,19 +219,26 @@ bool zip_add(ZipWriter* z, str name, u8* data, i64 nbytes, bool compress) {
         .usize = len,
         .method = method,
         .offset = lho,
+        .flags = flags,
+        .mode = mode,
     };
     return true;
 }
 
-// Read a file and add it under the given entry name.
+// Read a file and add it under the given entry name, mode 0644.
 bool zip_add_file(ZipWriter* z, str name, str path, bool compress) {
+    return zip_add_file_mode(z, name, path, compress, ZIP_PERM_FILE);
+}
+
+// Read a file and add it with explicit permission bits (0x1ED = 0755).
+bool zip_add_file_mode(ZipWriter* z, str name, str path, bool compress, u32 perm) {
     if z.err { return false; }
     FileData fd = file_read(path);
     if fd.data == null {
         z.err = true;
         return false;
     }
-    bool ok = zip_add(z, name, fd.data, fd.len, compress);
+    bool ok = zip_add_mode(z, name, fd.data, fd.len, compress, perm);
     free(fd.data);
     return ok;
 }
@@ -218,9 +256,9 @@ bool zip_end(ZipWriter* z, str out_path) {
     for i32 i = 0; i < z.nentries; i++ {
         ZipEntry* e = z.entries + i;
         zb_u32(z, 0x02014B50);       // central directory header
-        zb_u16(z, 20);               // version made by
+        zb_u16(z, ZIP_MADE_BY);
         zb_u16(z, 20);               // version needed
-        zb_u16(z, 0);                // flags
+        zb_u16(z, e.flags);
         zb_u16(z, cast(u32, e.method));
         zb_u16(z, 0);                // mod time
         zb_u16(z, ZIP_DOS_DATE);     // mod date
@@ -232,7 +270,9 @@ bool zip_end(ZipWriter* z, str out_path) {
         zb_u16(z, 0);                // comment len
         zb_u16(z, 0);                // disk number start
         zb_u16(z, 0);                // internal attrs
-        zb_u32(z, 0);                // external attrs
+        // External attrs: st_mode in the high half, FAT bits in the low.
+        u32 dos_attr = (e.mode & ZIP_S_IFDIR) != 0 ? ZIP_DOS_DIR : 0;
+        zb_u32(z, (e.mode << 16) | dos_attr);
         zb_u32(z, cast(u32, e.offset));
         zb_bytes(z, e.name.data, e.name.len);
     }

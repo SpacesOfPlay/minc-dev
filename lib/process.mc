@@ -16,6 +16,13 @@
 //
 // A program name without a directory separator is looked up on PATH.
 //
+// proc_stdin feeds the child its standard input and closes it, so the
+// child sees the bytes and then EOF. The feed is written before the
+// child's output is drained, so a feed larger than the pipe buffer
+// (4 KB on Windows, 64 KB on Linux) with a child that does not read it
+// first can stall; scripts and small documents are what it is for.
+// Without it the child inherits the parent's stdin.
+//
 // POSIX passes an argv vector. Windows takes one command-line string,
 // quoted with MSVCRT rules.
 //
@@ -47,6 +54,8 @@ struct ProcCmd {
     bool capture;        // collect the child's stdout into ProcResult.out
     bool split_stderr;   // keep stderr out of the capture (merged by default)
     bool overflow;       // more than PROC_MAX_ARGS args were added
+    bool has_stdin;      // feed stdin_feed to the child, then EOF
+    str stdin_feed;
 }
 
 // Argument count, up to the first unset slot.
@@ -117,6 +126,7 @@ when os(windows) {
                 bool inherit, i32 flags, void* env, u16* dir,
                 _ProcStartupInfo* si, _ProcProcessInfo* pi) from "CreateProcessW";
             i32 _proc_mb2wc(u32 cp, u32 flags, u8* mb, i32 cb, u16* wc, i32 cc) from "MultiByteToWideChar";
+            bool _proc_write_file(i64 h, void* buf, i32 n, i32* written, void* ov) from "WriteFile";
             i32 _proc_wait_single(i64 h, i32 ms) from "WaitForSingleObject";
             bool _proc_get_exit_code(i64 h, i32* code) from "GetExitCodeProcess";
             bool _proc_terminate(i64 h, i32 code) from "TerminateProcess";
@@ -245,6 +255,7 @@ when os(linux) || os(macos) {
         const i32 _PROC_POLL_WAIT_MS = 5;
         const i32 _PROC_WNOHANG = 1;
         const i32 _PROC_SIGKILL = 9;
+        const i32 _PROC_STDIN_FD = 0;
         const i32 _PROC_STDOUT_FD = 1;
         const i32 _PROC_STDERR_FD = 2;
         // Exit status of a child that could not exec, by convention.
@@ -267,6 +278,8 @@ void proc_init(ProcCmd* c, str program) {
     c.capture = false;
     c.split_stderr = false;
     c.overflow = false;
+    c.has_stdin = false;
+    c.stdin_feed = str_from(null, 0);
     return;
 }
 
@@ -309,6 +322,14 @@ void proc_capture(ProcCmd* c, bool on) {
 
 void proc_merge_stderr(ProcCmd* c, bool on) {
     c.split_stderr = !on;
+    return;
+}
+
+// Feed the child `feed` as its standard input, then EOF. An empty feed
+// gives it an immediate EOF.
+void proc_stdin(ProcCmd* c, str feed) {
+    c.has_stdin = true;
+    c.stdin_feed = feed;
     return;
 }
 
@@ -417,6 +438,21 @@ ProcResult proc_run(ProcCmd* c) {
             }
             _proc_set_handle_info(hread, _PROC_HANDLE_FLAG_INHERIT, 0);
         }
+        // The child reads the feed from its end; the parent's end stays
+        // out of the child so closing it is the EOF.
+        i64 hin_rd = 0;
+        i64 hin_wr = 0;
+        if c.has_stdin {
+            if !_proc_create_pipe(&hin_rd, &hin_wr, &sa, 0) {
+                if cap {
+                    _proc_close_handle(hread);
+                    _proc_close_handle(hwrite);
+                    str_buf_free(&ob);
+                }
+                return r;
+            }
+            _proc_set_handle_info(hin_wr, _PROC_HANDLE_FLAG_INHERIT, 0);
+        }
 
         // Both structs start zeroed.
         _ProcStartupInfo si;
@@ -424,6 +460,7 @@ ProcResult proc_run(ProcCmd* c) {
         si.cb = cast(u32, sizeof(_ProcStartupInfo));
         si.flags = _PROC_STARTF_USESTDHANDLES;
         si.h_std_input = stdin();
+        if c.has_stdin { si.h_std_input = hin_rd; }
         if cap {
             si.h_std_output = hwrite;
             if !c.split_stderr { si.h_std_error = hwrite; }
@@ -467,14 +504,26 @@ ProcResult proc_run(ProcCmd* c) {
         // The parent's copy of the write end has to go before the read
         // loop, or EOF never arrives.
         if cap { _proc_close_handle(hwrite); }
+        if c.has_stdin { _proc_close_handle(hin_rd); }
         if !ok {
             if cap {
                 _proc_close_handle(hread);
                 str_buf_free(&ob);
             }
+            if c.has_stdin { _proc_close_handle(hin_wr); }
             return r;
         }
         r.spawned = true;
+        if c.has_stdin {
+            i32 off = 0;
+            while off < c.stdin_feed.len {
+                i32 wrote = 0;
+                if !_proc_write_file(hin_wr, cast(void*, c.stdin_feed.data + off), c.stdin_feed.len - off, &wrote, null) { break; }
+                if wrote <= 0 { break; }
+                off = off + wrote;
+            }
+            _proc_close_handle(hin_wr);
+        }
 
         i64 hproc = pi.h_process;
         i64 hthread = pi.h_thread;
@@ -541,6 +590,17 @@ ProcResult proc_run(ProcCmd* c) {
                 return r;
             }
         }
+        i32[2] infds = { -1, -1 };
+        if c.has_stdin {
+            if _proc_pipe(cast(i32*, &infds[0])) != 0 {
+                if cap {
+                    close(cast(i64, fds[0]));
+                    close(cast(i64, fds[1]));
+                    str_buf_free(&ob);
+                }
+                return r;
+            }
+        }
 
         u8* cwdp = null;
         if c.cwd.len > 0 { cwdp = str_to_cstr(c.cwd); }
@@ -554,6 +614,11 @@ ProcResult proc_run(ProcCmd* c) {
                 if !c.split_stderr { _proc_dup2(fds[1], _PROC_STDERR_FD); }
                 close(cast(i64, fds[1]));
             }
+            if c.has_stdin {
+                close(cast(i64, infds[1]));
+                _proc_dup2(infds[0], _PROC_STDIN_FD);
+                close(cast(i64, infds[0]));
+            }
             // A bad cwd is a spawn failure.
             if cwdp != null && _proc_chdir(cwdp) != 0 { exit(_PROC_EXEC_FAILED); }
             _proc_execvp(argv[0], cast(u8**, &argv[0]));
@@ -566,11 +631,25 @@ ProcResult proc_run(ProcCmd* c) {
                 close(cast(i64, fds[1]));
                 str_buf_free(&ob);
             }
+            if c.has_stdin {
+                close(cast(i64, infds[0]));
+                close(cast(i64, infds[1]));
+            }
             return r;
         }
         r.spawned = true;
         // parent's write 'end' keeps the pipe from reaching EOF.
         if cap { close(cast(i64, fds[1])); }
+        if c.has_stdin {
+            close(cast(i64, infds[0]));
+            i32 off = 0;
+            while off < c.stdin_feed.len {
+                i32 wrote = write(cast(i64, infds[1]), cast(void*, c.stdin_feed.data + off), c.stdin_feed.len - off);
+                if wrote <= 0 { break; }
+                off = off + wrote;
+            }
+            close(cast(i64, infds[1]));
+        }
 
         i32 status = 0;
         if !cap && c.timeout_ms <= 0 {

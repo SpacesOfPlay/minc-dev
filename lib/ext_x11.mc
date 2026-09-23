@@ -147,6 +147,7 @@ const i32 PropModeReplace = 0;
 const i64 XA_CARDINAL = 6;
 const i64 XA_ATOM = 4;
 const i32 GrabModeAsync = 1;
+const i32 GrabSuccess = 0;
 const i64 CurrentTime = 0;
 const i32 NotifyNormal = 0;
 const i32 NotifyGrab = 1;

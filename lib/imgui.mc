@@ -1033,13 +1033,6 @@ enum ImDrawListFlags_ {
     ImDrawListFlags_TextNoPixelSnap = 16,
 }
 
-//-----------------------------------------------------------------------------
-// [SECTION] Texture API (ImTextureFormat, ImTextureStatus, ImTextureRect, ImTextureData)
-//-----------------------------------------------------------------------------
-// In principle, the only data types that user/application code should care about are 'ImTextureRef' and 'ImTextureID'.
-// They are defined above in this header file. Read their description to the difference between ImTextureRef and ImTextureID.
-// FOR ALL OTHER ImTextureXXXX TYPES: ONLY CORE LIBRARY AND RENDERER BACKENDS NEED TO KNOW AND CARE ABOUT THEM.
-//-----------------------------------------------------------------------------
 // We intentionally support a limited amount of texture formats to limit burden on CPU-side code and extension.
 // Most standard backends only support RGBA32 but we provide a single channel option for low-resource/embedded systems.
 enum ImTextureFormat {
@@ -61846,7 +61839,7 @@ ImS64 IM_S64_MIN = -9223372036854775807 - 1;
 ImS64 IM_S64_MAX = 9223372036854775807;
 ImU64 IM_U64_MIN = 0;
 // (0xFFFFFFFFFFFFFFFFull);
-ImU64 IM_U64_MAX = cast(ImU64, 2 * 9223372036854775807 + 1);
+ImU64 IM_U64_MAX = 2 * 9223372036854775807 + 1;
 }
 
 //-------------------------------------------------------------------------

@@ -43,6 +43,10 @@ when os(macos) || os(ios) {
     const i32 _NET_SOL_SOCKET = 0xffff;
     const i32 _NET_SO_REUSEADDR = 4;
 }
+when os(uefi) {
+    const i32 _NET_SOL_SOCKET = 1;
+    const i32 _NET_SO_REUSEADDR = 2;
+}
 
 // `struct sockaddr_in` — 16 bytes, identical on every target. Fields
 // stay in network byte order; see net_htons.
@@ -94,6 +98,7 @@ when os(macos) || os(ios) {
     extern "libSystem.B.dylib" {
         i32 socket(i32 domain, i32 type, i32 protocol);
         i32 bind(i32 sockfd, void* addr, i32 addrlen);
+        i32 shutdown(i32 s, i32 how);
         i32 listen(i32 sockfd, i32 backlog);
         i32 accept(i32 sockfd, void* addr, i32* addrlen);
         i32 connect(i32 sockfd, void* addr, i32 addrlen);
@@ -101,6 +106,108 @@ when os(macos) || os(ios) {
         i64 send(i32 sockfd, u8* buf, i64 len, i32 flags);
         i32 setsockopt(i32 sockfd, i32 level, i32 optname, void* optval, i32 optlen);
         i32 getsockname(i32 sockfd, void* addr, i32* addrlen);
+    }
+}
+
+// uefi has no sockets of its own. A program installs the same calls the
+// other targets take from the system, so everything below reads the same
+// way on all of them; only where the calls come from differs. Errors are
+// -1 with a code from _net_last_err, as on posix.
+
+when os(uefi) {
+    const i32 _NET_EINTR = 4;
+    const i32 _NET_EWOULDBLOCK = 11;
+    const i32 _NET_EINPROGRESS = 115;
+    const i32 _NET_SO_ERROR = 4;
+
+    // The same three under names a backend can use. These are the only
+    // codes last_err is compared against; anything else reads as a hard
+    // error. A backend that defines its own copies has two things to keep
+    // in step and no way to notice when they drift.
+    const i32 NET_BE_EINTR = _NET_EINTR;
+    const i32 NET_BE_EWOULDBLOCK = _NET_EWOULDBLOCK;
+    const i32 NET_BE_EINPROGRESS = _NET_EINPROGRESS;
+    const i32 NET_BE_SO_ERROR = _NET_SO_ERROR;
+
+    struct NetBackend {
+        fn(i32, i32, i32): i64 socket;
+        fn(i64, void*, i32): i32 bind;
+        fn(i64, i32): i32 listen;
+        fn(i64, void*, i32*): i64 accept;
+        fn(i64, void*, i32): i32 connect;
+        fn(i64, u8*, i32, i32): i32 recv;
+        fn(i64, u8*, i32, i32): i32 send;
+        fn(i64, i32): i32 shutdown;
+        fn(i64): i32 closesocket;
+        fn(i64, void*, i32*): i32 getsockname;
+        fn(i64, i32, i32, void*, i32*): i32 getsockopt;
+        fn(i64, bool): i32 ioctl_nonblock;
+        fn(NetPollFd*, i32, i32): i32 poll;
+        // One address family and one record type: getaddrinfo's shape
+        // would be all scaffolding.
+        fn(u8*): u32 resolve4;
+        fn(): i32 last_err;
+    }
+
+    NetBackend* _net_be = null;
+
+    void net_backend_install(NetBackend* b) { _net_be = b; }
+
+    // With nothing installed each one fails the way a bad descriptor
+    // does elsewhere, rather than calling through a null table.
+    private bool _net_be_up() { return _net_be != null; }
+
+    private i64 socket(i32 af, i32 type, i32 proto) {
+        if !_net_be_up() { return -1; }
+        return _net_be.socket(af, type, proto);
+    }
+    private i32 bind(i64 s, void* addr, i32 len) {
+        if !_net_be_up() { return -1; }
+        return _net_be.bind(s, addr, len);
+    }
+    private i32 listen(i64 s, i32 backlog) {
+        if !_net_be_up() { return -1; }
+        return _net_be.listen(s, backlog);
+    }
+    private i64 accept(i64 s, void* addr, i32* len) {
+        if !_net_be_up() { return -1; }
+        return _net_be.accept(s, addr, len);
+    }
+    private i32 connect(i64 s, void* addr, i32 len) {
+        if !_net_be_up() { return -1; }
+        return _net_be.connect(s, addr, len);
+    }
+    private i32 recv(i64 s, u8* buf, i32 len, i32 flags) {
+        if !_net_be_up() { return -1; }
+        return _net_be.recv(s, buf, len, flags);
+    }
+    private i32 send(i64 s, u8* buf, i32 len, i32 flags) {
+        if !_net_be_up() { return -1; }
+        return _net_be.send(s, buf, len, flags);
+    }
+    private i32 shutdown(i64 s, i32 how) {
+        if !_net_be_up() { return -1; }
+        return _net_be.shutdown(s, how);
+    }
+    private i32 closesocket(i64 s) {
+        if !_net_be_up() { return -1; }
+        return _net_be.closesocket(s);
+    }
+    private i32 getsockname(i64 s, void* addr, i32* len) {
+        if !_net_be_up() { return -1; }
+        return _net_be.getsockname(s, addr, len);
+    }
+    private i32 getsockopt(i64 s, i32 lvl, i32 opt, void* val, i32* len) {
+        if !_net_be_up() { return -1; }
+        return _net_be.getsockopt(s, lvl, opt, val, len);
+    }
+    private i32 poll(NetPollFd* fds, i32 n, i32 timeout_ms) {
+        if !_net_be_up() { return -1; }
+        return _net_be.poll(fds, n, timeout_ms);
+    }
+    private i32 _net_last_err() {
+        if !_net_be_up() { return 0; }
+        return _net_be.last_err();
     }
 }
 
@@ -131,6 +238,8 @@ bool net_init() {
         return WSAStartup(0x0202, &data[0]) == 0;
     } else when os(linux) || os(macos) || os(ios) {
         return true;
+    } else when os(uefi) {
+        return _net_be != null;
     } else {
         // No socket backend here — net.mc is Win32 / POSIX syscalls
         // only. Fail at the entry point rather than hand out handles
@@ -178,6 +287,10 @@ Socket _net_listen_tcp_at(u16 port, u32 bind_addr, bool reuse) {
         if fd_i32 < 0 { return result; }
         fd = fd_i32;
     }
+    when os(uefi) {
+        fd = socket(NET_AF_INET, NET_SOCK_STREAM, 0);
+        if fd == -1 { return result; }
+    }
 
     // SO_REUSEADDR eases fast restart, but on Windows it also lets a
     // second socket bind a port an active listener already holds — which
@@ -217,6 +330,10 @@ Socket _net_listen_tcp_at(u16 port, u32 bind_addr, bool reuse) {
     when os(macos) || os(ios) {
         if bind(cast(i32, fd), &addr, 16) != 0 { close(fd); return result; }
         if listen(cast(i32, fd), 16) != 0 { close(fd); return result; }
+    }
+    when os(uefi) {
+        if bind(fd, &addr, 16) != 0 { ignore closesocket(fd); return result; }
+        if listen(fd, 16) != 0 { ignore closesocket(fd); return result; }
     }
 
     result.fd = fd;
@@ -261,6 +378,10 @@ u16 net_socket_port(Socket s) {
         i32 len = 16;
         r = getsockname(cast(i32, s.fd), &addr, &len);
     }
+    when os(uefi) {
+        i32 len = 16;
+        r = getsockname(s.fd, &addr, &len);
+    }
     if r != 0 { return cast(u16, 0); }
     return net_htons(addr.port);   // swap back to host order
 }
@@ -290,6 +411,12 @@ Socket net_accept(Socket server) {
         if c_i32 < 0 { return result; }
         c = c_i32;
     }
+    when os(uefi) {
+        _NetSockAddrIn client_addr;
+        i32 addrlen = 16;
+        c = accept(server.fd, &client_addr, &addrlen);
+        if c == -1 { return result; }
+    }
 
     _net_no_sigpipe(c);
     result.fd = c;
@@ -306,6 +433,8 @@ i32 net_recv(Socket s, u8* buf, i32 len) {
         return cast(i32, sys_recvfrom(cast(i32, s.fd), buf, len, 0, null, null));
     } else when os(macos) || os(ios) {
         return cast(i32, recv(cast(i32, s.fd), buf, len, 0));
+    } else when os(uefi) {
+        return recv(s.fd, buf, len, 0);
     } else {
         return 0 - 1;   // no socket backend on this target
     }
@@ -320,6 +449,8 @@ i32 net_send(Socket s, u8* buf, i32 len) {
         return cast(i32, sys_sendto(cast(i32, s.fd), buf, len, _NET_MSG_NOSIGNAL, null, 0));
     } else when os(macos) || os(ios) {
         return cast(i32, send(cast(i32, s.fd), buf, len, 0));
+    } else when os(uefi) {
+        return send(s.fd, buf, len, 0);
     } else {
         return 0 - 1;   // no socket backend on this target
     }
@@ -342,6 +473,9 @@ void net_close(Socket s) {
     }
     when os(linux) || os(macos) || os(ios) {
         close(s.fd);
+    }
+    when os(uefi) {
+        ignore closesocket(s.fd);
     }
 }
 
@@ -366,6 +500,10 @@ Socket net_connect(u32 ip_be, u16 port) {
         if fd_i32 < 0 { return result; }
         fd = fd_i32;
     }
+    when os(uefi) {
+        fd = socket(NET_AF_INET, NET_SOCK_STREAM, 0);
+        if fd == -1 { return result; }
+    }
 
     _NetSockAddrIn addr;
     addr.family = NET_AF_INET;
@@ -381,6 +519,9 @@ Socket net_connect(u32 ip_be, u16 port) {
     }
     when os(macos) || os(ios) {
         if connect(cast(i32, fd), &addr, 16) != 0 { close(fd); return result; }
+    }
+    when os(uefi) {
+        if connect(fd, &addr, 16) != 0 { ignore closesocket(fd); return result; }
     }
 
     _net_no_sigpipe(fd);
@@ -416,9 +557,9 @@ Socket net_connect_loopback(u16 port) {
 // resolution needs the libc resolver anyway. Calling into it is what
 // adds the dependency — importing net.mc without it stays standalone.
 //
-// Targets with no socket backend (wasm, uefi) get fail-fast stubs,
-// like the blocking API's — net.mc is in the compiler's own closure
-// (web_server, shader_watch), so it must compile on every target.
+// wasm gets fail-fast stubs, like the blocking API's — net.mc is in the
+// compiler's own closure (web_server, shader_watch), so it must compile
+// on every target. uefi takes these calls from an installed backend.
 
 const i32 NET_WOULDBLOCK = -1;
 const i32 NET_ERR = -2;
@@ -459,6 +600,7 @@ when os(windows) {
         i32 ioctlsocket(i64 s, i32 cmd, u32* argp);
         i32 getsockopt(i64 s, i32 level, i32 opt, void* val, i32* len);
         i32 WSAPoll(void* fds, u32 nfds, i32 timeout);
+        i32 shutdown(i64 s, i32 how);
         i32 WSAGetLastError();
         i32 getaddrinfo(u8* node, u8* service, void* hints, void** res);
         void freeaddrinfo(void* res);
@@ -520,6 +662,7 @@ when os(linux) {
     extern "libc.so.6" {
         i32 fcntl(i32 fd, i32 cmd, ...);
         i32 poll(void* fds, u64 nfds, i32 timeout);
+        i32 shutdown(i32 s, i32 how);
         i32 getsockopt(i32 fd, i32 level, i32 opt, void* val, i32* len);
         i32 getaddrinfo(u8* node, u8* service, void* hints, void** res);
         void freeaddrinfo(void* res);
@@ -566,6 +709,9 @@ bool net_set_nonblocking(i64 fd) {
         i32 fl = fcntl(cast(i32, fd), _NET_F_GETFL, 0);
         if fl < 0 { return false; }
         return fcntl(cast(i32, fd), _NET_F_SETFL, fl | _NET_O_NONBLOCK) >= 0;
+    } else when os(uefi) {
+        if _net_be == null { return false; }
+        return _net_be.ioctl_nonblock(fd, true) == 0;
     } else {
         return false;   // no socket backend on this target
     }
@@ -594,6 +740,9 @@ i64 net_nb_socket() {
         i32 fd_i32 = socket(NET_AF_INET, NET_SOCK_STREAM, 0);
         if fd_i32 < 0 { return -1; }
         fd = fd_i32;
+    } else when os(uefi) {
+        fd = socket(NET_AF_INET, NET_SOCK_STREAM, 0);
+        if fd == -1 { return -1; }
     } else {
         return -1;   // no socket backend on this target
     }
@@ -659,6 +808,17 @@ i64 net_try_accept(i64 lfd) {
         }
         _net_nb_setup(c);
         return c;
+    } else when os(uefi) {
+        _NetSockAddrIn a;
+        i32 len = 16;
+        i64 c = accept(lfd, &a, &len);
+        if c == -1 {
+            i32 e = _net_last_err();
+            if e == _NET_EWOULDBLOCK || e == _NET_EINTR { return NET_WOULDBLOCK; }
+            return NET_ERR;
+        }
+        _net_nb_setup(c);
+        return c;
     } else {
         return NET_ERR;   // no socket backend on this target
     }
@@ -689,6 +849,11 @@ i64 net_connect_start(u32 ip_be, u16 port) {
         i32 e = _net_last_err();
         if e == _NET_EINPROGRESS || e == _NET_EINTR { return fd; }
     }
+    when os(uefi) {
+        if connect(fd, &addr, 16) == 0 { return fd; }
+        i32 e = _net_last_err();
+        if e == _NET_EINPROGRESS || e == _NET_EINTR { return fd; }
+    }
     net_fd_close(fd);
     return -1;
 }
@@ -707,6 +872,11 @@ i32 net_connect_result(i64 fd) {
             r = getsockopt(cast(i32, fd), _NET_SOL_SOCKET, _NET_SO_ERROR, &err, &len);
         }
         if r != 0 { return NET_ERR; }
+        return err;
+    } else when os(uefi) {
+        i32 err = 0;
+        i32 len = 4;
+        if getsockopt(fd, _NET_SOL_SOCKET, _NET_SO_ERROR, &err, &len) != 0 { return NET_ERR; }
         return err;
     } else {
         return NET_ERR;   // no socket backend on this target
@@ -732,6 +902,12 @@ i32 net_try_recv(i64 fd, u8* buf, i32 len) {
         i32 e = _net_last_err();
         if e == _NET_EWOULDBLOCK || e == _NET_EINTR { return NET_WOULDBLOCK; }
         return NET_ERR;
+    } else when os(uefi) {
+        i32 n = recv(fd, buf, len, 0);
+        if n >= 0 { return n; }
+        i32 e = _net_last_err();
+        if e == _NET_EWOULDBLOCK || e == _NET_EINTR { return NET_WOULDBLOCK; }
+        return NET_ERR;
     } else {
         return NET_ERR;   // no socket backend on this target
     }
@@ -753,6 +929,12 @@ i32 net_try_send(i64 fd, u8* buf, i32 len) {
     } else when os(macos) {
         i64 n = send(cast(i32, fd), buf, len, 0);
         if n >= 0 { return cast(i32, n); }
+        i32 e = _net_last_err();
+        if e == _NET_EWOULDBLOCK || e == _NET_EINTR { return NET_WOULDBLOCK; }
+        return NET_ERR;
+    } else when os(uefi) {
+        i32 n = send(fd, buf, len, 0);
+        if n >= 0 { return n; }
         i32 e = _net_last_err();
         if e == _NET_EWOULDBLOCK || e == _NET_EINTR { return NET_WOULDBLOCK; }
         return NET_ERR;
@@ -810,6 +992,23 @@ i32 net_poll(NetPollFd* fds, i32 n, i32 timeout_ms) {
             (fds + i).revents = re;
         }
         return r < 0 ? -1 : r;
+    } else when os(uefi) {
+        // The descriptor this layer hands around is already the one the
+        // backend polls, so there is nothing to narrow or translate.
+        return poll(fds, n, timeout_ms);
+    } else {
+        return -1;   // no socket backend on this target
+    }
+}
+
+// Half-close: send a FIN and keep reading. A protocol that ends its
+// reply by hanging up needs this — a full close would drop the peer's
+// answer. 0 on success, -1 otherwise.
+i32 net_shutdown_write(i64 fd) {
+    when os(windows) || os(uefi) {
+        return shutdown(fd, 1);                    // SD_SEND
+    } else when os(linux) || os(macos) || os(ios) {
+        return shutdown(cast(i32, fd), 1);         // SHUT_WR
     } else {
         return -1;   // no socket backend on this target
     }
@@ -834,6 +1033,9 @@ u32 net_resolve4(u8* host) {
         }
         freeaddrinfo(res);
         return out;
+    } else when os(uefi) {
+        if _net_be == null { return 0; }
+        return _net_be.resolve4(host);
     } else {
         return 0;   // no resolver on this target
     }

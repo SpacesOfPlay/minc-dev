@@ -828,10 +828,13 @@ bool env_set(str name, str value) {
     bool r = false;
     when os(windows) {
         noinit u16[_WIN_PATH_CAP] wname;
-        noinit u16[_WIN_PATH_CAP] wval;
+        // The value is sized per call: PATH outgrows any fixed buffer.
+        i32 vcap = value.len + 1;
+        u16* wval = alloc<u16>(vcap);
+        defer free(cast(void*, wval));
         if _win_wide(name, &wname[0], _WIN_PATH_CAP)
-            && _win_wide(value, &wval[0], _WIN_PATH_CAP) {
-            r = SetEnvironmentVariableW(&wname[0], &wval[0]);
+            && _win_wide(value, wval, vcap) {
+            r = SetEnvironmentVariableW(&wname[0], wval);
         }
     }
     when os(linux) || os(macos) || os(ios) {
@@ -844,9 +847,15 @@ bool env_set(str name, str value) {
     return r;
 }
 
+// A regular file at `p`: a directory of the same name is not a match.
+bool _which_hit(str p) {
+    return path_exists(p) && !path_is_dir(p);
+}
+
 // Path to `program` as found on PATH, or empty. A name that already
 // holds a separator is returned as-is when it exists. On Windows
-// ".exe" is tried when the name has no extension. Owned.
+// "<name>.exe" is tried first, since an extensionless <name> beside
+// it is a shell script the spawner could not run. Owned.
 @must_use
 string path_which(str program) {
     string none = { .data = null, .len = 0 };
@@ -857,12 +866,12 @@ string path_which(str program) {
         if _path_is_sep(*(program.data + i)) { has_sep = true; }
     }
     if has_sep {
-        if path_exists(program) { return str_concat(program, ""); }
         when os(windows) {
             string withexe = str_concat(program, ".exe");
-            if path_exists(str_from(withexe.data, withexe.len)) { return withexe; }
+            if _which_hit(str_from(withexe.data, withexe.len)) { return withexe; }
             free(withexe);
         }
+        if _which_hit(program) { return str_concat(program, ""); }
         return none;
     }
 
@@ -876,15 +885,15 @@ string path_which(str program) {
         if i > start {
             str dir = str_from(path.data + start, i - start);
             string cand = path_join(dir, program);
-            if path_exists(str_from(cand.data, cand.len)) { return cand; }
             when os(windows) {
                 string withexe = str_concat(str_from(cand.data, cand.len), ".exe");
-                if path_exists(str_from(withexe.data, withexe.len)) {
+                if _which_hit(str_from(withexe.data, withexe.len)) {
                     free(cand);
                     return withexe;
                 }
                 free(withexe);
             }
+            if _which_hit(str_from(cand.data, cand.len)) { return cand; }
             free(cand);
         }
         start = i + 1;
