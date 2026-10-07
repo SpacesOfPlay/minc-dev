@@ -1,10 +1,16 @@
-// jpeg.mc — JPEG baseline (SOF0) decoder + encoder for minc
+// jpeg.mc — JPEG decoder + encoder for minc
 // Depends on: lib/file.mc  (file_read, file_write, FileData)
 //
-// Read:  baseline sequential DCT (SOF0), 8-bit, grayscale or YCbCr with
-//        4:4:4 / 4:2:2 / 4:2:0 / 4:4:0 subsampling, restart markers.
-//        Progressive (SOF2) is rejected with a clear error.
+// Read:  baseline (SOF0), extended sequential (SOF1) and progressive
+//        (SOF2) Huffman DCT, 8-bit. Grayscale, YCbCr, RGB (Adobe
+//        transform 0), CMYK and YCCK (Adobe inverted). Each component
+//        may be sampled 1x or 2x in each direction. Restart markers.
+//        Rejected: arithmetic coding, lossless, hierarchical, 12-bit
+//        precision, 4:1:1.
+//        The EXIF orientation is reported in orientation, not applied;
+//        jpeg_apply_orientation applies it.
 //        Output is always RGBA8 (4 bytes per pixel). Caller must free(pixels).
+//        On failure pixels is null and error holds the reason.
 // Write: RGBA8 input, 4:2:0 subsampling, quality 1-100 (clamped),
 //        standard Annex-K quantization + Huffman tables, JFIF header.
 //
@@ -27,17 +33,13 @@ struct JpegImage {
     u8* pixels;     // RGBA8 data, null on error
     i32 width;      // 0 on error
     i32 height;     // 0 on error
+    str error;      // reason pixels is null; "" on success
+    i32 orientation; // EXIF orientation 1-8; 1 when absent, 0 on error
 }
 
-private JpegImage jpeg_error(u8* msg) {
-    eprint("jpeg: ");
-    i32 ml = 0; while *(msg + ml) != 0 { ml = ml + 1; }
-    write(stderr(), msg, ml);
-    eprint("\n");
+private JpegImage jpeg_error(str msg) {
     JpegImage r;
-    r.pixels = null;
-    r.width = 0;
-    r.height = 0;
+    r.error = msg;
     return r;
 }
 
@@ -315,7 +317,7 @@ private struct JDec {
     i32 w;
     i32 h;
     i32 ncomp;
-    JComp[3] comp;
+    JComp[4] comp;
     i32 hmax;
     i32 vmax;
     i32 mcux;
@@ -323,6 +325,9 @@ private struct JDec {
     i32 restart_interval;
     i32 frame_type;        // SOF marker (0xC0 baseline)
     bool got_sof;
+    bool adobe;
+    i32 adobe_transform;
+    i32 orientation;
     i32[256] qraw;         // 4 tables x 64, natural order
     bool[4] qpresent;
     f32[256] qt_f;         // AAN-prescaled dequant tables (built at SOS)
@@ -823,15 +828,36 @@ private void jd_upsample_row(JComp* c, i32 y, i32 w, i32 h, i32 hmax, i32 vmax,
     }
 }
 
+// Row y of component ci at full resolution.
+private f32* jd_row(JDec* d, i32 ci, i32 y, f32* tmp, f32* buf) {
+    JComp* c = &d.comp[ci];
+    if c.hsamp == d.hmax && c.vsamp == d.vmax {
+        return c.plane + y * c.pw;
+    }
+    jd_upsample_row(c, y, d.w, d.h, d.hmax, d.vmax, tmp, buf);
+    return buf;
+}
+
+private i32 jd_clamp8(f32 v) {
+    i32 i = cast(i32, v + 0.5f);
+    if i < 0 { return 0; }
+    if i > 255 { return 255; }
+    return i;
+}
+
 private void jd_color_convert(JDec* d, u8* pixels) {
     i32 w = d.w;
     i32 h = d.h;
-    JComp* cy = &d.comp[0];
     i32 w8 = w & ~7;   // 8-wide vector body; scalar tail below
+
+    f32* ups_tmp = alloc<f32>(w);
+    f32* bufs = alloc<f32>(w * 4);
+    defer free(ups_tmp);
+    defer free(bufs);
 
     if d.ncomp == 1 {
         for i32 y = 0; y < h; y++ {
-            f32* yrow = cy.plane + y * cy.pw;
+            f32* yrow = jd_row(d, 0, y, ups_tmp, bufs);
             u8* dst = pixels + y * w * 4;
             // Plane values are already clamped to 0..255 at IDCT exit;
             // just round 8 at a time.
@@ -858,18 +884,44 @@ private void jd_color_convert(JDec* d, u8* pixels) {
         return;
     }
 
-    JComp* ccb = &d.comp[1];
-    JComp* ccr = &d.comp[2];
-    // Reusable upsampled chroma rows + vertical-blend scratch. The
-    // triangle filter stays scalar (neighbor access has no f32x8
-    // shuffle); it feeds the vector color math below.
-    f32* cb_row = alloc<f32>(w);
-    f32* cr_row = alloc<f32>(w);
-    f32* ups_tmp = alloc<f32>(w);
-    defer free(cb_row);
-    defer free(cr_row);
-    defer free(ups_tmp);
+    if d.ncomp == 4 || (d.adobe && d.adobe_transform == 0) {
+        bool ycc = d.ncomp == 4 && d.adobe && d.adobe_transform == 2;
+        for i32 y = 0; y < h; y++ {
+            f32* r0 = jd_row(d, 0, y, ups_tmp, bufs);
+            f32* r1 = jd_row(d, 1, y, ups_tmp, bufs + w);
+            f32* r2 = jd_row(d, 2, y, ups_tmp, bufs + w * 2);
+            f32* r3 = null;
+            if d.ncomp == 4 { r3 = jd_row(d, 3, y, ups_tmp, bufs + w * 3); }
+            u8* dst = pixels + y * w * 4;
+            for i32 x = 0; x < w; x++ {
+                i32 c0 = jd_clamp8(*(r0 + x));
+                i32 c1 = jd_clamp8(*(r1 + x));
+                i32 c2 = jd_clamp8(*(r2 + x));
+                if ycc {
+                    f32 yv = *(r0 + x);
+                    f32 cb = *(r1 + x) - 128.0f;
+                    f32 cr = *(r2 + x) - 128.0f;
+                    c0 = 255 - jd_clamp8(yv + 1.402f * cr);
+                    c1 = 255 - jd_clamp8(yv - 0.344136f * cb - 0.714136f * cr);
+                    c2 = 255 - jd_clamp8(yv + 1.772f * cb);
+                }
+                if d.ncomp == 4 {
+                    i32 k = jd_clamp8(*(r3 + x));
+                    c0 = (c0 * k + 127) / 255;
+                    c1 = (c1 * k + 127) / 255;
+                    c2 = (c2 * k + 127) / 255;
+                }
+                *(dst + x * 4 + 0) = cast(u8, c0);
+                *(dst + x * 4 + 1) = cast(u8, c1);
+                *(dst + x * 4 + 2) = cast(u8, c2);
+                *(dst + x * 4 + 3) = 255;
+            }
+        }
+        return;
+    }
 
+    // The triangle filter stays scalar (neighbor access has no f32x8
+    // shuffle); it feeds the vector color math below.
     f32x8 c128 = f32x8_splat(128.0f);
     f32x8 cmin = f32x8_splat(0.0f);
     f32x8 cmax = f32x8_splat(255.0f);
@@ -879,9 +931,9 @@ private void jd_color_convert(JDec* d, u8* pixels) {
     f32x8 c1772 = f32x8_splat(1.772f);
 
     for i32 y = 0; y < h; y++ {
-        f32* yrow = cy.plane + y * cy.pw;
-        jd_upsample_row(ccb, y, w, h, d.hmax, d.vmax, ups_tmp, cb_row);
-        jd_upsample_row(ccr, y, w, h, d.hmax, d.vmax, ups_tmp, cr_row);
+        f32* yrow = jd_row(d, 0, y, ups_tmp, bufs);
+        f32* cb_row = jd_row(d, 1, y, ups_tmp, bufs + w);
+        f32* cr_row = jd_row(d, 2, y, ups_tmp, bufs + w * 2);
 
         u8* dst = pixels + y * w * 4;
         // BT.601: 8 pixels per iteration.
@@ -935,10 +987,46 @@ private u32 jd_read_u16(u8* p) {
     return (cast(u32, *(p + 0)) << 8) | cast(u32, *(p + 1));
 }
 
+private i32 jd_tiff_u16(u8* p, bool le) {
+    if le { return cast(i32, p[0]) | (cast(i32, p[1]) << 8); }
+    return (cast(i32, p[0]) << 8) | cast(i32, p[1]);
+}
+
+private i64 jd_tiff_u32(u8* p, bool le) {
+    i64 lo = jd_tiff_u16(p, le);
+    i64 hi = jd_tiff_u16(p + 2, le);
+    if le { return lo | (hi << 16); }
+    return (lo << 16) | hi;
+}
+
+// Orientation tag of an APP1 Exif segment; 0 when absent.
+private i32 jd_exif_orientation(u8* seg, i32 n) {
+    if n < 14 || seg[0] != 69 || seg[1] != 120 || seg[2] != 105 || seg[3] != 102 ||
+       seg[4] != 0 || seg[5] != 0 {
+        return 0;
+    }
+    u8* t = seg + 6;
+    i32 tn = n - 6;
+    bool le = t[0] == 73 && t[1] == 73;
+    if !le && !(t[0] == 77 && t[1] == 77) { return 0; }
+    i64 ifd = jd_tiff_u32(t + 4, le);
+    if ifd < 8 || ifd + 2 > tn { return 0; }
+    i32 at = cast(i32, ifd);
+    i32 count = jd_tiff_u16(t + at, le);
+    for i32 i = 0; i < count; i++ {
+        i32 e = at + 2 + i * 12;
+        if e + 12 > tn { return 0; }
+        if jd_tiff_u16(t + e, le) == 0x0112 && jd_tiff_u16(t + e + 2, le) == 3 {
+            return jd_tiff_u16(t + e + 8, le);
+        }
+    }
+    return 0;
+}
+
 // Error exit that releases any planes/coefficient buffers already
 // allocated — progressive parsing continues past the first SOS, so
 // later marker errors must clean up.
-private JpegImage jd_fail(JDec* d, u8* msg) {
+private JpegImage jd_fail(JDec* d, str msg) {
     jd_free_planes(d);
     return jpeg_error(msg);
 }
@@ -963,7 +1051,9 @@ JpegImage jpeg_decode(u8* data, i64 nbytes) {
         d.hdc[i].present = false;
         d.hac[i].present = false;
     }
-    for i32 i = 0; i < 3; i++ {
+    d.adobe = false;
+    d.orientation = 1;
+    for i32 i = 0; i < 4; i++ {
         d.comp[i].plane = null;
         d.comp[i].coef = null;
         d.comp[i].dc_pred = 0;
@@ -1054,8 +1144,8 @@ JpegImage jpeg_decode(u8* data, i64 nbytes) {
                 sp = sp + 17 + total;
             }
         }
-        else if m == 192 || m == 194 {
-            // SOF0 (baseline) / SOF2 (progressive) — shared frame header.
+        else if m == 192 || m == 193 || m == 194 {
+            // SOF0 (baseline) / SOF1 (extended) / SOF2 (progressive) — shared frame header.
             if d.got_sof { return jd_fail(&d, "invalid scan header"); }
             if segdata < 6 { return jd_fail(&d, "truncated marker segment"); }
             i32 prec = cast(i32, *(seg + 0));
@@ -1064,8 +1154,10 @@ JpegImage jpeg_decode(u8* data, i64 nbytes) {
             d.w = cast(i32, jd_read_u16(seg + 3));
             d.ncomp = cast(i32, *(seg + 5));
             if d.w <= 0 || d.h <= 0 { return jd_fail(&d, "invalid image dimensions"); }
-            if d.w > 32768 || d.h > 32768 { return jd_fail(&d, "image too large (max 32768x32768)"); }
-            if d.ncomp != 1 && d.ncomp != 3 { return jd_fail(&d, "unsupported component count"); }
+            if d.w > 32768 || d.h > 32768 || cast(i64, d.w) * d.h * 4 > 2147483647 {
+                return jd_fail(&d, "image too large");
+            }
+            if d.ncomp != 1 && d.ncomp != 3 && d.ncomp != 4 { return jd_fail(&d, "unsupported component count"); }
             if segdata < 6 + d.ncomp * 3 { return jd_fail(&d, "truncated marker segment"); }
             d.hmax = 1;
             d.vmax = 1;
@@ -1079,9 +1171,6 @@ JpegImage jpeg_decode(u8* data, i64 nbytes) {
                 if c.hsamp < 1 || c.hsamp > 2 || c.vsamp < 1 || c.vsamp > 2 {
                     return jd_fail(&d, "unsupported sampling factors");
                 }
-                if i > 0 && (c.hsamp != 1 || c.vsamp != 1) {
-                    return jd_fail(&d, "unsupported sampling factors");
-                }
                 if c.tq > 3 { return jd_fail(&d, "invalid quantization table"); }
                 if c.hsamp > d.hmax { d.hmax = c.hsamp; }
                 if c.vsamp > d.vmax { d.vmax = c.vsamp; }
@@ -1089,9 +1178,20 @@ JpegImage jpeg_decode(u8* data, i64 nbytes) {
             d.frame_type = m;
             d.got_sof = true;
         }
-        else if m == 193 || m == 195 || (m >= 197 && m <= 199) ||
+        else if m == 195 || (m >= 197 && m <= 199) ||
                   (m >= 201 && m <= 203) || (m >= 205 && m <= 207) {
-            return jd_fail(&d, "unsupported SOF marker (only baseline SOF0 / progressive SOF2)");
+            return jd_fail(&d, "unsupported JPEG type (lossless, hierarchical or arithmetic)");
+        }
+        else if m == 225 {
+            i32 o = jd_exif_orientation(seg, segdata);
+            if o >= 1 && o <= 8 { d.orientation = o; }
+        }
+        else if m == 238 {
+            if segdata >= 12 && *(seg + 0) == 65 && *(seg + 1) == 100 && *(seg + 2) == 111 &&
+               *(seg + 3) == 98 && *(seg + 4) == 101 {
+                d.adobe = true;
+                d.adobe_transform = cast(i32, *(seg + 11));
+            }
         }
         else if m == 221 {
             // DRI
@@ -1104,13 +1204,13 @@ JpegImage jpeg_decode(u8* data, i64 nbytes) {
             if segdata < 1 { return jd_fail(&d, "invalid scan header"); }
             bool progressive = d.frame_type == 194;
             i32 ns = cast(i32, *(seg + 0));
-            if ns < 1 || ns > 3 || segdata < 1 + ns * 2 + 3 {
+            if ns < 1 || ns > 4 || segdata < 1 + ns * 2 + 3 {
                 return jd_fail(&d, "invalid scan header");
             }
             if !progressive && ns != d.ncomp {
                 return jd_fail(&d, "invalid scan header");
             }
-            i32[3] scomp;
+            i32[4] scomp;
             for i32 i = 0; i < ns; i++ {
                 i32 cid = cast(i32, *(seg + 1 + i * 2));
                 i32 tt = cast(i32, *(seg + 2 + i * 2));
@@ -1244,6 +1344,7 @@ JpegImage jpeg_decode(u8* data, i64 nbytes) {
     result.pixels = pixels;
     result.width = d.w;
     result.height = d.h;
+    result.orientation = d.orientation;
     return result;
 }
 
@@ -1251,16 +1352,48 @@ JpegImage jpeg_decode(u8* data, i64 nbytes) {
 JpegImage jpeg_load(str path) {
     FileData fd = file_read(path);
     if fd.data == null {
-        eprint("jpeg: cannot open '{}'\n", path);
-        JpegImage r;
-        r.pixels = null;
-        r.width = 0;
-        r.height = 0;
-        return r;
+        return jpeg_error("cannot open file");
     }
     JpegImage result = jpeg_decode(fd.data, fd.len);
     free(fd.data);
     return result;
+}
+
+// Rotates or mirrors the pixels as the EXIF orientation says and sets
+// orientation to 1.
+void jpeg_apply_orientation(JpegImage* img) {
+    i32 o = img.orientation;
+    if img.pixels == null || o < 2 || o > 8 { return; }
+    i32 w = img.width;
+    i32 h = img.height;
+    i32 ow = w;
+    if o >= 5 { ow = h; }
+    u32* src = cast(u32*, img.pixels);
+    u32* dst = alloc<u32>(w * h);
+    for i32 y = 0; y < h; y++ {
+        for i32 x = 0; x < w; x++ {
+            i32 dx = x;
+            i32 dy = y;
+            switch o {
+                case 2: { dx = w - 1 - x; }
+                case 3: { dx = w - 1 - x; dy = h - 1 - y; }
+                case 4: { dy = h - 1 - y; }
+                case 5: { dx = y; dy = x; }
+                case 6: { dx = h - 1 - y; dy = x; }
+                case 7: { dx = h - 1 - y; dy = w - 1 - x; }
+                case 8: { dx = y; dy = w - 1 - x; }
+                default: { }
+            }
+            dst[dy * ow + dx] = src[y * w + x];
+        }
+    }
+    free(img.pixels);
+    img.pixels = cast(u8*, dst);
+    if o >= 5 {
+        img.width = h;
+        img.height = w;
+    }
+    img.orientation = 1;
 }
 
 // ====================== Encoder ======================================
@@ -1726,8 +1859,7 @@ i32 jpeg_encode(u8* pixels, i32 width, i32 height, i32 quality,
     i32 mcux = pw / 16;
     i32 mcuy = ph / 16;
     i32 total_blocks = mcux * mcuy * 6;
-    i32* coefbuf = alloc<i32>(total_blocks * 64);
-    defer free(coefbuf);
+    using i32* coefbuf = alloc<i32>(total_blocks * 64);
 
     i32[257] freq_dc_l;
     i32[257] freq_ac_l;

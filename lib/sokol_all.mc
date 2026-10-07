@@ -2256,6 +2256,7 @@ struct sapp_desc {
     bool disable_vsync;
     bool high_dpi;
     bool fullscreen;
+    bool maximized;
     u8* window_title;
     bool enable_clipboard;
     i32 clipboard_size;
@@ -5288,6 +5289,23 @@ struct _sg_u128_t {
     when running on the web platform:
 
         https://floooh.github.io/sokol-html5/wasm/imgui-highdpi-sapp.html
+
+    MAXIMIZED WINDOW
+    ================
+    If the sapp_desc.maximized flag is true, the window starts maximized on
+    Windows, macOS (zoomed) and Linux (X11). The window is maximized before
+    it is first shown, so there is no maximize animation, and restoring it
+    gives sapp_desc.width x sapp_desc.height. The flag is ignored when
+    sapp_desc.fullscreen is true, on the web and on mobile platforms, and
+    on Windows when the process is launched minimized.
+
+    TRACKPAD PINCH ZOOM
+    ===================
+    On macOS a two-finger pinch on the trackpad is reported as a MOUSE_SCROLL
+    event with SAPP_MODIFIER_CTRL set and the relative scale change in
+    scroll_y (positive when spreading), which is how a pinch already arrives
+    on Windows (precision touchpad) and in browsers. An app that zooms on
+    Ctrl + scroll handles the pinch without change.
 
     FULLSCREEN
     ==========
@@ -16908,9 +16926,6 @@ bool _sapp_gl_select_fbconfig(_sapp_gl_fbselect* fbselect, _sapp_gl_fbconfig* de
     if desired.doublebuffer != current.doublebuffer {
         return false;
     }
-    if desired.srgb_capable != current.srgb_capable {
-        return false;
-    }
     if desired.alpha_bits > 0 && current.alpha_bits == 0 {
         missing++;
     }
@@ -16918,6 +16933,9 @@ bool _sapp_gl_select_fbconfig(_sapp_gl_fbselect* fbselect, _sapp_gl_fbconfig* de
         missing++;
     }
     if desired.stencil_bits > 0 && current.stencil_bits == 0 {
+        missing++;
+    }
+    if desired.srgb_capable && !current.srgb_capable {
         missing++;
     }
     if desired.samples > 0 && current.samples == 0 {
@@ -16942,6 +16960,9 @@ bool _sapp_gl_select_fbconfig(_sapp_gl_fbselect* fbselect, _sapp_gl_fbconfig* de
     }
     if desired.stencil_bits != -1 {
         extra_diff += (desired.stencil_bits - current.stencil_bits) * (desired.stencil_bits - current.stencil_bits);
+    }
+    if !desired.srgb_capable && current.srgb_capable {
+        extra_diff++;
     }
     if desired.samples != -1 {
         extra_diff += (desired.samples - current.samples) * (desired.samples - current.samples);
@@ -16977,9 +16998,6 @@ _sapp_gl_fbconfig* _sapp_gl_choose_fbconfig(_sapp_gl_fbconfig* desired, _sapp_gl
         if desired.doublebuffer != current.doublebuffer {
             continue;
         }
-        if desired.srgb_capable != current.srgb_capable {
-            continue;
-        }
         missing = 0;
         if desired.alpha_bits > 0 && current.alpha_bits == 0 {
             missing++;
@@ -16988,6 +17006,9 @@ _sapp_gl_fbconfig* _sapp_gl_choose_fbconfig(_sapp_gl_fbconfig* desired, _sapp_gl
             missing++;
         }
         if desired.stencil_bits > 0 && current.stencil_bits == 0 {
+            missing++;
+        }
+        if desired.srgb_capable && !current.srgb_capable {
             missing++;
         }
         if desired.samples > 0 && current.samples == 0 {
@@ -17012,6 +17033,9 @@ _sapp_gl_fbconfig* _sapp_gl_choose_fbconfig(_sapp_gl_fbconfig* desired, _sapp_gl
         }
         if desired.stencil_bits != -1 {
             extra_diff += (desired.stencil_bits - current.stencil_bits) * (desired.stencil_bits - current.stencil_bits);
+        }
+        if !desired.srgb_capable && current.srgb_capable {
+            extra_diff++;
         }
         if desired.samples != -1 {
             extra_diff += (desired.samples - current.samples) * (desired.samples - current.samples);
@@ -20310,6 +20334,9 @@ LRESULT _sapp_win32_wndproc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 }
             }
             case WM_ERASEBKGND: {
+                if _sapp.frame_count == 0 {
+                    return DefWindowProcW(hWnd, uMsg, wParam, lParam);
+                }
                 return 1;
             }
             case WM_SIZE: {
@@ -20477,7 +20504,7 @@ void _sapp_win32_create_window() {
     wndclassw.hCursor = LoadCursor(null, IDC_ARROW);
     wndclassw.hIcon = LoadIcon(null, IDI_WINLOGO);
     wndclassw.lpszClassName = cast(u16*, __wide_literal("SOKOLAPP"));
-    wndclassw.hbrBackground = cast(HBRUSH, GetStockObject(BLACK_BRUSH));
+    wndclassw.hbrBackground = cast(HBRUSH, CreateSolidBrush(0x202020));
     RegisterClassW(&wndclassw);
     DWORD win_ex_style = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
     RECT rect;
@@ -20491,7 +20518,11 @@ void _sapp_win32_create_window() {
     i32 win_height = rect.bottom - rect.top;
     _sapp.win32.in_create_window = true;
     _sapp.win32.surrogate = 0;
-    _sapp.win32.hwnd = CreateWindowExW(win_ex_style, cast(u16*, __wide_literal("SOKOLAPP")), _sapp.window_title_wide, win_style, CW_USEDEFAULT, SW_HIDE, use_default_width != 0 ? CW_USEDEFAULT : win_width, use_default_height != 0 ? CW_USEDEFAULT : win_height, null, null, GetModuleHandle(null), null);
+    DWORD create_style = win_style;
+    if _sapp.desc.maximized && !_sapp.fullscreen {
+        create_style |= WS_MAXIMIZE;
+    }
+    _sapp.win32.hwnd = CreateWindowExW(win_ex_style, cast(u16*, __wide_literal("SOKOLAPP")), _sapp.window_title_wide, create_style, CW_USEDEFAULT, SW_HIDE, use_default_width != 0 ? CW_USEDEFAULT : win_width, use_default_height != 0 ? CW_USEDEFAULT : win_height, null, null, GetModuleHandle(null), null);
     _sapp.win32.in_create_window = false;
     _sapp.win32.dc = GetDC(_sapp.win32.hwnd);
     _sapp.win32.hmonitor = MonitorFromWindow(_sapp.win32.hwnd, MONITOR_DEFAULTTONULL);
@@ -21150,6 +21181,24 @@ void _objc__sapp_macos_view_scrollWheel(void* self, void* _cmd, void* event) {
             _sapp.event.modifiers = _sapp_macos_mods(event);
             _sapp.event.scroll_x = dx;
             _sapp.event.scroll_y = dy;
+            _sapp_call_event(&_sapp.event);
+        }
+    }
+}
+void _objc__sapp_macos_view_magnifyWithEvent(void* self, void* _cmd, void* event) {
+    _sapp_gl_make_current();
+    _sapp_macos_mouse_update_from_nsevent(event, true);
+    if _sapp_events_enabled() != 0 {
+        // Relative scale change since the last magnify event; a full spread
+        // sums to about 1.0. Scaled so a pinch covers the range of several
+        // wheel notches, matching a Windows precision touchpad.
+        f32 magnify_scroll_scale = 8.0f;
+        var m = cast(f32, cast(fn(void*, void*): f64, objc.raw)(event, objc_selref("magnification")));
+        if m != 0.0f {
+            _sapp_init_event(SAPP_EVENTTYPE_MOUSE_SCROLL);
+            _sapp.event.modifiers = _sapp_macos_mods(event) | SAPP_MODIFIER_CTRL;
+            _sapp.event.scroll_x = 0.0f;
+            _sapp.event.scroll_y = m * magnify_scroll_scale;
             _sapp_call_event(&_sapp.event);
         }
     }
@@ -26619,7 +26668,7 @@ void _sapp_wgl_load_extensions() {
     _sapp.wgl.arb_create_context_profile = _sapp_wgl_ext_supported("WGL_ARB_create_context_profile");
     _sapp.wgl.ext_swap_control = _sapp_wgl_ext_supported("WGL_EXT_swap_control");
     _sapp.wgl.arb_pixel_format = _sapp_wgl_ext_supported("WGL_ARB_pixel_format");
-    _sapp.wgl.arb_framebuffer_srgb = _sapp_wgl_ext_supported("WGL_ARB_framebuffer_sRGB");
+    _sapp.wgl.arb_framebuffer_srgb = _sapp_wgl_ext_supported("WGL_ARB_framebuffer_sRGB") || _sapp_wgl_ext_supported("WGL_EXT_framebuffer_sRGB");
     _sapp.wgl.MakeCurrent(_sapp.wgl.msg_dc, null);
     _sapp.wgl.DeleteContext(rc);
 }
@@ -26929,7 +26978,14 @@ void _sapp_win32_run(sapp_desc* desc) {
         _sapp_win32_frame(false);
         if window_shown == 0 {
             window_shown = true;
-            ShowWindow(_sapp.win32.hwnd, SW_SHOW);
+            // A plain SW_SHOW on the first show is replaced by the launch show
+            // state (normally SW_SHOWNORMAL), which would restore the window.
+            // IsZoomed is false after a fullscreen switch during init.
+            i32 show_cmd = SW_SHOW;
+            if _sapp.desc.maximized && !_sapp.fullscreen && IsZoomed(_sapp.win32.hwnd) != 0 && !win32_launched_minimized() {
+                show_cmd = SW_SHOWMAXIMIZED;
+            }
+            ShowWindow(_sapp.win32.hwnd, show_cmd);
         }
         if _sapp_win32_update_dimensions() != 0 {
             _sapp_win32_app_event(SAPP_EVENTTYPE_RESIZED);
@@ -31915,7 +31971,14 @@ void _sapp_win32_run(sapp_desc* desc) {
         _sapp_win32_frame(false);
         if window_shown == 0 {
             window_shown = true;
-            ShowWindow(_sapp.win32.hwnd, SW_SHOW);
+            // A plain SW_SHOW on the first show is replaced by the launch show
+            // state (normally SW_SHOWNORMAL), which would restore the window.
+            // IsZoomed is false after a fullscreen switch during init.
+            i32 show_cmd = SW_SHOW;
+            if _sapp.desc.maximized && !_sapp.fullscreen && IsZoomed(_sapp.win32.hwnd) != 0 && !win32_launched_minimized() {
+                show_cmd = SW_SHOWMAXIMIZED;
+            }
+            ShowWindow(_sapp.win32.hwnd, show_cmd);
         }
         if _sapp_win32_update_dimensions() != 0 {
             _sapp_d3d11_resize_default_render_target();
@@ -35807,6 +35870,8 @@ void _objc__sapp_macos_app_delegate_applicationDidFinishLaunching(void* self, vo
         cast(fn(void*, void*, bool): void, objc.raw)(_sapp.macos.window, objc_selref("setOpaque:"), cast(bool, false));
         objc.msg_id_i(_sapp.macos.window, objc_selref("setBackgroundColor:"), objc.msg_id_v(objc_getClass("NSColor"), objc_selref("clearColor")));
         cast(fn(void*, void*, bool): void, objc.raw)(_sapp.macos.window, objc_selref("setHasShadow:"), cast(bool, false));
+    } else {
+        objc.msg_id_i(_sapp.macos.window, objc_selref("setBackgroundColor:"), cast(fn(void*, void*, f64, f64, f64, f64): void*, objc.raw)(objc_getClass("NSColor"), objc_selref("colorWithSRGBRed:green:blue:alpha:"), 32.0 / 255.0, 32.0 / 255.0, 32.0 / 255.0, 1.0));
     }
     _sapp.macos.win_dlg = objc.msg_id_v(objc.msg_id_v(objc_getClass("_sapp_macos_window_delegate"), objc_selref("alloc")), objc_selref("init"));
     cast(fn(void*, void*, void*): void, objc.raw)(_sapp.macos.window, objc_selref("setDelegate:"), _sapp.macos.win_dlg);
@@ -35814,6 +35879,9 @@ void _objc__sapp_macos_app_delegate_applicationDidFinishLaunching(void* self, vo
     cast(fn(void*, void*, void*): void, objc.raw)(_sapp.macos.window, objc_selref("setContentView:"), _sapp.macos.view);
     objc.msg_id_i(_sapp.macos.window, objc_selref("makeFirstResponder:"), _sapp.macos.view);
     objc.msg_id_v(_sapp.macos.window, objc_selref("center"));
+    if _sapp.desc.maximized && !_sapp.fullscreen {
+        objc.msg_id_i(_sapp.macos.window, objc_selref("zoom:"), null);
+    }
     _sapp.valid = true;
     if _sapp.fullscreen != 0 {
         objc.msg_id_i(_sapp.macos.window, objc_selref("toggleFullScreen:"), self);
@@ -35898,6 +35966,7 @@ void _objc_register__sapp_macos_view() {
     class_addMethod(cls, objc_selref("mouseDragged:"), cast(void*, &_objc__sapp_macos_view_mouseDragged), "v@:@");
     class_addMethod(cls, objc_selref("rightMouseDragged:"), cast(void*, &_objc__sapp_macos_view_rightMouseDragged), "v@:@");
     class_addMethod(cls, objc_selref("scrollWheel:"), cast(void*, &_objc__sapp_macos_view_scrollWheel), "v@:@");
+    class_addMethod(cls, objc_selref("magnifyWithEvent:"), cast(void*, &_objc__sapp_macos_view_magnifyWithEvent), "v@:@");
     class_addMethod(cls, objc_selref("keyDown:"), cast(void*, &_objc__sapp_macos_view_keyDown), "v@:@");
     class_addMethod(cls, objc_selref("performKeyEquivalent:"), cast(void*, &_objc__sapp_macos_view_performKeyEquivalent), "c@:@");
     class_addMethod(cls, objc_selref("keyUp:"), cast(void*, &_objc__sapp_macos_view_keyUp), "v@:@");
@@ -36764,6 +36833,8 @@ void _objc__sapp_macos_app_delegate_applicationDidFinishLaunching(void* self, vo
         cast(fn(void*, void*, bool): void, objc.raw)(_sapp.macos.window, objc_selref("setOpaque:"), cast(bool, false));
         objc.msg_id_i(_sapp.macos.window, objc_selref("setBackgroundColor:"), objc.msg_id_v(objc_getClass("NSColor"), objc_selref("clearColor")));
         cast(fn(void*, void*, bool): void, objc.raw)(_sapp.macos.window, objc_selref("setHasShadow:"), cast(bool, false));
+    } else {
+        objc.msg_id_i(_sapp.macos.window, objc_selref("setBackgroundColor:"), cast(fn(void*, void*, f64, f64, f64, f64): void*, objc.raw)(objc_getClass("NSColor"), objc_selref("colorWithSRGBRed:green:blue:alpha:"), 32.0 / 255.0, 32.0 / 255.0, 32.0 / 255.0, 1.0));
     }
     _sapp.macos.win_dlg = objc.msg_id_v(objc.msg_id_v(objc_getClass("_sapp_macos_window_delegate"), objc_selref("alloc")), objc_selref("init"));
     cast(fn(void*, void*, void*): void, objc.raw)(_sapp.macos.window, objc_selref("setDelegate:"), _sapp.macos.win_dlg);
@@ -36771,6 +36842,9 @@ void _objc__sapp_macos_app_delegate_applicationDidFinishLaunching(void* self, vo
     cast(fn(void*, void*, void*): void, objc.raw)(_sapp.macos.window, objc_selref("setContentView:"), _sapp.macos.view);
     objc.msg_id_i(_sapp.macos.window, objc_selref("makeFirstResponder:"), _sapp.macos.view);
     objc.msg_id_v(_sapp.macos.window, objc_selref("center"));
+    if _sapp.desc.maximized && !_sapp.fullscreen {
+        objc.msg_id_i(_sapp.macos.window, objc_selref("zoom:"), null);
+    }
     _sapp.valid = true;
     if _sapp.fullscreen != 0 {
         objc.msg_id_i(_sapp.macos.window, objc_selref("toggleFullScreen:"), self);
@@ -36855,6 +36929,7 @@ void _objc_register__sapp_macos_view() {
     class_addMethod(cls, objc_selref("mouseDragged:"), cast(void*, &_objc__sapp_macos_view_mouseDragged), "v@:@");
     class_addMethod(cls, objc_selref("rightMouseDragged:"), cast(void*, &_objc__sapp_macos_view_rightMouseDragged), "v@:@");
     class_addMethod(cls, objc_selref("scrollWheel:"), cast(void*, &_objc__sapp_macos_view_scrollWheel), "v@:@");
+    class_addMethod(cls, objc_selref("magnifyWithEvent:"), cast(void*, &_objc__sapp_macos_view_magnifyWithEvent), "v@:@");
     class_addMethod(cls, objc_selref("keyDown:"), cast(void*, &_objc__sapp_macos_view_keyDown), "v@:@");
     class_addMethod(cls, objc_selref("performKeyEquivalent:"), cast(void*, &_objc__sapp_macos_view_performKeyEquivalent), "c@:@");
     class_addMethod(cls, objc_selref("keyUp:"), cast(void*, &_objc__sapp_macos_view_keyUp), "v@:@");
@@ -40814,6 +40889,9 @@ void _sapp_glx_init() {
     }
     _sapp.glx.ARB_multisample = _sapp_glx_extsupported("GLX_ARB_multisample", exts);
     _sapp.glx.ARB_framebuffer_srgb = _sapp_glx_extsupported("GLX_ARB_framebuffer_sRGB", exts);
+    if _sapp.glx.ARB_framebuffer_srgb == 0 {
+        _sapp.glx.ARB_framebuffer_srgb = _sapp_glx_extsupported("GLX_EXT_framebuffer_sRGB", exts);
+    }
     if _sapp_glx_extsupported("GLX_ARB_create_context", exts) != 0 {
         _sapp.glx.CreateContextAttribsARB = cast(PFNGLXCREATECONTEXTATTRIBSARBPROC, _sapp_glx_getprocaddr("glXCreateContextAttribsARB"));
         _sapp.glx.ARB_create_context = null != _sapp.glx.CreateContextAttribsARB;
@@ -41251,6 +41329,10 @@ void _sapp_x11_create_window(Visual* visual_or_null, i32 depth) {
     u32 wamask = CWBorderPixel | CWColormap | CWEventMask;
     wa.colormap = _sapp.x11.colormap;
     wa.border_pixel = 0;
+    if depth != 32 {
+        wa.background_pixel = 0x202020;
+        wamask |= cast(u32, CWBackPixel);
+    }
     wa.event_mask = StructureNotifyMask | KeyPressMask | KeyReleaseMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask | ExposureMask | FocusChangeMask | VisibilityChangeMask | EnterWindowMask | LeaveWindowMask | PropertyChangeMask;
     i32 display_width = DisplayWidth(_sapp.x11.display, _sapp.x11.screen);
     i32 display_height = DisplayHeight(_sapp.x11.display, _sapp.x11.screen);
@@ -42007,7 +42089,22 @@ void _sapp_linux_run(sapp_desc* desc) {
     }
     sapp_set_icon(&desc.icon);
     _sapp.valid = true;
+    XWindowAttributes pre_map_attrs;
+    if _sapp.desc.maximized && !_sapp.fullscreen {
+        Atom[2] max_state = {XInternAtom(_sapp.x11.display, "_NET_WM_STATE_MAXIMIZED_VERT", False), XInternAtom(_sapp.x11.display, "_NET_WM_STATE_MAXIMIZED_HORZ", False)};
+        XChangeProperty(_sapp.x11.display, _sapp.x11.window, _sapp.x11.NET_WM_STATE, XA_ATOM, 32, PropModeReplace, cast(u8*, &max_state[0]), 2);
+        XGetWindowAttributes(_sapp.x11.display, _sapp.x11.window, &pre_map_attrs);
+    }
     _sapp_x11_show_window();
+    if _sapp.desc.maximized && !_sapp.fullscreen {
+        // Wait for the window manager to apply the maximized size.
+        XWindowAttributes max_attrs;
+        XGetWindowAttributes(_sapp.x11.display, _sapp.x11.window, &max_attrs);
+        XEvent max_ev;
+        while max_attrs.width == pre_map_attrs.width && max_attrs.height == pre_map_attrs.height && _sapp_x11_wait_for_event(ConfigureNotify, 0.1, &max_ev) {
+            XGetWindowAttributes(_sapp.x11.display, _sapp.x11.window, &max_attrs);
+        }
+    }
     if _sapp.fullscreen != 0 {
         _sapp_x11_set_fullscreen(true);
     }
@@ -42021,6 +42118,9 @@ void _sapp_linux_run(sapp_desc* desc) {
             _sapp_x11_process_event(&event);
         }
         _sapp_linux_frame();
+        if _sapp.frame_count == 1 {
+            XSetWindowBackgroundPixmap(_sapp.x11.display, _sapp.x11.window, cast(u64, None));
+        }
         _sapp_x11_update_mouse_lock();
         XFlush(_sapp.x11.display);
         if _sapp.quit_requested && !_sapp.quit_ordered {

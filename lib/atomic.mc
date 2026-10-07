@@ -20,6 +20,8 @@ enum MemOrder {
 // i64  atomic_load (i64*  p);     
 // u64  atomic_load (u64*  p);
 // T*   atomic_load (T**   p);
+// u8 / i8 / u16 / i16 / bool atomic_load(p) — the narrow widths, for
+//      load and store only (device registers, flags); loads zero-extend.
 //
 // void atomic_store(i32*  p, i32  v);
 // void atomic_store(u32*  p, u32  v);

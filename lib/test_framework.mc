@@ -107,8 +107,7 @@ string test_compiler() {
     string env = env_get("MINC");
     if env.len > 0 {
         if path_is_dir(env) {
-            string base = str_concat("minc", TEST_EXE_SUFFIX);
-            defer free(base);
+            using string base = str_concat("minc", TEST_EXE_SUFFIX);
             string cand = path_join(env, base);
             free(env);
             return cand;
@@ -132,8 +131,7 @@ i64 test_ms_since(i64 t0) {
 // --- reporting ---------------------------------------------------------
 
 TestRun test_begin() {
-    string mode = env_get("MINC_AGENT");
-    defer free(mode);
+    using string mode = env_get("MINC_AGENT");
     return TestRun{ .passed = 0, .failed = 0, .unchanged = 0,
                     .json = str_equal(str_from(mode.data, mode.len), "json") };
 }
@@ -241,14 +239,12 @@ i32 test_run_dir(str dir) {
         eprint("error: no {} directory here\n", dir);
         return 1;
     }
-    string cc = test_compiler();
-    defer free(cc);
+    using string cc = test_compiler();
     if cc.len == 0 {
         eprint("error: no minc compiler found (set MINC, or put one on PATH)\n");
         return 1;
     }
-    string outdir = path_join("build", dir);
-    defer free(outdir);
+    using string outdir = path_join("build", dir);
     ignore dir_create("build");
     ignore dir_create(outdir);
 
@@ -265,20 +261,13 @@ i32 test_run_dir(str dir) {
         str stem = path_stem(name);
         if filter.len > 0 && !str_contains(stem, filter) { continue; }
 
-        string src = path_join(dir, name);
-        defer free(src);
-        string exe_base = str_concat(stem, TEST_EXE_SUFFIX);
-        defer free(exe_base);
-        string exe = path_join(outdir, exe_base);
-        defer free(exe);
-        string dep_base = str_concat(stem, ".d");
-        defer free(dep_base);
-        string deps = path_join(outdir, dep_base);
-        defer free(deps);
-        string ok_base = str_concat(stem, ".ok");
-        defer free(ok_base);
-        string okf = path_join(outdir, ok_base);
-        defer free(okf);
+        using string src = path_join(dir, name);
+        using string exe_base = str_concat(stem, TEST_EXE_SUFFIX);
+        using string exe = path_join(outdir, exe_base);
+        using string dep_base = str_concat(stem, ".d");
+        using string deps = path_join(outdir, dep_base);
+        using string ok_base = str_concat(stem, ".ok");
+        using string okf = path_join(outdir, ok_base);
 
         if changed_only && !_test_stale(deps, okf) {
             test_report_unchanged(&r, stem);

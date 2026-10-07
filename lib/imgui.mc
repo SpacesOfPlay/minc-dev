@@ -5874,58 +5874,6 @@ ImGuiTextRange* ImVector_ImGuiTextRange_insert(ImVector_ImGuiTextRange* self, Im
     return self.Data + off;
 }
 
-bool ImVector_ImGuiTextRange_contains(ImVector_ImGuiTextRange* self, ImGuiTextRange v) {
-    ImGuiTextRange* data = self.Data;
-    ImGuiTextRange* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiTextRange* ImVector_ImGuiTextRange_find(ImVector_ImGuiTextRange* self, ImGuiTextRange v) {
-    ImGuiTextRange* data = self.Data;
-    ImGuiTextRange* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiTextRange_find_index(ImVector_ImGuiTextRange* self, ImGuiTextRange v) {
-    ImGuiTextRange* data_end = self.Data + self.Size;
-    ImGuiTextRange* it = ImVector_ImGuiTextRange_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiTextRange_find_erase(ImVector_ImGuiTextRange* self, ImGuiTextRange v) {
-    ImGuiTextRange* it = ImVector_ImGuiTextRange_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTextRange_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiTextRange_find_erase_unsorted(ImVector_ImGuiTextRange* self, ImGuiTextRange v) {
-    ImGuiTextRange* it = ImVector_ImGuiTextRange_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTextRange_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiTextRange_index_from_ptr(ImVector_ImGuiTextRange* self, ImGuiTextRange* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -6470,58 +6418,6 @@ ImGuiStoragePair* ImVector_ImGuiStoragePair_insert(ImVector_ImGuiStoragePair* se
     return self.Data + off;
 }
 
-bool ImVector_ImGuiStoragePair_contains(ImVector_ImGuiStoragePair* self, ImGuiStoragePair v) {
-    ImGuiStoragePair* data = self.Data;
-    ImGuiStoragePair* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiStoragePair* ImVector_ImGuiStoragePair_find(ImVector_ImGuiStoragePair* self, ImGuiStoragePair v) {
-    ImGuiStoragePair* data = self.Data;
-    ImGuiStoragePair* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiStoragePair_find_index(ImVector_ImGuiStoragePair* self, ImGuiStoragePair v) {
-    ImGuiStoragePair* data_end = self.Data + self.Size;
-    ImGuiStoragePair* it = ImVector_ImGuiStoragePair_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiStoragePair_find_erase(ImVector_ImGuiStoragePair* self, ImGuiStoragePair v) {
-    ImGuiStoragePair* it = ImVector_ImGuiStoragePair_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiStoragePair_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiStoragePair_find_erase_unsorted(ImVector_ImGuiStoragePair* self, ImGuiStoragePair v) {
-    ImGuiStoragePair* it = ImVector_ImGuiStoragePair_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiStoragePair_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiStoragePair_index_from_ptr(ImVector_ImGuiStoragePair* self, ImGuiStoragePair* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -6768,58 +6664,6 @@ ImGuiSelectionRequest* ImVector_ImGuiSelectionRequest_insert(ImVector_ImGuiSelec
     return self.Data + off;
 }
 
-bool ImVector_ImGuiSelectionRequest_contains(ImVector_ImGuiSelectionRequest* self, ImGuiSelectionRequest v) {
-    ImGuiSelectionRequest* data = self.Data;
-    ImGuiSelectionRequest* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiSelectionRequest* ImVector_ImGuiSelectionRequest_find(ImVector_ImGuiSelectionRequest* self, ImGuiSelectionRequest v) {
-    ImGuiSelectionRequest* data = self.Data;
-    ImGuiSelectionRequest* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiSelectionRequest_find_index(ImVector_ImGuiSelectionRequest* self, ImGuiSelectionRequest v) {
-    ImGuiSelectionRequest* data_end = self.Data + self.Size;
-    ImGuiSelectionRequest* it = ImVector_ImGuiSelectionRequest_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiSelectionRequest_find_erase(ImVector_ImGuiSelectionRequest* self, ImGuiSelectionRequest v) {
-    ImGuiSelectionRequest* it = ImVector_ImGuiSelectionRequest_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiSelectionRequest_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiSelectionRequest_find_erase_unsorted(ImVector_ImGuiSelectionRequest* self, ImGuiSelectionRequest v) {
-    ImGuiSelectionRequest* it = ImVector_ImGuiSelectionRequest_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiSelectionRequest_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiSelectionRequest_index_from_ptr(ImVector_ImGuiSelectionRequest* self, ImGuiSelectionRequest* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -7064,58 +6908,6 @@ ImDrawCmd* ImVector_ImDrawCmd_insert(ImVector_ImDrawCmd* self, ImDrawCmd* it, Im
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImDrawCmd_contains(ImVector_ImDrawCmd* self, ImDrawCmd v) {
-    ImDrawCmd* data = self.Data;
-    ImDrawCmd* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImDrawCmd* ImVector_ImDrawCmd_find(ImVector_ImDrawCmd* self, ImDrawCmd v) {
-    ImDrawCmd* data = self.Data;
-    ImDrawCmd* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImDrawCmd_find_index(ImVector_ImDrawCmd* self, ImDrawCmd v) {
-    ImDrawCmd* data_end = self.Data + self.Size;
-    ImDrawCmd* it = ImVector_ImDrawCmd_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImDrawCmd_find_erase(ImVector_ImDrawCmd* self, ImDrawCmd v) {
-    ImDrawCmd* it = ImVector_ImDrawCmd_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImDrawCmd_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImDrawCmd_find_erase_unsorted(ImVector_ImDrawCmd* self, ImDrawCmd v) {
-    ImDrawCmd* it = ImVector_ImDrawCmd_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImDrawCmd_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImDrawCmd_index_from_ptr(ImVector_ImDrawCmd* self, ImDrawCmd* it) {
@@ -7662,58 +7454,6 @@ ImDrawChannel* ImVector_ImDrawChannel_insert(ImVector_ImDrawChannel* self, ImDra
     return self.Data + off;
 }
 
-bool ImVector_ImDrawChannel_contains(ImVector_ImDrawChannel* self, ImDrawChannel v) {
-    ImDrawChannel* data = self.Data;
-    ImDrawChannel* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImDrawChannel* ImVector_ImDrawChannel_find(ImVector_ImDrawChannel* self, ImDrawChannel v) {
-    ImDrawChannel* data = self.Data;
-    ImDrawChannel* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImDrawChannel_find_index(ImVector_ImDrawChannel* self, ImDrawChannel v) {
-    ImDrawChannel* data_end = self.Data + self.Size;
-    ImDrawChannel* it = ImVector_ImDrawChannel_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImDrawChannel_find_erase(ImVector_ImDrawChannel* self, ImDrawChannel v) {
-    ImDrawChannel* it = ImVector_ImDrawChannel_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImDrawChannel_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImDrawChannel_find_erase_unsorted(ImVector_ImDrawChannel* self, ImDrawChannel v) {
-    ImDrawChannel* it = ImVector_ImDrawChannel_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImDrawChannel_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImDrawChannel_index_from_ptr(ImVector_ImDrawChannel* self, ImDrawChannel* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -7958,58 +7698,6 @@ ImDrawVert* ImVector_ImDrawVert_insert(ImVector_ImDrawVert* self, ImDrawVert* it
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImDrawVert_contains(ImVector_ImDrawVert* self, ImDrawVert v) {
-    ImDrawVert* data = self.Data;
-    ImDrawVert* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImDrawVert* ImVector_ImDrawVert_find(ImVector_ImDrawVert* self, ImDrawVert v) {
-    ImDrawVert* data = self.Data;
-    ImDrawVert* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImDrawVert_find_index(ImVector_ImDrawVert* self, ImDrawVert v) {
-    ImDrawVert* data_end = self.Data + self.Size;
-    ImDrawVert* it = ImVector_ImDrawVert_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImDrawVert_find_erase(ImVector_ImDrawVert* self, ImDrawVert v) {
-    ImDrawVert* it = ImVector_ImDrawVert_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImDrawVert_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImDrawVert_find_erase_unsorted(ImVector_ImDrawVert* self, ImDrawVert v) {
-    ImDrawVert* it = ImVector_ImDrawVert_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImDrawVert_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImDrawVert_index_from_ptr(ImVector_ImDrawVert* self, ImDrawVert* it) {
@@ -8258,58 +7946,6 @@ ImVec2* ImVector_ImVec2_insert(ImVector_ImVec2* self, ImVec2* it, ImVec2 v) {
     return self.Data + off;
 }
 
-bool ImVector_ImVec2_contains(ImVector_ImVec2* self, ImVec2 v) {
-    ImVec2* data = self.Data;
-    ImVec2* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImVec2* ImVector_ImVec2_find(ImVector_ImVec2* self, ImVec2 v) {
-    ImVec2* data = self.Data;
-    ImVec2* data_end = self.Data + self.Size;
-    while data < data_end {
-        if op_eq_ImVec2_ImVec2(*data, v) != 0 {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImVec2_find_index(ImVector_ImVec2* self, ImVec2 v) {
-    ImVec2* data_end = self.Data + self.Size;
-    ImVec2* it = ImVector_ImVec2_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImVec2_find_erase(ImVector_ImVec2* self, ImVec2 v) {
-    ImVec2* it = ImVector_ImVec2_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImVec2_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImVec2_find_erase_unsorted(ImVector_ImVec2* self, ImVec2 v) {
-    ImVec2* it = ImVector_ImVec2_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImVec2_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImVec2_index_from_ptr(ImVector_ImVec2* self, ImVec2* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -8556,58 +8192,6 @@ ImVec4* ImVector_ImVec4_insert(ImVector_ImVec4* self, ImVec4* it, ImVec4 v) {
     return self.Data + off;
 }
 
-bool ImVector_ImVec4_contains(ImVector_ImVec4* self, ImVec4 v) {
-    ImVec4* data = self.Data;
-    ImVec4* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImVec4* ImVector_ImVec4_find(ImVector_ImVec4* self, ImVec4 v) {
-    ImVec4* data = self.Data;
-    ImVec4* data_end = self.Data + self.Size;
-    while data < data_end {
-        if op_eq_ImVec4_ImVec4(*data, v) != 0 {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImVec4_find_index(ImVector_ImVec4* self, ImVec4 v) {
-    ImVec4* data_end = self.Data + self.Size;
-    ImVec4* it = ImVector_ImVec4_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImVec4_find_erase(ImVector_ImVec4* self, ImVec4 v) {
-    ImVec4* it = ImVector_ImVec4_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImVec4_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImVec4_find_erase_unsorted(ImVector_ImVec4* self, ImVec4 v) {
-    ImVec4* it = ImVector_ImVec4_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImVec4_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImVec4_index_from_ptr(ImVector_ImVec4* self, ImVec4* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -8852,58 +8436,6 @@ ImTextureRef* ImVector_ImTextureRef_insert(ImVector_ImTextureRef* self, ImTextur
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImTextureRef_contains(ImVector_ImTextureRef* self, ImTextureRef v) {
-    ImTextureRef* data = self.Data;
-    ImTextureRef* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImTextureRef* ImVector_ImTextureRef_find(ImVector_ImTextureRef* self, ImTextureRef v) {
-    ImTextureRef* data = self.Data;
-    ImTextureRef* data_end = self.Data + self.Size;
-    while data < data_end {
-        if op_eq_ImTextureRef_ImTextureRef(*data, v) != 0 {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImTextureRef_find_index(ImVector_ImTextureRef* self, ImTextureRef v) {
-    ImTextureRef* data_end = self.Data + self.Size;
-    ImTextureRef* it = ImVector_ImTextureRef_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImTextureRef_find_erase(ImVector_ImTextureRef* self, ImTextureRef v) {
-    ImTextureRef* it = ImVector_ImTextureRef_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImTextureRef_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImTextureRef_find_erase_unsorted(ImVector_ImTextureRef* self, ImTextureRef v) {
-    ImTextureRef* it = ImVector_ImTextureRef_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImTextureRef_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImTextureRef_index_from_ptr(ImVector_ImTextureRef* self, ImTextureRef* it) {
@@ -10046,58 +9578,6 @@ ImTextureRect* ImVector_ImTextureRect_insert(ImVector_ImTextureRect* self, ImTex
     return self.Data + off;
 }
 
-bool ImVector_ImTextureRect_contains(ImVector_ImTextureRect* self, ImTextureRect v) {
-    ImTextureRect* data = self.Data;
-    ImTextureRect* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImTextureRect* ImVector_ImTextureRect_find(ImVector_ImTextureRect* self, ImTextureRect v) {
-    ImTextureRect* data = self.Data;
-    ImTextureRect* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImTextureRect_find_index(ImVector_ImTextureRect* self, ImTextureRect v) {
-    ImTextureRect* data_end = self.Data + self.Size;
-    ImTextureRect* it = ImVector_ImTextureRect_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImTextureRect_find_erase(ImVector_ImTextureRect* self, ImTextureRect v) {
-    ImTextureRect* it = ImVector_ImTextureRect_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImTextureRect_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImTextureRect_find_erase_unsorted(ImVector_ImTextureRect* self, ImTextureRect v) {
-    ImTextureRect* it = ImVector_ImTextureRect_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImTextureRect_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImTextureRect_index_from_ptr(ImVector_ImTextureRect* self, ImTextureRect* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -10938,58 +10418,6 @@ ImFontConfig* ImVector_ImFontConfig_insert(ImVector_ImFontConfig* self, ImFontCo
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImFontConfig_contains(ImVector_ImFontConfig* self, ImFontConfig v) {
-    ImFontConfig* data = self.Data;
-    ImFontConfig* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImFontConfig* ImVector_ImFontConfig_find(ImVector_ImFontConfig* self, ImFontConfig v) {
-    ImFontConfig* data = self.Data;
-    ImFontConfig* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImFontConfig_find_index(ImVector_ImFontConfig* self, ImFontConfig v) {
-    ImFontConfig* data_end = self.Data + self.Size;
-    ImFontConfig* it = ImVector_ImFontConfig_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImFontConfig_find_erase(ImVector_ImFontConfig* self, ImFontConfig v) {
-    ImFontConfig* it = ImVector_ImFontConfig_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImFontConfig_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImFontConfig_find_erase_unsorted(ImVector_ImFontConfig* self, ImFontConfig v) {
-    ImFontConfig* it = ImVector_ImFontConfig_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImFontConfig_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImFontConfig_index_from_ptr(ImVector_ImFontConfig* self, ImFontConfig* it) {
@@ -12132,58 +11560,6 @@ ImFontGlyph* ImVector_ImFontGlyph_insert(ImVector_ImFontGlyph* self, ImFontGlyph
     return self.Data + off;
 }
 
-bool ImVector_ImFontGlyph_contains(ImVector_ImFontGlyph* self, ImFontGlyph v) {
-    ImFontGlyph* data = self.Data;
-    ImFontGlyph* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImFontGlyph* ImVector_ImFontGlyph_find(ImVector_ImFontGlyph* self, ImFontGlyph v) {
-    ImFontGlyph* data = self.Data;
-    ImFontGlyph* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImFontGlyph_find_index(ImVector_ImFontGlyph* self, ImFontGlyph v) {
-    ImFontGlyph* data_end = self.Data + self.Size;
-    ImFontGlyph* it = ImVector_ImFontGlyph_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImFontGlyph_find_erase(ImVector_ImFontGlyph* self, ImFontGlyph v) {
-    ImFontGlyph* it = ImVector_ImFontGlyph_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImFontGlyph_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImFontGlyph_find_erase_unsorted(ImVector_ImFontGlyph* self, ImFontGlyph v) {
-    ImFontGlyph* it = ImVector_ImFontGlyph_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImFontGlyph_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImFontGlyph_index_from_ptr(ImVector_ImFontGlyph* self, ImFontGlyph* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -12726,58 +12102,6 @@ ImGuiPlatformMonitor* ImVector_ImGuiPlatformMonitor_insert(ImVector_ImGuiPlatfor
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiPlatformMonitor_contains(ImVector_ImGuiPlatformMonitor* self, ImGuiPlatformMonitor v) {
-    ImGuiPlatformMonitor* data = self.Data;
-    ImGuiPlatformMonitor* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiPlatformMonitor* ImVector_ImGuiPlatformMonitor_find(ImVector_ImGuiPlatformMonitor* self, ImGuiPlatformMonitor v) {
-    ImGuiPlatformMonitor* data = self.Data;
-    ImGuiPlatformMonitor* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiPlatformMonitor_find_index(ImVector_ImGuiPlatformMonitor* self, ImGuiPlatformMonitor v) {
-    ImGuiPlatformMonitor* data_end = self.Data + self.Size;
-    ImGuiPlatformMonitor* it = ImVector_ImGuiPlatformMonitor_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiPlatformMonitor_find_erase(ImVector_ImGuiPlatformMonitor* self, ImGuiPlatformMonitor v) {
-    ImGuiPlatformMonitor* it = ImVector_ImGuiPlatformMonitor_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiPlatformMonitor_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiPlatformMonitor_find_erase_unsorted(ImVector_ImGuiPlatformMonitor* self, ImGuiPlatformMonitor v) {
-    ImGuiPlatformMonitor* it = ImVector_ImGuiPlatformMonitor_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiPlatformMonitor_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiPlatformMonitor_index_from_ptr(ImVector_ImGuiPlatformMonitor* self, ImGuiPlatformMonitor* it) {
@@ -13622,58 +12946,6 @@ ImGuiKeyRoutingData* ImVector_ImGuiKeyRoutingData_insert(ImVector_ImGuiKeyRoutin
     return self.Data + off;
 }
 
-bool ImVector_ImGuiKeyRoutingData_contains(ImVector_ImGuiKeyRoutingData* self, ImGuiKeyRoutingData v) {
-    ImGuiKeyRoutingData* data = self.Data;
-    ImGuiKeyRoutingData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiKeyRoutingData* ImVector_ImGuiKeyRoutingData_find(ImVector_ImGuiKeyRoutingData* self, ImGuiKeyRoutingData v) {
-    ImGuiKeyRoutingData* data = self.Data;
-    ImGuiKeyRoutingData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiKeyRoutingData_find_index(ImVector_ImGuiKeyRoutingData* self, ImGuiKeyRoutingData v) {
-    ImGuiKeyRoutingData* data_end = self.Data + self.Size;
-    ImGuiKeyRoutingData* it = ImVector_ImGuiKeyRoutingData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiKeyRoutingData_find_erase(ImVector_ImGuiKeyRoutingData* self, ImGuiKeyRoutingData v) {
-    ImGuiKeyRoutingData* it = ImVector_ImGuiKeyRoutingData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiKeyRoutingData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiKeyRoutingData_find_erase_unsorted(ImVector_ImGuiKeyRoutingData* self, ImGuiKeyRoutingData v) {
-    ImGuiKeyRoutingData* it = ImVector_ImGuiKeyRoutingData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiKeyRoutingData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiKeyRoutingData_index_from_ptr(ImVector_ImGuiKeyRoutingData* self, ImGuiKeyRoutingData* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -13920,58 +13192,6 @@ ImGuiListClipperRange* ImVector_ImGuiListClipperRange_insert(ImVector_ImGuiListC
     return self.Data + off;
 }
 
-bool ImVector_ImGuiListClipperRange_contains(ImVector_ImGuiListClipperRange* self, ImGuiListClipperRange v) {
-    ImGuiListClipperRange* data = self.Data;
-    ImGuiListClipperRange* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiListClipperRange* ImVector_ImGuiListClipperRange_find(ImVector_ImGuiListClipperRange* self, ImGuiListClipperRange v) {
-    ImGuiListClipperRange* data = self.Data;
-    ImGuiListClipperRange* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiListClipperRange_find_index(ImVector_ImGuiListClipperRange* self, ImGuiListClipperRange v) {
-    ImGuiListClipperRange* data_end = self.Data + self.Size;
-    ImGuiListClipperRange* it = ImVector_ImGuiListClipperRange_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiListClipperRange_find_erase(ImVector_ImGuiListClipperRange* self, ImGuiListClipperRange v) {
-    ImGuiListClipperRange* it = ImVector_ImGuiListClipperRange_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiListClipperRange_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiListClipperRange_find_erase_unsorted(ImVector_ImGuiListClipperRange* self, ImGuiListClipperRange v) {
-    ImGuiListClipperRange* it = ImVector_ImGuiListClipperRange_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiListClipperRange_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiListClipperRange_index_from_ptr(ImVector_ImGuiListClipperRange* self, ImGuiListClipperRange* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -14216,58 +13436,6 @@ ImGuiOldColumnData* ImVector_ImGuiOldColumnData_insert(ImVector_ImGuiOldColumnDa
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiOldColumnData_contains(ImVector_ImGuiOldColumnData* self, ImGuiOldColumnData v) {
-    ImGuiOldColumnData* data = self.Data;
-    ImGuiOldColumnData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiOldColumnData* ImVector_ImGuiOldColumnData_find(ImVector_ImGuiOldColumnData* self, ImGuiOldColumnData v) {
-    ImGuiOldColumnData* data = self.Data;
-    ImGuiOldColumnData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiOldColumnData_find_index(ImVector_ImGuiOldColumnData* self, ImGuiOldColumnData v) {
-    ImGuiOldColumnData* data_end = self.Data + self.Size;
-    ImGuiOldColumnData* it = ImVector_ImGuiOldColumnData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiOldColumnData_find_erase(ImVector_ImGuiOldColumnData* self, ImGuiOldColumnData v) {
-    ImGuiOldColumnData* it = ImVector_ImGuiOldColumnData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiOldColumnData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiOldColumnData_find_erase_unsorted(ImVector_ImGuiOldColumnData* self, ImGuiOldColumnData v) {
-    ImGuiOldColumnData* it = ImVector_ImGuiOldColumnData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiOldColumnData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiOldColumnData_index_from_ptr(ImVector_ImGuiOldColumnData* self, ImGuiOldColumnData* it) {
@@ -14814,58 +13982,6 @@ ImGuiDockRequest* ImVector_ImGuiDockRequest_insert(ImVector_ImGuiDockRequest* se
     return self.Data + off;
 }
 
-bool ImVector_ImGuiDockRequest_contains(ImVector_ImGuiDockRequest* self, ImGuiDockRequest v) {
-    ImGuiDockRequest* data = self.Data;
-    ImGuiDockRequest* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiDockRequest* ImVector_ImGuiDockRequest_find(ImVector_ImGuiDockRequest* self, ImGuiDockRequest v) {
-    ImGuiDockRequest* data = self.Data;
-    ImGuiDockRequest* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiDockRequest_find_index(ImVector_ImGuiDockRequest* self, ImGuiDockRequest v) {
-    ImGuiDockRequest* data_end = self.Data + self.Size;
-    ImGuiDockRequest* it = ImVector_ImGuiDockRequest_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiDockRequest_find_erase(ImVector_ImGuiDockRequest* self, ImGuiDockRequest v) {
-    ImGuiDockRequest* it = ImVector_ImGuiDockRequest_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiDockRequest_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiDockRequest_find_erase_unsorted(ImVector_ImGuiDockRequest* self, ImGuiDockRequest v) {
-    ImGuiDockRequest* it = ImVector_ImGuiDockRequest_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiDockRequest_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiDockRequest_index_from_ptr(ImVector_ImGuiDockRequest* self, ImGuiDockRequest* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -15112,58 +14228,6 @@ ImGuiDockNodeSettings* ImVector_ImGuiDockNodeSettings_insert(ImVector_ImGuiDockN
     return self.Data + off;
 }
 
-bool ImVector_ImGuiDockNodeSettings_contains(ImVector_ImGuiDockNodeSettings* self, ImGuiDockNodeSettings v) {
-    ImGuiDockNodeSettings* data = self.Data;
-    ImGuiDockNodeSettings* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiDockNodeSettings* ImVector_ImGuiDockNodeSettings_find(ImVector_ImGuiDockNodeSettings* self, ImGuiDockNodeSettings v) {
-    ImGuiDockNodeSettings* data = self.Data;
-    ImGuiDockNodeSettings* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiDockNodeSettings_find_index(ImVector_ImGuiDockNodeSettings* self, ImGuiDockNodeSettings v) {
-    ImGuiDockNodeSettings* data_end = self.Data + self.Size;
-    ImGuiDockNodeSettings* it = ImVector_ImGuiDockNodeSettings_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiDockNodeSettings_find_erase(ImVector_ImGuiDockNodeSettings* self, ImGuiDockNodeSettings v) {
-    ImGuiDockNodeSettings* it = ImVector_ImGuiDockNodeSettings_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiDockNodeSettings_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiDockNodeSettings_find_erase_unsorted(ImVector_ImGuiDockNodeSettings* self, ImGuiDockNodeSettings v) {
-    ImGuiDockNodeSettings* it = ImVector_ImGuiDockNodeSettings_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiDockNodeSettings_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiDockNodeSettings_index_from_ptr(ImVector_ImGuiDockNodeSettings* self, ImGuiDockNodeSettings* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -15408,58 +14472,6 @@ ImGuiStackLevelInfo* ImVector_ImGuiStackLevelInfo_insert(ImVector_ImGuiStackLeve
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiStackLevelInfo_contains(ImVector_ImGuiStackLevelInfo* self, ImGuiStackLevelInfo v) {
-    ImGuiStackLevelInfo* data = self.Data;
-    ImGuiStackLevelInfo* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiStackLevelInfo* ImVector_ImGuiStackLevelInfo_find(ImVector_ImGuiStackLevelInfo* self, ImGuiStackLevelInfo v) {
-    ImGuiStackLevelInfo* data = self.Data;
-    ImGuiStackLevelInfo* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiStackLevelInfo_find_index(ImVector_ImGuiStackLevelInfo* self, ImGuiStackLevelInfo v) {
-    ImGuiStackLevelInfo* data_end = self.Data + self.Size;
-    ImGuiStackLevelInfo* it = ImVector_ImGuiStackLevelInfo_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiStackLevelInfo_find_erase(ImVector_ImGuiStackLevelInfo* self, ImGuiStackLevelInfo v) {
-    ImGuiStackLevelInfo* it = ImVector_ImGuiStackLevelInfo_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiStackLevelInfo_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiStackLevelInfo_find_erase_unsorted(ImVector_ImGuiStackLevelInfo* self, ImGuiStackLevelInfo v) {
-    ImGuiStackLevelInfo* it = ImVector_ImGuiStackLevelInfo_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiStackLevelInfo_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiStackLevelInfo_index_from_ptr(ImVector_ImGuiStackLevelInfo* self, ImGuiStackLevelInfo* it) {
@@ -16006,58 +15018,6 @@ ImGuiInputEvent* ImVector_ImGuiInputEvent_insert(ImVector_ImGuiInputEvent* self,
     return self.Data + off;
 }
 
-bool ImVector_ImGuiInputEvent_contains(ImVector_ImGuiInputEvent* self, ImGuiInputEvent v) {
-    ImGuiInputEvent* data = self.Data;
-    ImGuiInputEvent* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiInputEvent* ImVector_ImGuiInputEvent_find(ImVector_ImGuiInputEvent* self, ImGuiInputEvent v) {
-    ImGuiInputEvent* data = self.Data;
-    ImGuiInputEvent* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiInputEvent_find_index(ImVector_ImGuiInputEvent* self, ImGuiInputEvent v) {
-    ImGuiInputEvent* data_end = self.Data + self.Size;
-    ImGuiInputEvent* it = ImVector_ImGuiInputEvent_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiInputEvent_find_erase(ImVector_ImGuiInputEvent* self, ImGuiInputEvent v) {
-    ImGuiInputEvent* it = ImVector_ImGuiInputEvent_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiInputEvent_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiInputEvent_find_erase_unsorted(ImVector_ImGuiInputEvent* self, ImGuiInputEvent v) {
-    ImGuiInputEvent* it = ImVector_ImGuiInputEvent_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiInputEvent_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiInputEvent_index_from_ptr(ImVector_ImGuiInputEvent* self, ImGuiInputEvent* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -16302,58 +15262,6 @@ ImGuiWindowStackData* ImVector_ImGuiWindowStackData_insert(ImVector_ImGuiWindowS
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiWindowStackData_contains(ImVector_ImGuiWindowStackData* self, ImGuiWindowStackData v) {
-    ImGuiWindowStackData* data = self.Data;
-    ImGuiWindowStackData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiWindowStackData* ImVector_ImGuiWindowStackData_find(ImVector_ImGuiWindowStackData* self, ImGuiWindowStackData v) {
-    ImGuiWindowStackData* data = self.Data;
-    ImGuiWindowStackData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiWindowStackData_find_index(ImVector_ImGuiWindowStackData* self, ImGuiWindowStackData v) {
-    ImGuiWindowStackData* data_end = self.Data + self.Size;
-    ImGuiWindowStackData* it = ImVector_ImGuiWindowStackData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiWindowStackData_find_erase(ImVector_ImGuiWindowStackData* self, ImGuiWindowStackData v) {
-    ImGuiWindowStackData* it = ImVector_ImGuiWindowStackData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiWindowStackData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiWindowStackData_find_erase_unsorted(ImVector_ImGuiWindowStackData* self, ImGuiWindowStackData v) {
-    ImGuiWindowStackData* it = ImVector_ImGuiWindowStackData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiWindowStackData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiWindowStackData_index_from_ptr(ImVector_ImGuiWindowStackData* self, ImGuiWindowStackData* it) {
@@ -16602,58 +15510,6 @@ ImGuiColorMod* ImVector_ImGuiColorMod_insert(ImVector_ImGuiColorMod* self, ImGui
     return self.Data + off;
 }
 
-bool ImVector_ImGuiColorMod_contains(ImVector_ImGuiColorMod* self, ImGuiColorMod v) {
-    ImGuiColorMod* data = self.Data;
-    ImGuiColorMod* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiColorMod* ImVector_ImGuiColorMod_find(ImVector_ImGuiColorMod* self, ImGuiColorMod v) {
-    ImGuiColorMod* data = self.Data;
-    ImGuiColorMod* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiColorMod_find_index(ImVector_ImGuiColorMod* self, ImGuiColorMod v) {
-    ImGuiColorMod* data_end = self.Data + self.Size;
-    ImGuiColorMod* it = ImVector_ImGuiColorMod_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiColorMod_find_erase(ImVector_ImGuiColorMod* self, ImGuiColorMod v) {
-    ImGuiColorMod* it = ImVector_ImGuiColorMod_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiColorMod_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiColorMod_find_erase_unsorted(ImVector_ImGuiColorMod* self, ImGuiColorMod v) {
-    ImGuiColorMod* it = ImVector_ImGuiColorMod_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiColorMod_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiColorMod_index_from_ptr(ImVector_ImGuiColorMod* self, ImGuiColorMod* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -16898,58 +15754,6 @@ ImGuiStyleMod* ImVector_ImGuiStyleMod_insert(ImVector_ImGuiStyleMod* self, ImGui
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiStyleMod_contains(ImVector_ImGuiStyleMod* self, ImGuiStyleMod v) {
-    ImGuiStyleMod* data = self.Data;
-    ImGuiStyleMod* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiStyleMod* ImVector_ImGuiStyleMod_find(ImVector_ImGuiStyleMod* self, ImGuiStyleMod v) {
-    ImGuiStyleMod* data = self.Data;
-    ImGuiStyleMod* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiStyleMod_find_index(ImVector_ImGuiStyleMod* self, ImGuiStyleMod v) {
-    ImGuiStyleMod* data_end = self.Data + self.Size;
-    ImGuiStyleMod* it = ImVector_ImGuiStyleMod_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiStyleMod_find_erase(ImVector_ImGuiStyleMod* self, ImGuiStyleMod v) {
-    ImGuiStyleMod* it = ImVector_ImGuiStyleMod_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiStyleMod_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiStyleMod_find_erase_unsorted(ImVector_ImGuiStyleMod* self, ImGuiStyleMod v) {
-    ImGuiStyleMod* it = ImVector_ImGuiStyleMod_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiStyleMod_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiStyleMod_index_from_ptr(ImVector_ImGuiStyleMod* self, ImGuiStyleMod* it) {
@@ -17198,58 +16002,6 @@ ImFontStackData* ImVector_ImFontStackData_insert(ImVector_ImFontStackData* self,
     return self.Data + off;
 }
 
-bool ImVector_ImFontStackData_contains(ImVector_ImFontStackData* self, ImFontStackData v) {
-    ImFontStackData* data = self.Data;
-    ImFontStackData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImFontStackData* ImVector_ImFontStackData_find(ImVector_ImFontStackData* self, ImFontStackData v) {
-    ImFontStackData* data = self.Data;
-    ImFontStackData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImFontStackData_find_index(ImVector_ImFontStackData* self, ImFontStackData v) {
-    ImFontStackData* data_end = self.Data + self.Size;
-    ImFontStackData* it = ImVector_ImFontStackData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImFontStackData_find_erase(ImVector_ImFontStackData* self, ImFontStackData v) {
-    ImFontStackData* it = ImVector_ImFontStackData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImFontStackData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImFontStackData_find_erase_unsorted(ImVector_ImFontStackData* self, ImFontStackData v) {
-    ImFontStackData* it = ImVector_ImFontStackData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImFontStackData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImFontStackData_index_from_ptr(ImVector_ImFontStackData* self, ImFontStackData* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -17494,58 +16246,6 @@ ImGuiFocusScopeData* ImVector_ImGuiFocusScopeData_insert(ImVector_ImGuiFocusScop
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiFocusScopeData_contains(ImVector_ImGuiFocusScopeData* self, ImGuiFocusScopeData v) {
-    ImGuiFocusScopeData* data = self.Data;
-    ImGuiFocusScopeData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiFocusScopeData* ImVector_ImGuiFocusScopeData_find(ImVector_ImGuiFocusScopeData* self, ImGuiFocusScopeData v) {
-    ImGuiFocusScopeData* data = self.Data;
-    ImGuiFocusScopeData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiFocusScopeData_find_index(ImVector_ImGuiFocusScopeData* self, ImGuiFocusScopeData v) {
-    ImGuiFocusScopeData* data_end = self.Data + self.Size;
-    ImGuiFocusScopeData* it = ImVector_ImGuiFocusScopeData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiFocusScopeData_find_erase(ImVector_ImGuiFocusScopeData* self, ImGuiFocusScopeData v) {
-    ImGuiFocusScopeData* it = ImVector_ImGuiFocusScopeData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiFocusScopeData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiFocusScopeData_find_erase_unsorted(ImVector_ImGuiFocusScopeData* self, ImGuiFocusScopeData v) {
-    ImGuiFocusScopeData* it = ImVector_ImGuiFocusScopeData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiFocusScopeData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiFocusScopeData_index_from_ptr(ImVector_ImGuiFocusScopeData* self, ImGuiFocusScopeData* it) {
@@ -18092,58 +16792,6 @@ ImGuiGroupData* ImVector_ImGuiGroupData_insert(ImVector_ImGuiGroupData* self, Im
     return self.Data + off;
 }
 
-bool ImVector_ImGuiGroupData_contains(ImVector_ImGuiGroupData* self, ImGuiGroupData v) {
-    ImGuiGroupData* data = self.Data;
-    ImGuiGroupData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiGroupData* ImVector_ImGuiGroupData_find(ImVector_ImGuiGroupData* self, ImGuiGroupData v) {
-    ImGuiGroupData* data = self.Data;
-    ImGuiGroupData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiGroupData_find_index(ImVector_ImGuiGroupData* self, ImGuiGroupData v) {
-    ImGuiGroupData* data_end = self.Data + self.Size;
-    ImGuiGroupData* it = ImVector_ImGuiGroupData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiGroupData_find_erase(ImVector_ImGuiGroupData* self, ImGuiGroupData v) {
-    ImGuiGroupData* it = ImVector_ImGuiGroupData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiGroupData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiGroupData_find_erase_unsorted(ImVector_ImGuiGroupData* self, ImGuiGroupData v) {
-    ImGuiGroupData* it = ImVector_ImGuiGroupData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiGroupData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiGroupData_index_from_ptr(ImVector_ImGuiGroupData* self, ImGuiGroupData* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -18390,58 +17038,6 @@ ImGuiPopupData* ImVector_ImGuiPopupData_insert(ImVector_ImGuiPopupData* self, Im
     return self.Data + off;
 }
 
-bool ImVector_ImGuiPopupData_contains(ImVector_ImGuiPopupData* self, ImGuiPopupData v) {
-    ImGuiPopupData* data = self.Data;
-    ImGuiPopupData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiPopupData* ImVector_ImGuiPopupData_find(ImVector_ImGuiPopupData* self, ImGuiPopupData v) {
-    ImGuiPopupData* data = self.Data;
-    ImGuiPopupData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiPopupData_find_index(ImVector_ImGuiPopupData* self, ImGuiPopupData v) {
-    ImGuiPopupData* data_end = self.Data + self.Size;
-    ImGuiPopupData* it = ImVector_ImGuiPopupData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiPopupData_find_erase(ImVector_ImGuiPopupData* self, ImGuiPopupData v) {
-    ImGuiPopupData* it = ImVector_ImGuiPopupData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiPopupData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiPopupData_find_erase_unsorted(ImVector_ImGuiPopupData* self, ImGuiPopupData v) {
-    ImGuiPopupData* it = ImVector_ImGuiPopupData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiPopupData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiPopupData_index_from_ptr(ImVector_ImGuiPopupData* self, ImGuiPopupData* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -18686,58 +17282,6 @@ ImGuiTreeNodeStackData* ImVector_ImGuiTreeNodeStackData_insert(ImVector_ImGuiTre
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiTreeNodeStackData_contains(ImVector_ImGuiTreeNodeStackData* self, ImGuiTreeNodeStackData v) {
-    ImGuiTreeNodeStackData* data = self.Data;
-    ImGuiTreeNodeStackData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiTreeNodeStackData* ImVector_ImGuiTreeNodeStackData_find(ImVector_ImGuiTreeNodeStackData* self, ImGuiTreeNodeStackData v) {
-    ImGuiTreeNodeStackData* data = self.Data;
-    ImGuiTreeNodeStackData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiTreeNodeStackData_find_index(ImVector_ImGuiTreeNodeStackData* self, ImGuiTreeNodeStackData v) {
-    ImGuiTreeNodeStackData* data_end = self.Data + self.Size;
-    ImGuiTreeNodeStackData* it = ImVector_ImGuiTreeNodeStackData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiTreeNodeStackData_find_erase(ImVector_ImGuiTreeNodeStackData* self, ImGuiTreeNodeStackData v) {
-    ImGuiTreeNodeStackData* it = ImVector_ImGuiTreeNodeStackData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTreeNodeStackData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiTreeNodeStackData_find_erase_unsorted(ImVector_ImGuiTreeNodeStackData* self, ImGuiTreeNodeStackData v) {
-    ImGuiTreeNodeStackData* it = ImVector_ImGuiTreeNodeStackData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTreeNodeStackData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiTreeNodeStackData_index_from_ptr(ImVector_ImGuiTreeNodeStackData* self, ImGuiTreeNodeStackData* it) {
@@ -19582,58 +18126,6 @@ ImGuiListClipperData* ImVector_ImGuiListClipperData_insert(ImVector_ImGuiListCli
     return self.Data + off;
 }
 
-bool ImVector_ImGuiListClipperData_contains(ImVector_ImGuiListClipperData* self, ImGuiListClipperData v) {
-    ImGuiListClipperData* data = self.Data;
-    ImGuiListClipperData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiListClipperData* ImVector_ImGuiListClipperData_find(ImVector_ImGuiListClipperData* self, ImGuiListClipperData v) {
-    ImGuiListClipperData* data = self.Data;
-    ImGuiListClipperData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiListClipperData_find_index(ImVector_ImGuiListClipperData* self, ImGuiListClipperData v) {
-    ImGuiListClipperData* data_end = self.Data + self.Size;
-    ImGuiListClipperData* it = ImVector_ImGuiListClipperData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiListClipperData_find_erase(ImVector_ImGuiListClipperData* self, ImGuiListClipperData v) {
-    ImGuiListClipperData* it = ImVector_ImGuiListClipperData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiListClipperData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiListClipperData_find_erase_unsorted(ImVector_ImGuiListClipperData* self, ImGuiListClipperData v) {
-    ImGuiListClipperData* it = ImVector_ImGuiListClipperData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiListClipperData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiListClipperData_index_from_ptr(ImVector_ImGuiListClipperData* self, ImGuiListClipperData* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -19878,58 +18370,6 @@ ImGuiTableTempData* ImVector_ImGuiTableTempData_insert(ImVector_ImGuiTableTempDa
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiTableTempData_contains(ImVector_ImGuiTableTempData* self, ImGuiTableTempData v) {
-    ImGuiTableTempData* data = self.Data;
-    ImGuiTableTempData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiTableTempData* ImVector_ImGuiTableTempData_find(ImVector_ImGuiTableTempData* self, ImGuiTableTempData v) {
-    ImGuiTableTempData* data = self.Data;
-    ImGuiTableTempData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiTableTempData_find_index(ImVector_ImGuiTableTempData* self, ImGuiTableTempData v) {
-    ImGuiTableTempData* data_end = self.Data + self.Size;
-    ImGuiTableTempData* it = ImVector_ImGuiTableTempData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiTableTempData_find_erase(ImVector_ImGuiTableTempData* self, ImGuiTableTempData v) {
-    ImGuiTableTempData* it = ImVector_ImGuiTableTempData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTableTempData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiTableTempData_find_erase_unsorted(ImVector_ImGuiTableTempData* self, ImGuiTableTempData v) {
-    ImGuiTableTempData* it = ImVector_ImGuiTableTempData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTableTempData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiTableTempData_index_from_ptr(ImVector_ImGuiTableTempData* self, ImGuiTableTempData* it) {
@@ -20178,58 +18618,6 @@ ImGuiPtrOrIndex* ImVector_ImGuiPtrOrIndex_insert(ImVector_ImGuiPtrOrIndex* self,
     return self.Data + off;
 }
 
-bool ImVector_ImGuiPtrOrIndex_contains(ImVector_ImGuiPtrOrIndex* self, ImGuiPtrOrIndex v) {
-    ImGuiPtrOrIndex* data = self.Data;
-    ImGuiPtrOrIndex* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiPtrOrIndex* ImVector_ImGuiPtrOrIndex_find(ImVector_ImGuiPtrOrIndex* self, ImGuiPtrOrIndex v) {
-    ImGuiPtrOrIndex* data = self.Data;
-    ImGuiPtrOrIndex* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiPtrOrIndex_find_index(ImVector_ImGuiPtrOrIndex* self, ImGuiPtrOrIndex v) {
-    ImGuiPtrOrIndex* data_end = self.Data + self.Size;
-    ImGuiPtrOrIndex* it = ImVector_ImGuiPtrOrIndex_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiPtrOrIndex_find_erase(ImVector_ImGuiPtrOrIndex* self, ImGuiPtrOrIndex v) {
-    ImGuiPtrOrIndex* it = ImVector_ImGuiPtrOrIndex_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiPtrOrIndex_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiPtrOrIndex_find_erase_unsorted(ImVector_ImGuiPtrOrIndex* self, ImGuiPtrOrIndex v) {
-    ImGuiPtrOrIndex* it = ImVector_ImGuiPtrOrIndex_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiPtrOrIndex_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiPtrOrIndex_index_from_ptr(ImVector_ImGuiPtrOrIndex* self, ImGuiPtrOrIndex* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -20476,58 +18864,6 @@ ImGuiShrinkWidthItem* ImVector_ImGuiShrinkWidthItem_insert(ImVector_ImGuiShrinkW
     return self.Data + off;
 }
 
-bool ImVector_ImGuiShrinkWidthItem_contains(ImVector_ImGuiShrinkWidthItem* self, ImGuiShrinkWidthItem v) {
-    ImGuiShrinkWidthItem* data = self.Data;
-    ImGuiShrinkWidthItem* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiShrinkWidthItem* ImVector_ImGuiShrinkWidthItem_find(ImVector_ImGuiShrinkWidthItem* self, ImGuiShrinkWidthItem v) {
-    ImGuiShrinkWidthItem* data = self.Data;
-    ImGuiShrinkWidthItem* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiShrinkWidthItem_find_index(ImVector_ImGuiShrinkWidthItem* self, ImGuiShrinkWidthItem v) {
-    ImGuiShrinkWidthItem* data_end = self.Data + self.Size;
-    ImGuiShrinkWidthItem* it = ImVector_ImGuiShrinkWidthItem_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiShrinkWidthItem_find_erase(ImVector_ImGuiShrinkWidthItem* self, ImGuiShrinkWidthItem v) {
-    ImGuiShrinkWidthItem* it = ImVector_ImGuiShrinkWidthItem_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiShrinkWidthItem_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiShrinkWidthItem_find_erase_unsorted(ImVector_ImGuiShrinkWidthItem* self, ImGuiShrinkWidthItem v) {
-    ImGuiShrinkWidthItem* it = ImVector_ImGuiShrinkWidthItem_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiShrinkWidthItem_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiShrinkWidthItem_index_from_ptr(ImVector_ImGuiShrinkWidthItem* self, ImGuiShrinkWidthItem* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -20772,58 +19108,6 @@ ImGuiMultiSelectTempData* ImVector_ImGuiMultiSelectTempData_insert(ImVector_ImGu
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiMultiSelectTempData_contains(ImVector_ImGuiMultiSelectTempData* self, ImGuiMultiSelectTempData v) {
-    ImGuiMultiSelectTempData* data = self.Data;
-    ImGuiMultiSelectTempData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiMultiSelectTempData* ImVector_ImGuiMultiSelectTempData_find(ImVector_ImGuiMultiSelectTempData* self, ImGuiMultiSelectTempData v) {
-    ImGuiMultiSelectTempData* data = self.Data;
-    ImGuiMultiSelectTempData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiMultiSelectTempData_find_index(ImVector_ImGuiMultiSelectTempData* self, ImGuiMultiSelectTempData v) {
-    ImGuiMultiSelectTempData* data_end = self.Data + self.Size;
-    ImGuiMultiSelectTempData* it = ImVector_ImGuiMultiSelectTempData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiMultiSelectTempData_find_erase(ImVector_ImGuiMultiSelectTempData* self, ImGuiMultiSelectTempData v) {
-    ImGuiMultiSelectTempData* it = ImVector_ImGuiMultiSelectTempData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiMultiSelectTempData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiMultiSelectTempData_find_erase_unsorted(ImVector_ImGuiMultiSelectTempData* self, ImGuiMultiSelectTempData v) {
-    ImGuiMultiSelectTempData* it = ImVector_ImGuiMultiSelectTempData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiMultiSelectTempData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiMultiSelectTempData_index_from_ptr(ImVector_ImGuiMultiSelectTempData* self, ImGuiMultiSelectTempData* it) {
@@ -21370,58 +19654,6 @@ ImGuiSettingsHandler* ImVector_ImGuiSettingsHandler_insert(ImVector_ImGuiSetting
     return self.Data + off;
 }
 
-bool ImVector_ImGuiSettingsHandler_contains(ImVector_ImGuiSettingsHandler* self, ImGuiSettingsHandler v) {
-    ImGuiSettingsHandler* data = self.Data;
-    ImGuiSettingsHandler* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiSettingsHandler* ImVector_ImGuiSettingsHandler_find(ImVector_ImGuiSettingsHandler* self, ImGuiSettingsHandler v) {
-    ImGuiSettingsHandler* data = self.Data;
-    ImGuiSettingsHandler* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiSettingsHandler_find_index(ImVector_ImGuiSettingsHandler* self, ImGuiSettingsHandler v) {
-    ImGuiSettingsHandler* data_end = self.Data + self.Size;
-    ImGuiSettingsHandler* it = ImVector_ImGuiSettingsHandler_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiSettingsHandler_find_erase(ImVector_ImGuiSettingsHandler* self, ImGuiSettingsHandler v) {
-    ImGuiSettingsHandler* it = ImVector_ImGuiSettingsHandler_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiSettingsHandler_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiSettingsHandler_find_erase_unsorted(ImVector_ImGuiSettingsHandler* self, ImGuiSettingsHandler v) {
-    ImGuiSettingsHandler* it = ImVector_ImGuiSettingsHandler_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiSettingsHandler_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiSettingsHandler_index_from_ptr(ImVector_ImGuiSettingsHandler* self, ImGuiSettingsHandler* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -21666,58 +19898,6 @@ ImGuiContextHook* ImVector_ImGuiContextHook_insert(ImVector_ImGuiContextHook* se
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiContextHook_contains(ImVector_ImGuiContextHook* self, ImGuiContextHook v) {
-    ImGuiContextHook* data = self.Data;
-    ImGuiContextHook* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiContextHook* ImVector_ImGuiContextHook_find(ImVector_ImGuiContextHook* self, ImGuiContextHook v) {
-    ImGuiContextHook* data = self.Data;
-    ImGuiContextHook* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiContextHook_find_index(ImVector_ImGuiContextHook* self, ImGuiContextHook v) {
-    ImGuiContextHook* data_end = self.Data + self.Size;
-    ImGuiContextHook* it = ImVector_ImGuiContextHook_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiContextHook_find_erase(ImVector_ImGuiContextHook* self, ImGuiContextHook v) {
-    ImGuiContextHook* it = ImVector_ImGuiContextHook_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiContextHook_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiContextHook_find_erase_unsorted(ImVector_ImGuiContextHook* self, ImGuiContextHook v) {
-    ImGuiContextHook* it = ImVector_ImGuiContextHook_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiContextHook_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiContextHook_index_from_ptr(ImVector_ImGuiContextHook* self, ImGuiContextHook* it) {
@@ -21966,58 +20146,6 @@ ImGuiOldColumns* ImVector_ImGuiOldColumns_insert(ImVector_ImGuiOldColumns* self,
     return self.Data + off;
 }
 
-bool ImVector_ImGuiOldColumns_contains(ImVector_ImGuiOldColumns* self, ImGuiOldColumns v) {
-    ImGuiOldColumns* data = self.Data;
-    ImGuiOldColumns* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiOldColumns* ImVector_ImGuiOldColumns_find(ImVector_ImGuiOldColumns* self, ImGuiOldColumns v) {
-    ImGuiOldColumns* data = self.Data;
-    ImGuiOldColumns* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiOldColumns_find_index(ImVector_ImGuiOldColumns* self, ImGuiOldColumns v) {
-    ImGuiOldColumns* data_end = self.Data + self.Size;
-    ImGuiOldColumns* it = ImVector_ImGuiOldColumns_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiOldColumns_find_erase(ImVector_ImGuiOldColumns* self, ImGuiOldColumns v) {
-    ImGuiOldColumns* it = ImVector_ImGuiOldColumns_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiOldColumns_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiOldColumns_find_erase_unsorted(ImVector_ImGuiOldColumns* self, ImGuiOldColumns v) {
-    ImGuiOldColumns* it = ImVector_ImGuiOldColumns_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiOldColumns_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiOldColumns_index_from_ptr(ImVector_ImGuiOldColumns* self, ImGuiOldColumns* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -22262,58 +20390,6 @@ ImGuiTabItem* ImVector_ImGuiTabItem_insert(ImVector_ImGuiTabItem* self, ImGuiTab
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiTabItem_contains(ImVector_ImGuiTabItem* self, ImGuiTabItem v) {
-    ImGuiTabItem* data = self.Data;
-    ImGuiTabItem* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiTabItem* ImVector_ImGuiTabItem_find(ImVector_ImGuiTabItem* self, ImGuiTabItem v) {
-    ImGuiTabItem* data = self.Data;
-    ImGuiTabItem* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiTabItem_find_index(ImVector_ImGuiTabItem* self, ImGuiTabItem v) {
-    ImGuiTabItem* data_end = self.Data + self.Size;
-    ImGuiTabItem* it = ImVector_ImGuiTabItem_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiTabItem_find_erase(ImVector_ImGuiTabItem* self, ImGuiTabItem v) {
-    ImGuiTabItem* it = ImVector_ImGuiTabItem_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTabItem_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiTabItem_find_erase_unsorted(ImVector_ImGuiTabItem* self, ImGuiTabItem v) {
-    ImGuiTabItem* it = ImVector_ImGuiTabItem_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTabItem_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiTabItem_index_from_ptr(ImVector_ImGuiTabItem* self, ImGuiTabItem* it) {
@@ -22562,58 +20638,6 @@ ImGuiTableInstanceData* ImVector_ImGuiTableInstanceData_insert(ImVector_ImGuiTab
     return self.Data + off;
 }
 
-bool ImVector_ImGuiTableInstanceData_contains(ImVector_ImGuiTableInstanceData* self, ImGuiTableInstanceData v) {
-    ImGuiTableInstanceData* data = self.Data;
-    ImGuiTableInstanceData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiTableInstanceData* ImVector_ImGuiTableInstanceData_find(ImVector_ImGuiTableInstanceData* self, ImGuiTableInstanceData v) {
-    ImGuiTableInstanceData* data = self.Data;
-    ImGuiTableInstanceData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiTableInstanceData_find_index(ImVector_ImGuiTableInstanceData* self, ImGuiTableInstanceData v) {
-    ImGuiTableInstanceData* data_end = self.Data + self.Size;
-    ImGuiTableInstanceData* it = ImVector_ImGuiTableInstanceData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiTableInstanceData_find_erase(ImVector_ImGuiTableInstanceData* self, ImGuiTableInstanceData v) {
-    ImGuiTableInstanceData* it = ImVector_ImGuiTableInstanceData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTableInstanceData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiTableInstanceData_find_erase_unsorted(ImVector_ImGuiTableInstanceData* self, ImGuiTableInstanceData v) {
-    ImGuiTableInstanceData* it = ImVector_ImGuiTableInstanceData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTableInstanceData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiTableInstanceData_index_from_ptr(ImVector_ImGuiTableInstanceData* self, ImGuiTableInstanceData* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -22858,58 +20882,6 @@ ImGuiTableColumnSortSpecs* ImVector_ImGuiTableColumnSortSpecs_insert(ImVector_Im
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiTableColumnSortSpecs_contains(ImVector_ImGuiTableColumnSortSpecs* self, ImGuiTableColumnSortSpecs v) {
-    ImGuiTableColumnSortSpecs* data = self.Data;
-    ImGuiTableColumnSortSpecs* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiTableColumnSortSpecs* ImVector_ImGuiTableColumnSortSpecs_find(ImVector_ImGuiTableColumnSortSpecs* self, ImGuiTableColumnSortSpecs v) {
-    ImGuiTableColumnSortSpecs* data = self.Data;
-    ImGuiTableColumnSortSpecs* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiTableColumnSortSpecs_find_index(ImVector_ImGuiTableColumnSortSpecs* self, ImGuiTableColumnSortSpecs v) {
-    ImGuiTableColumnSortSpecs* data_end = self.Data + self.Size;
-    ImGuiTableColumnSortSpecs* it = ImVector_ImGuiTableColumnSortSpecs_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiTableColumnSortSpecs_find_erase(ImVector_ImGuiTableColumnSortSpecs* self, ImGuiTableColumnSortSpecs v) {
-    ImGuiTableColumnSortSpecs* it = ImVector_ImGuiTableColumnSortSpecs_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTableColumnSortSpecs_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiTableColumnSortSpecs_find_erase_unsorted(ImVector_ImGuiTableColumnSortSpecs* self, ImGuiTableColumnSortSpecs v) {
-    ImGuiTableColumnSortSpecs* it = ImVector_ImGuiTableColumnSortSpecs_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTableColumnSortSpecs_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiTableColumnSortSpecs_index_from_ptr(ImVector_ImGuiTableColumnSortSpecs* self, ImGuiTableColumnSortSpecs* it) {
@@ -23158,58 +21130,6 @@ ImGuiTableHeaderData* ImVector_ImGuiTableHeaderData_insert(ImVector_ImGuiTableHe
     return self.Data + off;
 }
 
-bool ImVector_ImGuiTableHeaderData_contains(ImVector_ImGuiTableHeaderData* self, ImGuiTableHeaderData v) {
-    ImGuiTableHeaderData* data = self.Data;
-    ImGuiTableHeaderData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiTableHeaderData* ImVector_ImGuiTableHeaderData_find(ImVector_ImGuiTableHeaderData* self, ImGuiTableHeaderData v) {
-    ImGuiTableHeaderData* data = self.Data;
-    ImGuiTableHeaderData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiTableHeaderData_find_index(ImVector_ImGuiTableHeaderData* self, ImGuiTableHeaderData v) {
-    ImGuiTableHeaderData* data_end = self.Data + self.Size;
-    ImGuiTableHeaderData* it = ImVector_ImGuiTableHeaderData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiTableHeaderData_find_erase(ImVector_ImGuiTableHeaderData* self, ImGuiTableHeaderData v) {
-    ImGuiTableHeaderData* it = ImVector_ImGuiTableHeaderData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTableHeaderData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiTableHeaderData_find_erase_unsorted(ImVector_ImGuiTableHeaderData* self, ImGuiTableHeaderData v) {
-    ImGuiTableHeaderData* it = ImVector_ImGuiTableHeaderData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTableHeaderData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiTableHeaderData_index_from_ptr(ImVector_ImGuiTableHeaderData* self, ImGuiTableHeaderData* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -23454,58 +21374,6 @@ ImGuiTableReconcileColumnData* ImVector_ImGuiTableReconcileColumnData_insert(ImV
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiTableReconcileColumnData_contains(ImVector_ImGuiTableReconcileColumnData* self, ImGuiTableReconcileColumnData v) {
-    ImGuiTableReconcileColumnData* data = self.Data;
-    ImGuiTableReconcileColumnData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiTableReconcileColumnData* ImVector_ImGuiTableReconcileColumnData_find(ImVector_ImGuiTableReconcileColumnData* self, ImGuiTableReconcileColumnData v) {
-    ImGuiTableReconcileColumnData* data = self.Data;
-    ImGuiTableReconcileColumnData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiTableReconcileColumnData_find_index(ImVector_ImGuiTableReconcileColumnData* self, ImGuiTableReconcileColumnData v) {
-    ImGuiTableReconcileColumnData* data_end = self.Data + self.Size;
-    ImGuiTableReconcileColumnData* it = ImVector_ImGuiTableReconcileColumnData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiTableReconcileColumnData_find_erase(ImVector_ImGuiTableReconcileColumnData* self, ImGuiTableReconcileColumnData v) {
-    ImGuiTableReconcileColumnData* it = ImVector_ImGuiTableReconcileColumnData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTableReconcileColumnData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiTableReconcileColumnData_find_erase_unsorted(ImVector_ImGuiTableReconcileColumnData* self, ImGuiTableReconcileColumnData v) {
-    ImGuiTableReconcileColumnData* it = ImVector_ImGuiTableReconcileColumnData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTableReconcileColumnData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiTableReconcileColumnData_index_from_ptr(ImVector_ImGuiTableReconcileColumnData* self, ImGuiTableReconcileColumnData* it) {
@@ -24052,58 +21920,6 @@ stbrp_node_im* ImVector_stbrp_node_im_insert(ImVector_stbrp_node_im* self, stbrp
     return self.Data + off;
 }
 
-bool ImVector_stbrp_node_im_contains(ImVector_stbrp_node_im* self, stbrp_node_im v) {
-    stbrp_node_im* data = self.Data;
-    stbrp_node_im* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-stbrp_node_im* ImVector_stbrp_node_im_find(ImVector_stbrp_node_im* self, stbrp_node_im v) {
-    stbrp_node_im* data = self.Data;
-    stbrp_node_im* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_stbrp_node_im_find_index(ImVector_stbrp_node_im* self, stbrp_node_im v) {
-    stbrp_node_im* data_end = self.Data + self.Size;
-    stbrp_node_im* it = ImVector_stbrp_node_im_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_stbrp_node_im_find_erase(ImVector_stbrp_node_im* self, stbrp_node_im v) {
-    stbrp_node_im* it = ImVector_stbrp_node_im_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_stbrp_node_im_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_stbrp_node_im_find_erase_unsorted(ImVector_stbrp_node_im* self, stbrp_node_im v) {
-    stbrp_node_im* it = ImVector_stbrp_node_im_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_stbrp_node_im_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_stbrp_node_im_index_from_ptr(ImVector_stbrp_node_im* self, stbrp_node_im* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -24348,58 +22164,6 @@ ImFontAtlasRectEntry* ImVector_ImFontAtlasRectEntry_insert(ImVector_ImFontAtlasR
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImFontAtlasRectEntry_contains(ImVector_ImFontAtlasRectEntry* self, ImFontAtlasRectEntry v) {
-    ImFontAtlasRectEntry* data = self.Data;
-    ImFontAtlasRectEntry* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImFontAtlasRectEntry* ImVector_ImFontAtlasRectEntry_find(ImVector_ImFontAtlasRectEntry* self, ImFontAtlasRectEntry v) {
-    ImFontAtlasRectEntry* data = self.Data;
-    ImFontAtlasRectEntry* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImFontAtlasRectEntry_find_index(ImVector_ImFontAtlasRectEntry* self, ImFontAtlasRectEntry v) {
-    ImFontAtlasRectEntry* data_end = self.Data + self.Size;
-    ImFontAtlasRectEntry* it = ImVector_ImFontAtlasRectEntry_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImFontAtlasRectEntry_find_erase(ImVector_ImFontAtlasRectEntry* self, ImFontAtlasRectEntry v) {
-    ImFontAtlasRectEntry* it = ImVector_ImFontAtlasRectEntry_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImFontAtlasRectEntry_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImFontAtlasRectEntry_find_erase_unsorted(ImVector_ImFontAtlasRectEntry* self, ImFontAtlasRectEntry v) {
-    ImFontAtlasRectEntry* it = ImVector_ImFontAtlasRectEntry_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImFontAtlasRectEntry_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImFontAtlasRectEntry_index_from_ptr(ImVector_ImFontAtlasRectEntry* self, ImFontAtlasRectEntry* it) {
@@ -24944,58 +22708,6 @@ DockRemainingWindowTask* ImVector_DockRemainingWindowTask_insert(ImVector_DockRe
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_DockRemainingWindowTask_contains(ImVector_DockRemainingWindowTask* self, DockRemainingWindowTask v) {
-    DockRemainingWindowTask* data = self.Data;
-    DockRemainingWindowTask* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-DockRemainingWindowTask* ImVector_DockRemainingWindowTask_find(ImVector_DockRemainingWindowTask* self, DockRemainingWindowTask v) {
-    DockRemainingWindowTask* data = self.Data;
-    DockRemainingWindowTask* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_DockRemainingWindowTask_find_index(ImVector_DockRemainingWindowTask* self, DockRemainingWindowTask v) {
-    DockRemainingWindowTask* data_end = self.Data + self.Size;
-    DockRemainingWindowTask* it = ImVector_DockRemainingWindowTask_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_DockRemainingWindowTask_find_erase(ImVector_DockRemainingWindowTask* self, DockRemainingWindowTask v) {
-    DockRemainingWindowTask* it = ImVector_DockRemainingWindowTask_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_DockRemainingWindowTask_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_DockRemainingWindowTask_find_erase_unsorted(ImVector_DockRemainingWindowTask* self, DockRemainingWindowTask v) {
-    DockRemainingWindowTask* it = ImVector_DockRemainingWindowTask_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_DockRemainingWindowTask_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_DockRemainingWindowTask_index_from_ptr(ImVector_DockRemainingWindowTask* self, DockRemainingWindowTask* it) {
@@ -40278,7 +37990,7 @@ bool ImGui_BeginPopupModal(u8* name, bool* p_open, ImGuiWindowFlags flags) {
         return false;
     }
     if (g.NextWindowData.HasFlags & ImGuiNextWindowDataFlags_HasPos) == 0 {
-        var viewport = cast(ImGuiViewport*, window.WasActive != 0 ? window.Viewport : ImGui_GetMainViewport());
+        var viewport = cast(ImGuiViewport*, window.WasActive != 0 ? cast(ImGuiViewport*, window.Viewport) : ImGui_GetMainViewport());
         ImGui_SetNextWindowPos(ImGuiViewport_GetCenter(viewport), ImGuiCond_FirstUseEver, ImVec2{0.5f, 0.5f});
     }
     flags |= ImGuiWindowFlags_Popup | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
@@ -48789,58 +46501,6 @@ ImGuiTable* ImVector_ImGuiTable_insert(ImVector_ImGuiTable* self, ImGuiTable* it
     return self.Data + off;
 }
 
-bool ImVector_ImGuiTable_contains(ImVector_ImGuiTable* self, ImGuiTable v) {
-    ImGuiTable* data = self.Data;
-    ImGuiTable* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiTable* ImVector_ImGuiTable_find(ImVector_ImGuiTable* self, ImGuiTable v) {
-    ImGuiTable* data = self.Data;
-    ImGuiTable* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiTable_find_index(ImVector_ImGuiTable* self, ImGuiTable v) {
-    ImGuiTable* data_end = self.Data + self.Size;
-    ImGuiTable* it = ImVector_ImGuiTable_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiTable_find_erase(ImVector_ImGuiTable* self, ImGuiTable v) {
-    ImGuiTable* it = ImVector_ImGuiTable_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTable_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiTable_find_erase_unsorted(ImVector_ImGuiTable* self, ImGuiTable v) {
-    ImGuiTable* it = ImVector_ImGuiTable_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTable_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiTable_index_from_ptr(ImVector_ImGuiTable* self, ImGuiTable* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -49085,58 +46745,6 @@ ImGuiTabBar* ImVector_ImGuiTabBar_insert(ImVector_ImGuiTabBar* self, ImGuiTabBar
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiTabBar_contains(ImVector_ImGuiTabBar* self, ImGuiTabBar v) {
-    ImGuiTabBar* data = self.Data;
-    ImGuiTabBar* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiTabBar* ImVector_ImGuiTabBar_find(ImVector_ImGuiTabBar* self, ImGuiTabBar v) {
-    ImGuiTabBar* data = self.Data;
-    ImGuiTabBar* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiTabBar_find_index(ImVector_ImGuiTabBar* self, ImGuiTabBar v) {
-    ImGuiTabBar* data_end = self.Data + self.Size;
-    ImGuiTabBar* it = ImVector_ImGuiTabBar_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiTabBar_find_erase(ImVector_ImGuiTabBar* self, ImGuiTabBar v) {
-    ImGuiTabBar* it = ImVector_ImGuiTabBar_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTabBar_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiTabBar_find_erase_unsorted(ImVector_ImGuiTabBar* self, ImGuiTabBar v) {
-    ImGuiTabBar* it = ImVector_ImGuiTabBar_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiTabBar_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiTabBar_index_from_ptr(ImVector_ImGuiTabBar* self, ImGuiTabBar* it) {
@@ -49385,58 +46993,6 @@ ImGuiMultiSelectState* ImVector_ImGuiMultiSelectState_insert(ImVector_ImGuiMulti
     return self.Data + off;
 }
 
-bool ImVector_ImGuiMultiSelectState_contains(ImVector_ImGuiMultiSelectState* self, ImGuiMultiSelectState v) {
-    ImGuiMultiSelectState* data = self.Data;
-    ImGuiMultiSelectState* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiMultiSelectState* ImVector_ImGuiMultiSelectState_find(ImVector_ImGuiMultiSelectState* self, ImGuiMultiSelectState v) {
-    ImGuiMultiSelectState* data = self.Data;
-    ImGuiMultiSelectState* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiMultiSelectState_find_index(ImVector_ImGuiMultiSelectState* self, ImGuiMultiSelectState v) {
-    ImGuiMultiSelectState* data_end = self.Data + self.Size;
-    ImGuiMultiSelectState* it = ImVector_ImGuiMultiSelectState_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiMultiSelectState_find_erase(ImVector_ImGuiMultiSelectState* self, ImGuiMultiSelectState v) {
-    ImGuiMultiSelectState* it = ImVector_ImGuiMultiSelectState_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiMultiSelectState_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiMultiSelectState_find_erase_unsorted(ImVector_ImGuiMultiSelectState* self, ImGuiMultiSelectState v) {
-    ImGuiMultiSelectState* it = ImVector_ImGuiMultiSelectState_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiMultiSelectState_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
-}
-
 i32 ImVector_ImGuiMultiSelectState_index_from_ptr(ImVector_ImGuiMultiSelectState* self, ImGuiMultiSelectState* it) {
     assert(it >= self.Data && it < self.Data + self.Size);
     var off = cast(i64, it - self.Data);
@@ -49681,58 +47237,6 @@ ImGuiDockContextPruneNodeData* ImVector_ImGuiDockContextPruneNodeData_insert(ImV
     memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
     self.Size++;
     return self.Data + off;
-}
-
-bool ImVector_ImGuiDockContextPruneNodeData_contains(ImVector_ImGuiDockContextPruneNodeData* self, ImGuiDockContextPruneNodeData v) {
-    ImGuiDockContextPruneNodeData* data = self.Data;
-    ImGuiDockContextPruneNodeData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data++ == v {
-            return true;
-        }
-    }
-    return false;
-}
-
-ImGuiDockContextPruneNodeData* ImVector_ImGuiDockContextPruneNodeData_find(ImVector_ImGuiDockContextPruneNodeData* self, ImGuiDockContextPruneNodeData v) {
-    ImGuiDockContextPruneNodeData* data = self.Data;
-    ImGuiDockContextPruneNodeData* data_end = self.Data + self.Size;
-    while data < data_end {
-        if *data == v {
-            break;
-        } else {
-            ++data;
-        }
-    }
-    return data;
-}
-
-i32 ImVector_ImGuiDockContextPruneNodeData_find_index(ImVector_ImGuiDockContextPruneNodeData* self, ImGuiDockContextPruneNodeData v) {
-    ImGuiDockContextPruneNodeData* data_end = self.Data + self.Size;
-    ImGuiDockContextPruneNodeData* it = ImVector_ImGuiDockContextPruneNodeData_find(self, v);
-    if it == data_end {
-        return -1;
-    }
-    var off = cast(i64, it - self.Data);
-    return cast(i32, off);
-}
-
-bool ImVector_ImGuiDockContextPruneNodeData_find_erase(ImVector_ImGuiDockContextPruneNodeData* self, ImGuiDockContextPruneNodeData v) {
-    ImGuiDockContextPruneNodeData* it = ImVector_ImGuiDockContextPruneNodeData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiDockContextPruneNodeData_erase(self, it);
-        return true;
-    }
-    return false;
-}
-
-bool ImVector_ImGuiDockContextPruneNodeData_find_erase_unsorted(ImVector_ImGuiDockContextPruneNodeData* self, ImGuiDockContextPruneNodeData v) {
-    ImGuiDockContextPruneNodeData* it = ImVector_ImGuiDockContextPruneNodeData_find(self, v);
-    if it < self.Data + self.Size {
-        ImVector_ImGuiDockContextPruneNodeData_erase_unsorted(self, it);
-        return true;
-    }
-    return false;
 }
 
 i32 ImVector_ImGuiDockContextPruneNodeData_index_from_ptr(ImVector_ImGuiDockContextPruneNodeData* self, ImGuiDockContextPruneNodeData* it) {

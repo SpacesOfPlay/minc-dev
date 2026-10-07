@@ -186,6 +186,7 @@ const i64 SubstructureRedirectMask  = 1 << 20;
 const i64 FocusChangeMask           = 1 << 21;
 const i64 PropertyChangeMask        = 1 << 22;
 const i32 NoEventMask               = 0;
+const u64 CWBackPixel               = 1 << 1;
 const u64 CWBorderPixel             = 1 << 3;
 const u64 CWOverrideRedirect        = 1 << 9;
 const u64 CWEventMask               = 1 << 11;
@@ -543,6 +544,7 @@ extern "libX11.so.6" {
     i32 XDestroyWindow(Display* display, u64 window);
     i32 XMapWindow(Display* display, u64 window);
     i32 XUnmapWindow(Display* display, u64 window);
+    i32 XSetWindowBackgroundPixmap(Display* display, u64 window, u64 pixmap);
     i32 XFlush(Display* display);
     i32 XPending(Display* display);
     i32 XNextEvent(Display* display, XEvent* event);

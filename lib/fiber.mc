@@ -11,11 +11,13 @@
 // --- API --------------------------------------------------------------
 //
 // Fiber* fiber_create(fn(void*): void entry, void* arg);
+// Fiber* fiber_create(fn(void*): void entry, void* arg, i64 stack_bytes);
 //
 //   Allocate a new fiber. `entry(arg)` runs the next time the fiber is
 //   switched to. Fiber keeps running until it calls fiber_yield (which
 //   returns control to the switcher) or returns (which marks the fiber
-//   done).
+//   done). The stack is 64 KiB unless a size is given; it is rounded
+//   up to whole pages and a guard page below it faults on overflow.
 //
 // void fiber_switch(Fiber* f);
 //   Resume f. Runs until f yields or completes. No-op if f is done.
@@ -52,4 +54,6 @@ struct Fiber {
     bool done;
     fn(void*): void entry;
     void* arg;
+    Fiber* caller;    // who switched in; null when it was main
+    i64 stack_size;   // bytes mapped for the stack, guard page included
 }

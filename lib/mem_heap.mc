@@ -97,7 +97,8 @@ private void mheap_map_insert(u64 size) {
         return;
     }
     u64 f = mheap_fls(size);
-    mheap_map_sl = (size >> (f - 5)) - 32;
+    // f is 9..63 here, the shift needs no range clamp.
+    mheap_map_sl = (size >> ((f - 5) & 63)) - 32;
     mheap_map_fl = f - 8;
 }
 
@@ -105,7 +106,7 @@ private void mheap_map_insert(u64 size) {
 private void mheap_map_search(u64 size) {
     u64 s = size;
     if s >= 512 {
-        u64 round = (cast(u64, 1) << (mheap_fls(s) - 5)) - 1;
+        u64 round = (cast(u64, 1) << ((mheap_fls(s) - 5) & 63)) - 1;
         s = s + round;
     }
     mheap_map_size = s;

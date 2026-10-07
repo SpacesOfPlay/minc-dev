@@ -73,9 +73,29 @@ const u32[64] sha256__K = {
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
+// Whether the part has the SHA-256 instructions: -1 unprobed, 0 no, 1 yes.
+i32 sha256_hw = -1;
+
+bool sha256_use_hw() {
+    if sha256_hw < 0 {
+        sha256_hw = 0;
+        when arch(x64) || arch(arm64) {
+            if cpu_has_sha256() { sha256_hw = 1; }
+        }
+    }
+    return sha256_hw == 1;
+}
+
 // SHA-256 compression function — process one 64-byte block.
 void sha256_update_block(void* vctx, u8* inp) {
     Sha256Ctx* ctx = vctx;
+    when arch(x64) || arch(arm64) {
+        if sha256_use_hw() {
+            sha256_compress(&ctx.H[0], inp, 1);
+            ctx.blocks = ctx.blocks + 1;
+            return;
+        }
+    }
     u32[16] W;
     u32 a = ctx.H[0];
     u32 b = ctx.H[1];
@@ -235,6 +255,16 @@ void sha256_init(Sha256Ctx* ctx) {
 }
 
 void sha256_update(Sha256Ctx* ctx, void* data, u64 nbytes) {
+    // Whole blocks go to the hardware in one call when nothing is buffered.
+    when arch(x64) || arch(arm64) {
+        if ctx.npartial == 0 && nbytes >= 64 && sha256_use_hw() {
+            u64 nb = nbytes / 64;
+            sha256_compress(&ctx.H[0], cast(u8*, data), cast(i64, nb));
+            ctx.blocks = ctx.blocks + cast(u32, nb);
+            data = cast(u8*, data) + nb * 64;
+            nbytes = nbytes - nb * 64;
+        }
+    }
     sha256_blockwise_accumulate(&ctx.partial[0], &ctx.npartial, 64,
                                 data, nbytes,
                                 sha256_update_block, ctx);

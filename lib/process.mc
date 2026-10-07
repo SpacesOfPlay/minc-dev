@@ -419,11 +419,11 @@ ProcResult proc_run(ProcCmd* c) {
     bool cap = c.capture;
     str_buf ob;
     if cap { str_buf_init(&ob); }
-    noinit u8[_PROC_CHUNK] chunk;
-    i64 freq = qpf();
-    i64 start = qpc();
 
     when os(windows) {
+        noinit u8[_PROC_CHUNK] chunk;
+        i64 freq = qpf();
+        i64 start = qpc();
         _ProcSecurityAttrs sa = {
             .n_length = cast(u32, sizeof(_ProcSecurityAttrs)),
             .inherit_handle = 1
@@ -577,6 +577,9 @@ ProcResult proc_run(ProcCmd* c) {
     }
 
     when os(linux) || os(macos) {
+        noinit u8[_PROC_CHUNK] chunk;
+        i64 freq = qpf();
+        i64 start = qpc();
         // +1 for null terminator
         u8*[PROC_MAX_ARGS + 1] argv;
         for i32 i = 0; i < nargs; i++ { argv[i] = str_to_cstr(c.args[i]); }

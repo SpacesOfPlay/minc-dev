@@ -38,6 +38,7 @@ const u32 WS_VISIBLE = 268435456;
 const u32 WS_MAXIMIZEBOX = 65536;
 const u32 WS_MINIMIZEBOX = 131072;
 const u32 WS_SIZEBOX = 262144;
+const u32 WS_MAXIMIZE = 16777216;
 
 const u32 SWP_FRAMECHANGED = 32;
 const u32 SWP_SHOWWINDOW = 64;
@@ -52,6 +53,7 @@ const u32 MONITOR_DEFAULTTONEAREST = 2;
 
 const i32 CW_USEDEFAULT = cast(i32, 2147483648);
 const i32 SW_SHOW = 5;
+const i32 SW_SHOWMAXIMIZED = 3;
 const u32 PM_REMOVE = 1;
 
 const i32 VK_SHIFT = 16;
@@ -107,7 +109,10 @@ extern "kernel32.dll" {
     i32 FreeLibrary(void* mod);
     void Sleep(u32 ms);
 }
-extern "user32.dll" i32 IsIconic(void* hWnd);
+extern "user32.dll" {
+    i32 IsIconic(void* hWnd);
+    i32 IsZoomed(void* hWnd);
+}
 extern "kernel32.dll" {
     void* GetModuleHandleA(u8* name);
     void* GetModuleHandleW(u16* name);
@@ -219,9 +224,43 @@ extern "gdi32.dll" {
     i32 GetPixelFormat(void* hdc);
     i32 SwapBuffers(void* hdc);
     void* GetStockObject(i32 i);
+    void* CreateSolidBrush(u32 color);
 }
-// used as default background to avoid white flash on launch
-const i32 BLACK_BRUSH = 4;
+
+// Show state requested by the launcher (shortcut "Run:" setting, start /min).
+struct STARTUPINFOW {
+    u32 cb;
+    u16* lpReserved;
+    u16* lpDesktop;
+    u16* lpTitle;
+    u32 dwX;
+    u32 dwY;
+    u32 dwXSize;
+    u32 dwYSize;
+    u32 dwXCountChars;
+    u32 dwYCountChars;
+    u32 dwFillAttribute;
+    u32 dwFlags;
+    u16 wShowWindow;
+    u16 cbReserved2;
+    u8* lpReserved2;
+    void* hStdInput;
+    void* hStdOutput;
+    void* hStdError;
+}
+const u32 STARTF_USESHOWWINDOW = 1;
+extern "kernel32.dll" void GetStartupInfoW(STARTUPINFOW* si);
+
+// True when the process was launched asking for a minimized window.
+bool win32_launched_minimized() {
+    STARTUPINFOW si;
+    si.cb = cast(u32, sizeof(STARTUPINFOW));
+    GetStartupInfoW(&si);
+    if (si.dwFlags & STARTF_USESHOWWINDOW) == 0 { return false; }
+    // SW_SHOWMINIMIZED, SW_MINIMIZE, SW_SHOWMINNOACTIVE, SW_FORCEMINIMIZE
+    u16 cmd = si.wShowWindow;
+    return cmd == 2 || cmd == 6 || cmd == 7 || cmd == 11;
+}
 
 // opengl32.dll; WGL context API
 extern "opengl32.dll" {

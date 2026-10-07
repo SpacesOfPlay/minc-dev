@@ -1,13 +1,15 @@
 // net.mc — basic cross-platform TCP networking.
 //
-// A thin wrapper over BSD sockets / Winsock for synchronous TCP
-// servers and clients. Callers do their own framing on top of
-// net_recv / net_send. A separate fd-level non-blocking layer
-// (net_nb_socket / net_poll / net_try_* / net_resolve4, below) serves
-// readiness-driven runtimes such as event loops.
+// TCP servers and clients over BSD sockets and Winsock. The blocking
+// API reads and writes whole Socket values. Callers frame their own
+// messages on top of net_recv and net_send.
 //
-// Platforms: Windows (ws2_32.dll), Linux (raw syscalls, no libc —
-// except the non-blocking layer, see below), macOS (libSystem.B.dylib).
+// The non-blocking API (net_nb_socket, net_poll, net_try_*,
+// net_resolve4) is for event loops. The pollers (net_poller_*, at the
+// end) report only the sockets that are ready.
+//
+// Windows uses ws2_32.dll and macOS libSystem. Linux uses system calls
+// directly, except in the non-blocking API.
 //
 // Typical server skeleton:
 //
@@ -24,41 +26,38 @@
 //     net_close(srv);
 //     net_shutdown();
 
-// AF_INET / SOCK_STREAM are fixed by the BSD spec.
-const u16 NET_AF_INET = 2;
-const i32 NET_SOCK_STREAM = 1;
+private const u16 NET_AF_INET = 2;
+private const i32 NET_SOCK_STREAM = 1;
 
-// SO_REUSEADDR lets the listener re-bind through the kernel's
-// TIME_WAIT window after a restart. Constants differ per platform;
-// macOS and Winsock share the BSD numbering.
+// SO_REUSEADDR lets a restarted server bind its port again at once.
 when os(windows) {
-    const i32 _NET_SOL_SOCKET = 0xffff;
-    const i32 _NET_SO_REUSEADDR = 4;
+    private const i32 _NET_SOL_SOCKET = 0xffff;
+    private const i32 _NET_SO_REUSEADDR = 4;
 }
 when os(linux) {
-    const i32 _NET_SOL_SOCKET = 1;
-    const i32 _NET_SO_REUSEADDR = 2;
+    private const i32 _NET_SOL_SOCKET = 1;
+    private const i32 _NET_SO_REUSEADDR = 2;
 }
 when os(macos) || os(ios) {
-    const i32 _NET_SOL_SOCKET = 0xffff;
-    const i32 _NET_SO_REUSEADDR = 4;
+    private const i32 _NET_SOL_SOCKET = 0xffff;
+    private const i32 _NET_SO_REUSEADDR = 4;
 }
 when os(uefi) {
-    const i32 _NET_SOL_SOCKET = 1;
-    const i32 _NET_SO_REUSEADDR = 2;
+    private const i32 _NET_SOL_SOCKET = 1;
+    private const i32 _NET_SO_REUSEADDR = 2;
 }
 
-// `struct sockaddr_in` — 16 bytes, identical on every target. Fields
-// stay in network byte order; see net_htons.
-struct _NetSockAddrIn {
+// `struct sockaddr_in`, the same 16 bytes on every target. Port and
+// address are in network byte order.
+private struct _NetSockAddrIn {
     u16 family;
     u16 port;
     u32 addr;
     u8[8] zero;
 }
 
-// `.valid == false` means a syscall failed. `.fd == -1` is the
-// no-socket sentinel for both Winsock and POSIX.
+// `valid` is false when a call failed. `fd` is -1 when there is no
+// socket.
 struct Socket {
     i64 fd;
     bool valid;
@@ -67,7 +66,7 @@ struct Socket {
 // --- Per-platform externs ------------------------------------------
 
 when os(windows) {
-    extern "ws2_32.dll" {
+    private extern "ws2_32.dll" {
         i32 WSAStartup(u16 wVersionRequested, void* lpWSAData);
         i32 WSACleanup();
         i64 socket(i32 af, i32 type, i32 protocol);
@@ -83,19 +82,15 @@ when os(windows) {
     }
 }
 
-// POSIX fds fit in i32. The public Socket struct widens to i64 so
-// the type matches the Windows path; each call casts back at the
-// boundary.
-// Linux uses libc-free raw-syscall builtins (sys_socket / sys_bind /
-// sys_listen / sys_accept / sys_connect / sys_sendto / sys_recvfrom /
-// sys_setsockopt / sys_getsockname, emitted by src/linux_stubs*.mc), so
-// there is no extern block and no libc.so.6 dependency. send/recv map to
-// sendto/recvfrom with a null address. close() is likewise a builtin.
+// Socket.fd is i64 to hold a Windows handle. The POSIX calls take an
+// i32 and cast at each call.
+// The blocking API on Linux calls the sys_* builtins, which make the
+// system calls without libc.
 
 when os(macos) || os(ios) {
-    const i32 _NET_SO_NOSIGPIPE = 0x1022;
+    private const i32 _NET_SO_NOSIGPIPE = 0x1022;
 
-    extern "libSystem.B.dylib" {
+    private extern "libSystem.B.dylib" {
         i32 socket(i32 domain, i32 type, i32 protocol);
         i32 bind(i32 sockfd, void* addr, i32 addrlen);
         i32 shutdown(i32 s, i32 how);
@@ -109,21 +104,19 @@ when os(macos) || os(ios) {
     }
 }
 
-// uefi has no sockets of its own. A program installs the same calls the
-// other targets take from the system, so everything below reads the same
-// way on all of them; only where the calls come from differs. Errors are
-// -1 with a code from _net_last_err, as on posix.
+// uefi has no sockets of its own. A program installs a NetBackend with
+// the calls the other targets get from the system. The code below then
+// reads the same on every target. Errors are -1, with the code from
+// last_err.
 
 when os(uefi) {
-    const i32 _NET_EINTR = 4;
-    const i32 _NET_EWOULDBLOCK = 11;
-    const i32 _NET_EINPROGRESS = 115;
-    const i32 _NET_SO_ERROR = 4;
+    private const i32 _NET_EINTR = 4;
+    private const i32 _NET_EWOULDBLOCK = 11;
+    private const i32 _NET_EINPROGRESS = 115;
+    private const i32 _NET_SO_ERROR = 4;
 
-    // The same three under names a backend can use. These are the only
-    // codes last_err is compared against; anything else reads as a hard
-    // error. A backend that defines its own copies has two things to keep
-    // in step and no way to notice when they drift.
+    // The error codes a backend returns from last_err. Any other code
+    // counts as a failure.
     const i32 NET_BE_EINTR = _NET_EINTR;
     const i32 NET_BE_EWOULDBLOCK = _NET_EWOULDBLOCK;
     const i32 NET_BE_EINPROGRESS = _NET_EINPROGRESS;
@@ -143,18 +136,22 @@ when os(uefi) {
         fn(i64, i32, i32, void*, i32*): i32 getsockopt;
         fn(i64, bool): i32 ioctl_nonblock;
         fn(NetPollFd*, i32, i32): i32 poll;
-        // One address family and one record type: getaddrinfo's shape
-        // would be all scaffolding.
+        // IPv4 only. Returns the address, or 0.
         fn(u8*): u32 resolve4;
         fn(): i32 last_err;
+        // The pollers. A backend may leave these null. The poller
+        // calls then fail.
+        fn(): i64 poller_new;
+        fn(i64): i32 poller_close;
+        fn(i64, i64, i16, i64): i32 poller_set;
+        fn(i64, NetPollEvent*, i32, i32): i32 poller_wait;
     }
 
-    NetBackend* _net_be = null;
+    private NetBackend* _net_be = null;
 
     void net_backend_install(NetBackend* b) { _net_be = b; }
 
-    // With nothing installed each one fails the way a bad descriptor
-    // does elsewhere, rather than calling through a null table.
+    // Without a backend each call fails as it would on a bad socket.
     private bool _net_be_up() { return _net_be != null; }
 
     private i64 socket(i32 af, i32 type, i32 proto) {
@@ -213,12 +210,12 @@ when os(uefi) {
 
 // --- Helpers --------------------------------------------------------
 
-// Host → network byte order, 16-bit. Just a swap on x86/x64.
+// Swaps the two bytes of a port between host and network order.
 u16 net_htons(u16 host) {
     return cast(u16, ((host & 0xFF) << 8) | ((host >> 8) & 0xFF));
 }
 
-Socket _net_invalid() {
+private Socket _net_invalid() {
     Socket s;
     s.fd = -1;
     s.valid = false;
@@ -227,13 +224,11 @@ Socket _net_invalid() {
 
 // --- Public API -----------------------------------------------------
 
-// Initialise the networking subsystem. Call once before any other
-// net_* function. WSAStartup on Windows; no-op on POSIX. Returns
-// false on failure.
+// Starts networking. Call it once before any other net_* function.
+// Returns false on failure.
 bool net_init() {
     when os(windows) {
-        // WSADATA is 408 bytes for Winsock 2.2. We need the side
-        // effect, not the contents.
+        // WSADATA is 408 bytes for Winsock 2.2. Its contents are unused.
         u8[408] data;
         return WSAStartup(0x0202, &data[0]) == 0;
     } else when os(linux) || os(macos) || os(ios) {
@@ -241,26 +236,21 @@ bool net_init() {
     } else when os(uefi) {
         return _net_be != null;
     } else {
-        // No socket backend here — net.mc is Win32 / POSIX syscalls
-        // only. Fail at the entry point rather than hand out handles
-        // the rest of the file cannot service.
+        // This target has no sockets.
         return false;
     }
 }
 
-// Tear down. Pairs with net_init().
+// Stops networking. Pairs with net_init.
 void net_shutdown() {
     when os(windows) {
         WSACleanup();
     }
 }
 
-// Bind a TCP socket to `bind_addr`:port and listen. Backlog is 16.
-// `bind_addr` must be in network byte order. Returns an invalid
-// socket on any failure.
-// A send to a peer that has already closed must return an error. On
-// posix the default is a SIGPIPE that kills the process instead.
-// Linux asks per send, macOS and iOS once per socket.
+// A send to a peer that has closed returns an error. Without this,
+// macOS and iOS stop the process with SIGPIPE. Linux asks for the same
+// on each send.
 private void _net_no_sigpipe(i64 fd) {
     when os(macos) || os(ios) {
         i32 one = 1;
@@ -269,7 +259,10 @@ private void _net_no_sigpipe(i64 fd) {
     return;
 }
 
-Socket _net_listen_tcp_at(u16 port, u32 bind_addr, bool reuse) {
+// Binds a TCP socket to `bind_addr`:port and listens, with a backlog
+// of 16. `bind_addr` is in network byte order. Returns an invalid
+// socket on failure.
+private Socket _net_listen_tcp_at(u16 port, u32 bind_addr, bool reuse) {
     Socket result = _net_invalid();
     i64 fd;
 
@@ -292,13 +285,12 @@ Socket _net_listen_tcp_at(u16 port, u32 bind_addr, bool reuse) {
         if fd == -1 { return result; }
     }
 
-    // SO_REUSEADDR eases fast restart, but on Windows it also lets a
-    // second socket bind a port an active listener already holds — which
-    // would defeat a "find a free port" probe. Callers that scan for a
-    // free port pass reuse=false so a busy port fails the bind.
+    // On Windows SO_REUSEADDR also lets a second socket bind a port that
+    // a listener holds. A search for a free port passes reuse=false.
+    // Then a busy port fails the bind.
     if reuse {
-        // opt is declared per-branch: on the kernel (uefi) target all three os()
-        // blocks compile out, and a shared declaration would be flagged unused.
+        // Each branch declares its own opt. On uefi no branch remains,
+        // and a shared opt would be an unused variable.
         when os(windows) {
             i32 opt = 1;
             setsockopt(fd, _NET_SOL_SOCKET, _NET_SO_REUSEADDR, &opt, 4);
@@ -341,28 +333,27 @@ Socket _net_listen_tcp_at(u16 port, u32 bind_addr, bool reuse) {
     return result;
 }
 
-// Listen on 0.0.0.0:port — any interface. macOS shows a firewall
-// prompt the first time; use net_listen_tcp_loopback to avoid it.
+// Listens on port on every interface. macOS asks the user about its
+// firewall the first time. net_listen_tcp_loopback avoids the prompt.
 Socket net_listen_tcp(u16 port) {
-    return _net_listen_tcp_at(port, 0, true);   // INADDR_ANY
+    return _net_listen_tcp_at(port, 0, true);
 }
 
-// Listen on 127.0.0.1:port — loopback only, no firewall prompt.
+// Listens on 127.0.0.1:port. Only this machine can connect.
 Socket net_listen_tcp_loopback(u16 port) {
-    // INADDR_LOOPBACK is 0x7F000001 big-endian, written directly
-    // for a little-endian host as 0x0100007F.
+    // 127.0.0.1 in network byte order.
     return _net_listen_tcp_at(port, 0x0100007F, true);
 }
 
-// Loopback listener without SO_REUSEADDR, so binding a port an active
-// listener already holds fails (on every platform). For free-port
-// scans — try this in a loop and fall through to the next port.
+// Listens on 127.0.0.1:port without SO_REUSEADDR. It fails when another
+// listener holds the port. Call it on port after port to find a free
+// one.
 Socket net_listen_tcp_loopback_excl(u16 port) {
     return _net_listen_tcp_at(port, 0x0100007F, false);
 }
 
-// Local port the socket is bound to. Use after listen(s, 0) to
-// discover the OS-assigned port. Returns 0 on error.
+// The local port of the socket. After a listen on port 0 it returns
+// the port the system chose. Returns 0 on error.
 u16 net_socket_port(Socket s) {
     _NetSockAddrIn addr;
     i32 r;
@@ -383,10 +374,10 @@ u16 net_socket_port(Socket s) {
         r = getsockname(s.fd, &addr, &len);
     }
     if r != 0 { return cast(u16, 0); }
-    return net_htons(addr.port);   // swap back to host order
+    return net_htons(addr.port);
 }
 
-// Block until a client connects. The peer address is discarded.
+// Waits until a client connects. The peer address is discarded.
 Socket net_accept(Socket server) {
     Socket result = _net_invalid();
     i64 c;
@@ -424,8 +415,8 @@ Socket net_accept(Socket server) {
     return result;
 }
 
-// Read up to `len` bytes. Returns the byte count, 0 on clean EOF,
-// -1 on error.
+// Reads up to `len` bytes. Returns the count, 0 when the peer has
+// closed, or -1 on error.
 i32 net_recv(Socket s, u8* buf, i32 len) {
     when os(windows) {
         return recv(s.fd, buf, len, 0);
@@ -436,12 +427,12 @@ i32 net_recv(Socket s, u8* buf, i32 len) {
     } else when os(uefi) {
         return recv(s.fd, buf, len, 0);
     } else {
-        return 0 - 1;   // no socket backend on this target
+        return 0 - 1;   // this target has no sockets
     }
 }
 
-// Send up to `len` bytes. May write fewer — see net_send_all.
-// Returns byte count, -1 on error.
+// Sends up to `len` bytes and may send fewer. Returns the count, or -1
+// on error. net_send_all sends everything.
 i32 net_send(Socket s, u8* buf, i32 len) {
     when os(windows) {
         return send(s.fd, buf, len, 0);
@@ -452,11 +443,11 @@ i32 net_send(Socket s, u8* buf, i32 len) {
     } else when os(uefi) {
         return send(s.fd, buf, len, 0);
     } else {
-        return 0 - 1;   // no socket backend on this target
+        return 0 - 1;   // this target has no sockets
     }
 }
 
-// Send all `len` bytes, looping over partial sends.
+// Sends all `len` bytes. Returns false on error.
 bool net_send_all(Socket s, u8* buf, i32 len) {
     i32 sent = 0;
     while sent < len {
@@ -479,9 +470,8 @@ void net_close(Socket s) {
     }
 }
 
-// Connect to an arbitrary IPv4 host. `ip_be` is the address with its
-// bytes in network order packed into a u32 (e.g. 127.0.0.1 -> 0x0100007F,
-// 1.1.1.1 -> 0x01010101). Returns an invalid socket on failure.
+// Connects to an IPv4 host. `ip_be` holds the address bytes in network
+// order: 127.0.0.1 is 0x0100007F. Returns an invalid socket on failure.
 Socket net_connect(u32 ip_be, u16 port) {
     Socket result = _net_invalid();
     i64 fd;
@@ -530,36 +520,28 @@ Socket net_connect(u32 ip_be, u16 port) {
     return result;
 }
 
-// Connect to 127.0.0.1:port. Returns an invalid socket on failure.
+// Connects to 127.0.0.1:port. Returns an invalid socket on failure.
 Socket net_connect_loopback(u16 port) {
-    // INADDR_LOOPBACK 0x7F000001 in network order -> 0x0100007F.
     return net_connect(0x0100007F, port);
 }
 
 // --- Non-blocking layer ---------------------------------------------
 //
-// fd-level API for readiness-driven runtimes (event loops, reactors):
-// non-blocking sockets, WOULDBLOCK-aware I/O, poll, and DNS. The
-// blocking API above is unchanged; a blocking Socket interoperates via
-// its .fd (make it non-blocking with net_set_nonblocking).
+// Calls on plain descriptors for event loops. A call that would wait
+// returns NET_WOULDBLOCK instead. A blocking Socket works here through
+// its fd, after net_set_nonblocking.
 //
-// Return conventions:
-//   net_try_recv/send: >=0 bytes moved, 0 clean EOF (recv only),
-//                      NET_WOULDBLOCK, or NET_ERR.
-//   net_try_accept:    >=0 new fd, NET_WOULDBLOCK, or NET_ERR.
-// An fd of -1 is the invalid sentinel on every path.
+// net_try_recv and net_try_send return the bytes moved, NET_WOULDBLOCK
+// or NET_ERR. net_try_recv returns 0 when the peer has closed.
+// net_try_accept returns the new descriptor, NET_WOULDBLOCK or NET_ERR.
+// A descriptor of -1 means none.
 //
-// A send to a peer that already closed is an error return, never a
-// process signal (SO_NOSIGPIPE on macOS, MSG_NOSIGNAL on Linux).
+// A send to a peer that has closed returns an error.
 //
-// On Linux this layer, unlike the blocking one, links libc.so.6:
-// poll, fcntl and getaddrinfo have no raw-syscall builtins, and name
-// resolution needs the libc resolver anyway. Calling into it is what
-// adds the dependency — importing net.mc without it stays standalone.
+// On Linux these calls use libc.so.6 for poll, fcntl and name lookup.
+// A program that calls none of them does not link libc.
 //
-// wasm gets fail-fast stubs, like the blocking API's — net.mc is in the
-// compiler's own closure (web_server, shader_watch), so it must compile
-// on every target. uefi takes these calls from an installed backend.
+// On wasm every call fails.
 
 const i32 NET_WOULDBLOCK = -1;
 const i32 NET_ERR = -2;
@@ -567,36 +549,37 @@ const i32 NET_ERR = -2;
 // 127.0.0.1 in network byte order.
 const u32 NET_LOOPBACK_BE = 0x0100007F;
 
-// poll event/result bits. These are the native poll(2) values; the
-// Windows arm translates to and from WSAPoll's inside net_poll.
+// The readiness bits of net_poll and the pollers.
 const i16 NET_POLLIN  = 0x0001;
 const i16 NET_POLLOUT = 0x0004;
 const i16 NET_POLLERR = 0x0008;
 const i16 NET_POLLHUP = 0x0010;
 
-// The readiness descriptor for net_poll. fd is i64 to match Socket.fd
-// and Winsock; the POSIX arms narrow to the native pollfd inside the
-// call.
+// One descriptor for net_poll: the readiness asked for in `events`,
+// the readiness found in `revents`.
 struct NetPollFd {
     i64 fd;
     i16 events;
     i16 revents;
 }
 
-// --- per-platform pieces the blocking layer doesn't have -------------
+// --- Per-platform pieces of the non-blocking API ---------------------
 
 when os(windows) {
-    const i32 _NET_FIONBIO = 0x8004667E;
-    const i32 _NET_SO_ERROR = 0x1007;
-    const i32 _NET_WSAEWOULDBLOCK = 10035;
+    private const i32 _NET_FIONBIO = 0x8004667E;
+    private const i32 _NET_SO_ERROR = 0x1007;
+    private const i32 _NET_WSAEWOULDBLOCK = 10035;
     // WSAPoll bits
-    const i16 _NET_W_POLLRDNORM = 0x0100;
-    const i16 _NET_W_POLLWRNORM = 0x0010;
-    const i16 _NET_W_POLLERR    = 0x0001;
-    const i16 _NET_W_POLLHUP    = 0x0002;
-    const i16 _NET_W_POLLNVAL   = 0x0004;
+    private const i16 _NET_W_POLLRDNORM = 0x0100;
+    private const i16 _NET_W_POLLWRNORM = 0x0010;
+    private const i16 _NET_W_POLLERR    = 0x0001;
+    private const i16 _NET_W_POLLHUP    = 0x0002;
+    private const i16 _NET_W_POLLNVAL   = 0x0004;
 
-    extern "ws2_32.dll" {
+    private extern "kernel32.dll" {
+        void Sleep(u32 ms);
+    }
+    private extern "ws2_32.dll" {
         i32 ioctlsocket(i64 s, i32 cmd, u32* argp);
         i32 getsockopt(i64 s, i32 level, i32 opt, void* val, i32* len);
         i32 WSAPoll(void* fds, u32 nfds, i32 timeout);
@@ -607,7 +590,7 @@ when os(windows) {
     }
 
     // ADDRINFOA, x64 layout: ai_canonname before ai_addr.
-    struct _NetAddrInfo {
+    private struct _NetAddrInfo {
         i32 ai_flags;
         i32 ai_family;
         i32 ai_socktype;
@@ -622,14 +605,16 @@ when os(windows) {
 }
 
 when os(macos) {
-    const i32 _NET_SO_ERROR = 0x1007;
-    const i32 _NET_O_NONBLOCK = 0x0004;
-    const i32 _NET_EWOULDBLOCK = 35;
-    const i32 _NET_EINPROGRESS = 36;
+    private const i32 _NET_SO_ERROR = 0x1007;
+    private const i32 _NET_O_NONBLOCK = 0x0004;
+    private const i32 _NET_EWOULDBLOCK = 35;
+    private const i32 _NET_EINPROGRESS = 36;
 
-    extern "libSystem.B.dylib" {
+    private extern "libSystem.B.dylib" {
         i32 fcntl(i32 fd, i32 cmd, ...);
         i32 poll(void* fds, u32 nfds, i32 timeout);
+        i32 kqueue();
+        i32 kevent(i32 kq, void* changelist, i32 nchanges, void* eventlist, i32 nevents, void* timeout);
         i32 getsockopt(i32 fd, i32 level, i32 opt, void* val, i32* len);
         i32 getaddrinfo(u8* node, u8* service, void* hints, void** res);
         void freeaddrinfo(void* res);
@@ -637,7 +622,7 @@ when os(macos) {
     private extern "libSystem.B.dylib" i32* _net_errno_loc() from "__error";
 
     // BSD addrinfo: ai_canonname before ai_addr, 32-bit ai_addrlen.
-    struct _NetAddrInfo {
+    private struct _NetAddrInfo {
         i32 ai_flags;
         i32 ai_family;
         i32 ai_socktype;
@@ -653,15 +638,18 @@ when os(macos) {
 }
 
 when os(linux) {
-    const i32 _NET_SO_ERROR = 4;
-    const i32 _NET_O_NONBLOCK = 0x0800;
-    const i32 _NET_EWOULDBLOCK = 11;
-    const i32 _NET_EINPROGRESS = 115;
-    const i32 _NET_MSG_NOSIGNAL = 0x4000;
+    private const i32 _NET_SO_ERROR = 4;
+    private const i32 _NET_O_NONBLOCK = 0x0800;
+    private const i32 _NET_EWOULDBLOCK = 11;
+    private const i32 _NET_EINPROGRESS = 115;
+    private const i32 _NET_MSG_NOSIGNAL = 0x4000;
 
-    extern "libc.so.6" {
+    private extern "libc.so.6" {
         i32 fcntl(i32 fd, i32 cmd, ...);
         i32 poll(void* fds, u64 nfds, i32 timeout);
+        i32 epoll_create1(i32 flags);
+        i32 epoll_ctl(i32 epfd, i32 op, i32 fd, void* event);
+        i32 epoll_wait(i32 epfd, void* events, i32 maxevents, i32 timeout);
         i32 shutdown(i32 s, i32 how);
         i32 getsockopt(i32 fd, i32 level, i32 opt, void* val, i32* len);
         i32 getaddrinfo(u8* node, u8* service, void* hints, void** res);
@@ -669,7 +657,7 @@ when os(linux) {
     }
 
     // glibc addrinfo: ai_addr before ai_canonname, 32-bit ai_addrlen.
-    struct _NetAddrInfo {
+    private struct _NetAddrInfo {
         i32 ai_flags;
         i32 ai_family;
         i32 ai_socktype;
@@ -681,26 +669,24 @@ when os(linux) {
         void* ai_next;
     }
 
-    // sys_* socket builtins return -errno directly; no accessor needed
-    // for them. libc's poll/getsockopt failures are not inspected.
+    // The sys_* builtins return the error code negated.
 }
 
 when os(linux) || os(macos) {
-    const i32 _NET_F_GETFL = 3;
-    const i32 _NET_F_SETFL = 4;
-    const i32 _NET_EINTR = 4;
+    private const i32 _NET_F_GETFL = 3;
+    private const i32 _NET_F_SETFL = 4;
+    private const i32 _NET_EINTR = 4;
 
-    // native struct pollfd — int fd, unlike WSAPOLLFD's i64
-    struct _NetPosixPollFd {
+    // struct pollfd, with an i32 descriptor.
+    private struct _NetPosixPollFd {
         i32 fd;
         i16 events;
         i16 revents;
     }
-    const i16 _NET_P_POLLNVAL = 0x0020;
+    private const i16 _NET_P_POLLNVAL = 0x0020;
 }
 
-// Switch an fd (from this layer or a blocking Socket) to non-blocking
-// mode. Returns false on failure.
+// Makes a descriptor non-blocking. Returns false on failure.
 bool net_set_nonblocking(i64 fd) {
     when os(windows) {
         u32 one = 1;
@@ -713,11 +699,11 @@ bool net_set_nonblocking(i64 fd) {
         if _net_be == null { return false; }
         return _net_be.ioctl_nonblock(fd, true) == 0;
     } else {
-        return false;   // no socket backend on this target
+        return false;   // this target has no sockets
     }
 }
 
-// Post-creation setup shared by every socket this layer hands out.
+// Setup for every socket the non-blocking API creates.
 private void _net_nb_setup(i64 fd) {
     ignore net_set_nonblocking(fd);
     when os(macos) {
@@ -726,7 +712,7 @@ private void _net_nb_setup(i64 fd) {
     }
 }
 
-// A fresh non-blocking TCP socket, or -1.
+// A new non-blocking TCP socket, or -1.
 i64 net_nb_socket() {
     i64 fd;
     when os(windows) {
@@ -744,15 +730,15 @@ i64 net_nb_socket() {
         fd = socket(NET_AF_INET, NET_SOCK_STREAM, 0);
         if fd == -1 { return -1; }
     } else {
-        return -1;   // no socket backend on this target
+        return -1;   // this target has no sockets
     }
     _net_nb_setup(fd);
     return fd;
 }
 
-// Bind + listen on bind_be:port, non-blocking, SO_REUSEADDR, backlog
-// 128. bind_be is in network byte order (0 = INADDR_ANY). Returns the
-// fd or -1.
+// A non-blocking listener on bind_be:port with SO_REUSEADDR.
+// `bind_be` is in network byte order, and 0 means every interface.
+// Returns the descriptor, or -1.
 i64 net_nb_listen4(u32 bind_be, u16 port) {
     Socket s = _net_listen_tcp_at(port, bind_be, true);
     if !s.valid { return -1; }
@@ -760,7 +746,7 @@ i64 net_nb_listen4(u32 bind_be, u16 port) {
     return s.fd;
 }
 
-// Local port an fd is bound to (host order), or 0.
+// The local port of a descriptor, or 0.
 u16 net_fd_port(i64 fd) {
     Socket s;
     s.fd = fd;
@@ -775,8 +761,8 @@ void net_fd_close(i64 fd) {
     net_close(s);
 }
 
-// Accept a pending connection off a non-blocking listener: the new
-// fd (already non-blocking), NET_WOULDBLOCK, or NET_ERR.
+// Accepts a waiting connection on a non-blocking listener. Returns the
+// new non-blocking descriptor, NET_WOULDBLOCK or NET_ERR.
 i64 net_try_accept(i64 lfd) {
     when os(windows) || os(linux) || os(macos) {
         _NetSockAddrIn a;
@@ -820,13 +806,12 @@ i64 net_try_accept(i64 lfd) {
         _net_nb_setup(c);
         return c;
     } else {
-        return NET_ERR;   // no socket backend on this target
+        return NET_ERR;   // this target has no sockets
     }
 }
 
-// Start a non-blocking connect. Returns the fd (connection in progress
-// or already complete), or -1 on immediate failure. Poll the fd for
-// writable, then confirm with net_connect_result.
+// Starts a connect without waiting. Returns the descriptor, or -1. Wait
+// for NET_POLLOUT on it, then read the outcome with net_connect_result.
 i64 net_connect_start(u32 ip_be, u16 port) {
     i64 fd = net_nb_socket();
     if fd == -1 { return -1; }
@@ -836,7 +821,7 @@ i64 net_connect_start(u32 ip_be, u16 port) {
     addr.addr = ip_be;
     for i32 i = 0; i < 8; i++ { addr.zero[i] = 0; }
     when os(windows) {
-        if connect(fd, &addr, 16) == 0 { return fd; }      // rare: instant
+        if connect(fd, &addr, 16) == 0 { return fd; }
         if _net_last_err() == _NET_WSAEWOULDBLOCK { return fd; }
     }
     when os(linux) {
@@ -858,8 +843,8 @@ i64 net_connect_start(u32 ip_be, u16 port) {
     return -1;
 }
 
-// After the fd polls writable: 0 = connected, >0 = the connect errno,
-// NET_ERR if the state could not be read (checked via SO_ERROR).
+// The outcome of a connect, once the descriptor reports NET_POLLOUT.
+// 0 when connected, the system's error code when not, or NET_ERR.
 i32 net_connect_result(i64 fd) {
     when os(windows) || os(linux) || os(macos) {
         i32 err = 0;
@@ -879,12 +864,12 @@ i32 net_connect_result(i64 fd) {
         if getsockopt(fd, _NET_SOL_SOCKET, _NET_SO_ERROR, &err, &len) != 0 { return NET_ERR; }
         return err;
     } else {
-        return NET_ERR;   // no socket backend on this target
+        return NET_ERR;   // this target has no sockets
     }
 }
 
-// Read up to len bytes off a non-blocking fd: the byte count, 0 on
-// clean EOF, NET_WOULDBLOCK, or NET_ERR.
+// Reads up to `len` bytes. Returns the count, 0 when the peer has
+// closed, NET_WOULDBLOCK or NET_ERR.
 i32 net_try_recv(i64 fd, u8* buf, i32 len) {
     when os(windows) {
         i32 n = recv(fd, buf, len, 0);
@@ -909,12 +894,12 @@ i32 net_try_recv(i64 fd, u8* buf, i32 len) {
         if e == _NET_EWOULDBLOCK || e == _NET_EINTR { return NET_WOULDBLOCK; }
         return NET_ERR;
     } else {
-        return NET_ERR;   // no socket backend on this target
+        return NET_ERR;   // this target has no sockets
     }
 }
 
-// Write up to len bytes to a non-blocking fd: the byte count,
-// NET_WOULDBLOCK, or NET_ERR.
+// Sends up to `len` bytes. Returns the count, NET_WOULDBLOCK or
+// NET_ERR.
 i32 net_try_send(i64 fd, u8* buf, i32 len) {
     when os(windows) {
         i32 n = send(fd, buf, len, 0);
@@ -939,18 +924,17 @@ i32 net_try_send(i64 fd, u8* buf, i32 len) {
         if e == _NET_EWOULDBLOCK || e == _NET_EINTR { return NET_WOULDBLOCK; }
         return NET_ERR;
     } else {
-        return NET_ERR;   // no socket backend on this target
+        return NET_ERR;   // this target has no sockets
     }
 }
 
-// Wait up to timeout_ms (-1 = indefinitely) for readiness on n
-// descriptors. Returns the number of ready descriptors, 0 on timeout,
-// -1 on error; revents is filled with NET_POLL* bits.
+// Waits up to `timeout_ms` for any of `n` descriptors to be ready. -1
+// waits without a limit. Sets each `revents`. Returns the number ready,
+// 0 on timeout, or -1 on error.
 i32 net_poll(NetPollFd* fds, i32 n, i32 timeout_ms) {
     if n <= 0 { return 0; }
     when os(windows) {
-        // translate the portable bits to WSAPoll's and back; the
-        // NetPollFd layout already matches WSAPOLLFD
+        // NetPollFd has the layout of WSAPOLLFD. Only the bits differ.
         for i32 i = 0; i < n; i++ {
             i16 ev = 0;
             if ((fds + i).events & NET_POLLIN) != 0 { ev = cast(i16, ev | _NET_W_POLLRDNORM); }
@@ -970,7 +954,7 @@ i32 net_poll(NetPollFd* fds, i32 n, i32 timeout_ms) {
         }
         return r;
     } else when os(linux) || os(macos) {
-        // same bit values natively; only the fd width differs
+        // The bits are the same. Only the descriptor width differs.
         _NetPosixPollFd* pp = alloc<_NetPosixPollFd>(n);
         defer free(pp);
         for i32 i = 0; i < n; i++ {
@@ -987,35 +971,32 @@ i32 net_poll(NetPollFd* fds, i32 n, i32 timeout_ms) {
         }
         for i32 i = 0; i < n; i++ {
             i16 re = (pp + i).revents;
-            // a bad descriptor reads as an error condition
+            // A bad descriptor reports as an error.
             if (re & _NET_P_POLLNVAL) != 0 { re = cast(i16, re | NET_POLLERR); }
             (fds + i).revents = re;
         }
         return r < 0 ? -1 : r;
     } else when os(uefi) {
-        // The descriptor this layer hands around is already the one the
-        // backend polls, so there is nothing to narrow or translate.
         return poll(fds, n, timeout_ms);
     } else {
-        return -1;   // no socket backend on this target
+        return -1;   // this target has no sockets
     }
 }
 
-// Half-close: send a FIN and keep reading. A protocol that ends its
-// reply by hanging up needs this — a full close would drop the peer's
-// answer. 0 on success, -1 otherwise.
+// Closes the sending side and keeps the receiving side open. The peer
+// sees the end of the stream and can still answer. Returns 0, or -1.
 i32 net_shutdown_write(i64 fd) {
     when os(windows) || os(uefi) {
         return shutdown(fd, 1);                    // SD_SEND
     } else when os(linux) || os(macos) || os(ios) {
         return shutdown(cast(i32, fd), 1);         // SHUT_WR
     } else {
-        return -1;   // no socket backend on this target
+        return -1;   // this target has no sockets
     }
 }
 
-// Resolve a hostname to its first IPv4 address (network-order u32),
-// or 0 on failure. A dotted-quad string resolves without a lookup.
+// The first IPv4 address of a host name, in network byte order, or 0.
+// An address such as "10.0.0.1" converts without a lookup.
 u32 net_resolve4(u8* host) {
     when os(windows) || os(linux) || os(macos) {
         void* res = null;
@@ -1037,6 +1018,320 @@ u32 net_resolve4(u8* host) {
         if _net_be == null { return 0; }
         return _net_be.resolve4(host);
     } else {
-        return 0;   // no resolver on this target
+        return 0;   // this target has no sockets
+    }
+}
+
+// --- Pollers ---------------------------------------------------------
+//
+// A poller holds descriptors a program adds once. Each has the
+// readiness it wants and a token of the program's choice. A wait
+// returns only the ready entries. net_poll, by contrast, checks the
+// whole list on every call.
+//
+// An entry stays ready until the program reads or writes what made it
+// ready, as in net_poll. A poller belongs to the thread that waits on
+// it. A program with a loop per core makes one per loop.
+//
+// Linux uses epoll and macOS kqueue. On Windows a poller is a list that
+// each wait passes to net_poll. A wait there costs as much as net_poll.
+// When more entries are ready than a wait can return, the earliest in
+// the list come first.
+
+// A ready entry: its token and its readiness bits.
+struct NetPollEvent {
+    i64 token;
+    i16 revents;
+}
+
+when os(linux) {
+    private const i32 _NET_EPOLL_CTL_ADD = 1;
+    private const i32 _NET_EPOLL_CTL_DEL = 2;
+    private const i32 _NET_EPOLL_CTL_MOD = 3;
+    // struct epoll_event, a u32 then a u64. It is packed to 12 bytes on
+    // x64 and padded to 16 on arm64.
+    when arch(x64) {
+        private const i32 _NET_EPEV_SIZE = 12;
+        private const i32 _NET_EPEV_DATA = 4;
+    }
+    when !arch(x64) {
+        private const i32 _NET_EPEV_SIZE = 16;
+        private const i32 _NET_EPEV_DATA = 8;
+    }
+}
+
+when os(macos) {
+    private const i16 _NET_EVFILT_READ = -1;
+    private const i16 _NET_EVFILT_WRITE = -2;
+    private const u16 _NET_EV_ADD = 0x0001;
+    private const u16 _NET_EV_DELETE = 0x0002;
+    private const u16 _NET_EV_ENABLE = 0x0004;
+    private const u16 _NET_EV_RECEIPT = 0x0040;
+    private const u16 _NET_EV_ERROR = 0x4000;
+    private const u16 _NET_EV_EOF = 0x8000;
+    private const i64 _NET_ENOENT = 2;
+
+    // struct kevent on 64-bit Darwin.
+    private struct _NetKEvent {
+        u64 ident;
+        i16 filter;
+        u16 flags;
+        u32 fflags;
+        i64 data;
+        u64 udata;
+    }
+    private struct _NetTimespec {
+        i64 sec;
+        i64 nsec;
+    }
+
+    // Applies one change. Returns 0, the error code, or -1.
+    private i64 _net_kq_change(i32 kq, i64 fd, i16 filter, u16 flags, i64 token) {
+        _NetKEvent ch;
+        ch.ident = cast(u64, fd);
+        ch.filter = filter;
+        ch.flags = cast(u16, flags | _NET_EV_RECEIPT);
+        ch.fflags = 0;
+        ch.data = 0;
+        ch.udata = cast(u64, token);
+        _NetKEvent out;
+        if kevent(kq, &ch, 1, &out, 1, null) < 1 { return -1; }
+        return out.data;
+    }
+}
+
+when os(windows) {
+    // Threads may create pollers at the same time. Each claims a slot
+    // with atomic_cas.
+    private struct _NetWinPoller {
+        i32 used;
+        i64* fds;
+        i16* events;
+        i64* tokens;
+        i32 n;
+        i32 cap;
+    }
+    private const i32 _NET_WIN_POLLERS = 64;
+    private _NetWinPoller[64] _net_win_pollers;
+
+    private _NetWinPoller* _net_win_poller(i64 p) {
+        if p < 0 || p >= cast(i64, _NET_WIN_POLLERS) { return null; }
+        _NetWinPoller* w = &_net_win_pollers[cast(i32, p)];
+        return w.used != 0 ? w : null;
+    }
+}
+
+// A new poller, or -1.
+i64 net_poller_new() {
+    when os(linux) {
+        i32 fd = epoll_create1(0);
+        return fd < 0 ? -1 : cast(i64, fd);
+    } else when os(macos) {
+        i32 fd = kqueue();
+        return fd < 0 ? -1 : cast(i64, fd);
+    } else when os(windows) {
+        for i32 i = 0; i < _NET_WIN_POLLERS; i++ {
+            _NetWinPoller* w = &_net_win_pollers[i];
+            if !atomic_cas(&w.used, 0, 1) { continue; }
+            w.fds = null;
+            w.events = null;
+            w.tokens = null;
+            w.n = 0;
+            w.cap = 0;
+            return cast(i64, i);
+        }
+        return -1;
+    } else when os(uefi) {
+        if !_net_be_up() || _net_be.poller_new == null { return -1; }
+        return _net_be.poller_new();
+    } else {
+        return -1;   // this target has no sockets
+    }
+}
+
+// Closes a poller. The descriptors in it stay open.
+i32 net_poller_close(i64 p) {
+    when os(linux) || os(macos) {
+        close(p);
+        return 0;
+    } else when os(windows) {
+        _NetWinPoller* w = _net_win_poller(p);
+        if w == null { return -1; }
+        if w.fds != null { free(w.fds); }
+        if w.events != null { free(w.events); }
+        if w.tokens != null { free(w.tokens); }
+        w.used = 0;
+        return 0;
+    } else when os(uefi) {
+        if !_net_be_up() || _net_be.poller_close == null { return -1; }
+        return _net_be.poller_close(p);
+    } else {
+        return -1;
+    }
+}
+
+// Adds `fd` to the poller, or changes its entry. `events` takes
+// NET_POLLIN and NET_POLLOUT. A wait reports the entry by `token`.
+// `events` of 0 removes the entry, and fails when there is none.
+// Returns 0, or -1.
+//
+// Closing a descriptor removes it on Linux, macOS and uefi. On Windows
+// remove it before closing it.
+i32 net_poller_set(i64 p, i64 fd, i16 events, i64 token) {
+    when os(linux) {
+        noinit u8[16] ev;
+        u32 bits = 0;
+        if (events & NET_POLLIN) != 0 { bits = bits | 1; }
+        if (events & NET_POLLOUT) != 0 { bits = bits | 4; }
+        *cast(u32*, &ev[0]) = bits;
+        *cast(u64*, &ev[_NET_EPEV_DATA]) = cast(u64, token);
+        if events == 0 {
+            return epoll_ctl(cast(i32, p), _NET_EPOLL_CTL_DEL, cast(i32, fd), &ev[0]) < 0 ? -1 : 0;
+        }
+        // Change the entry, or add it when there is none.
+        if epoll_ctl(cast(i32, p), _NET_EPOLL_CTL_MOD, cast(i32, fd), &ev[0]) == 0 { return 0; }
+        return epoll_ctl(cast(i32, p), _NET_EPOLL_CTL_ADD, cast(i32, fd), &ev[0]) < 0 ? -1 : 0;
+    } else when os(macos) {
+        // kqueue keeps one filter for reading and one for writing.
+        // Removing a filter that is absent fails only when both are.
+        i32 kq = cast(i32, p);
+        u16 on = cast(u16, _NET_EV_ADD | _NET_EV_ENABLE);
+        i64 r = _net_kq_change(kq, fd, _NET_EVFILT_READ, (events & NET_POLLIN) != 0 ? on : _NET_EV_DELETE, token);
+        if r != 0 && !(r == _NET_ENOENT && (events & NET_POLLIN) == 0) { return -1; }
+        bool had_read = r == 0;
+        r = _net_kq_change(kq, fd, _NET_EVFILT_WRITE, (events & NET_POLLOUT) != 0 ? on : _NET_EV_DELETE, token);
+        if r != 0 && !(r == _NET_ENOENT && (events & NET_POLLOUT) == 0) { return -1; }
+        if events == 0 && !had_read && r != 0 { return -1; }
+        return 0;
+    } else when os(windows) {
+        _NetWinPoller* w = _net_win_poller(p);
+        if w == null { return -1; }
+        i32 at = -1;
+        for i32 i = 0; i < w.n; i++ {
+            if *(w.fds + i) == fd { at = i; break; }
+        }
+        if events == 0 {
+            if at < 0 { return -1; }
+            w.n--;
+            *(w.fds + at) = *(w.fds + w.n);
+            *(w.events + at) = *(w.events + w.n);
+            *(w.tokens + at) = *(w.tokens + w.n);
+            return 0;
+        }
+        if at < 0 {
+            if w.n == w.cap {
+                i32 cap = w.cap == 0 ? 64 : w.cap * 2;
+                i64* nf = alloc<i64>(cap);
+                i16* ne = alloc<i16>(cap);
+                i64* nt = alloc<i64>(cap);
+                if nf == null || ne == null || nt == null { return -1; }
+                for i32 i = 0; i < w.n; i++ {
+                    *(nf + i) = *(w.fds + i);
+                    *(ne + i) = *(w.events + i);
+                    *(nt + i) = *(w.tokens + i);
+                }
+                if w.fds != null { free(w.fds); }
+                if w.events != null { free(w.events); }
+                if w.tokens != null { free(w.tokens); }
+                w.fds = nf;
+                w.events = ne;
+                w.tokens = nt;
+                w.cap = cap;
+            }
+            at = w.n;
+            w.n++;
+            *(w.fds + at) = fd;
+        }
+        *(w.events + at) = events;
+        *(w.tokens + at) = token;
+        return 0;
+    } else when os(uefi) {
+        if !_net_be_up() || _net_be.poller_set == null { return -1; }
+        return _net_be.poller_set(p, fd, events, token);
+    } else {
+        return -1;
+    }
+}
+
+// Waits up to `timeout_ms` for entries to be ready. -1 waits without a
+// limit. Puts up to `max` ready entries in `out` and returns how many,
+// 0 on timeout, or -1 on error.
+//
+// On macOS one entry can appear twice in a wait, once for reading and
+// once for writing. A program that closes a socket on the first should
+// skip tokens it no longer knows.
+i32 net_poller_wait(i64 p, NetPollEvent* out, i32 max, i32 timeout_ms) {
+    if max <= 0 { return 0; }
+    when os(linux) {
+        u8* evs = alloc<u8>(max * _NET_EPEV_SIZE);
+        if evs == null { return -1; }
+        defer free(evs);
+        i32 r = epoll_wait(cast(i32, p), evs, max, timeout_ms);
+        if r < 0 { return -1; }
+        for i32 i = 0; i < r; i++ {
+            u8* e = evs + i * _NET_EPEV_SIZE;
+            u32 bits = *cast(u32*, e);
+            i16 re = 0;
+            if (bits & 1) != 0 { re = cast(i16, re | NET_POLLIN); }
+            if (bits & 4) != 0 { re = cast(i16, re | NET_POLLOUT); }
+            if (bits & 8) != 0 { re = cast(i16, re | NET_POLLERR); }
+            if (bits & 0x10) != 0 { re = cast(i16, re | NET_POLLHUP); }
+            (out + i).token = cast(i64, *cast(u64*, e + _NET_EPEV_DATA));
+            (out + i).revents = re;
+        }
+        return r;
+    } else when os(macos) {
+        _NetKEvent* evs = alloc<_NetKEvent>(max);
+        if evs == null { return -1; }
+        defer free(evs);
+        _NetTimespec ts;
+        ts.sec = cast(i64, timeout_ms) / 1000;
+        ts.nsec = (cast(i64, timeout_ms) % 1000) * 1000000;
+        i32 r = kevent(cast(i32, p), null, 0, evs, max, timeout_ms < 0 ? null : &ts);
+        if r < 0 { return -1; }
+        for i32 i = 0; i < r; i++ {
+            _NetKEvent* e = evs + i;
+            i16 re = 0;
+            if e.filter == _NET_EVFILT_READ { re = NET_POLLIN; }
+            else if e.filter == _NET_EVFILT_WRITE { re = NET_POLLOUT; }
+            if (e.flags & _NET_EV_EOF) != 0 { re = cast(i16, re | NET_POLLHUP); }
+            if (e.flags & _NET_EV_ERROR) != 0 { re = cast(i16, re | NET_POLLERR); }
+            (out + i).token = cast(i64, e.udata);
+            (out + i).revents = re;
+        }
+        return r;
+    } else when os(windows) {
+        _NetWinPoller* w = _net_win_poller(p);
+        if w == null { return -1; }
+        if w.n == 0 {
+            // An empty poller sleeps out the timeout. Without a limit it
+            // never returns, as on Linux and macOS.
+            if timeout_ms < 0 { Sleep(0xFFFFFFFF); }
+            if timeout_ms > 0 { Sleep(cast(u32, timeout_ms)); }
+            return 0;
+        }
+        NetPollFd* fds = alloc<NetPollFd>(w.n);
+        if fds == null { return -1; }
+        defer free(fds);
+        for i32 i = 0; i < w.n; i++ {
+            (fds + i).fd = *(w.fds + i);
+            (fds + i).events = *(w.events + i);
+            (fds + i).revents = 0;
+        }
+        i32 r = net_poll(fds, w.n, timeout_ms);
+        if r < 0 { return -1; }
+        i32 k = 0;
+        for i32 i = 0; i < w.n && k < max; i++ {
+            if (fds + i).revents == 0 { continue; }
+            (out + k).token = *(w.tokens + i);
+            (out + k).revents = (fds + i).revents;
+            k++;
+        }
+        return k;
+    } else when os(uefi) {
+        if !_net_be_up() || _net_be.poller_wait == null { return -1; }
+        return _net_be.poller_wait(p, out, max, timeout_ms);
+    } else {
+        return -1;
     }
 }
