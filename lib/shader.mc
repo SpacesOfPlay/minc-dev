@@ -70,6 +70,8 @@
 //     i32 sample_kind;    // ShaderSampleKind — meaningful for textures
 //     i32 sampler_kind;   // ShaderSamplerKind — meaningful for samplers
 //     i32 multisampled;   // 1 when the bound image is multisample (Texture2DMS)
+//     i32 hlsl_register_u; // the HLSL u-register declared for a storage image or
+//                          // read-write storage buffer; 0 for other kinds
 // }
 
 // bindings is one entry per @texture / @sampler / @storage / @buffer /

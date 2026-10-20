@@ -5518,7 +5518,7 @@ void ImVector_ImWchar_push_back(ImVector_ImWchar* self, ImWchar v) {
     if self.Size == self.Capacity {
         ImVector_ImWchar_reserve(self, ImVector_ImWchar__grow_capacity(self, self.Size + 1));
     }
-    memcpy(&self.Data[self.Size], &v, cast(u64, sizeof(v)));
+    *cast(u16*, &self.Data[self.Size]) = v;
     self.Size++;
 }
 
@@ -5571,7 +5571,7 @@ ImWchar* ImVector_ImWchar_insert(ImVector_ImWchar* self, ImWchar* it, ImWchar v)
     if off < self.Size {
         memmove(self.Data + off + 1, self.Data + off, (cast(u64, self.Size) - cast(u64, off)) * cast(u64, sizeof(ImWchar)));
     }
-    memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
+    *cast(u16*, &self.Data[off]) = v;
     self.Size++;
     return self.Data + off;
 }
@@ -6062,7 +6062,7 @@ void ImVector_char_push_back(ImVector_char* self, u8 v) {
     if self.Size == self.Capacity {
         ImVector_char_reserve(self, ImVector_char__grow_capacity(self, self.Size + 1));
     }
-    memcpy(&self.Data[self.Size], &v, cast(u64, sizeof(v)));
+    self.Data[self.Size] = v;
     self.Size++;
 }
 
@@ -6115,7 +6115,7 @@ u8* ImVector_char_insert(ImVector_char* self, u8* it, u8 v) {
     if off < self.Size {
         memmove(self.Data + off + 1, self.Data + off, (cast(u64, self.Size) - cast(u64, off)) * cast(u64, sizeof(u8)));
     }
-    memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
+    self.Data[off] = v;
     self.Size++;
     return self.Data + off;
 }
@@ -7098,7 +7098,7 @@ void ImVector_ImDrawIdx_push_back(ImVector_ImDrawIdx* self, ImDrawIdx v) {
     if self.Size == self.Capacity {
         ImVector_ImDrawIdx_reserve(self, ImVector_ImDrawIdx__grow_capacity(self, self.Size + 1));
     }
-    memcpy(&self.Data[self.Size], &v, cast(u64, sizeof(v)));
+    *cast(u16*, &self.Data[self.Size]) = v;
     self.Size++;
 }
 
@@ -7151,7 +7151,7 @@ ImDrawIdx* ImVector_ImDrawIdx_insert(ImVector_ImDrawIdx* self, ImDrawIdx* it, Im
     if off < self.Size {
         memmove(self.Data + off + 1, self.Data + off, (cast(u64, self.Size) - cast(u64, off)) * cast(u64, sizeof(ImDrawIdx)));
     }
-    memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
+    *cast(u16*, &self.Data[off]) = v;
     self.Size++;
     return self.Data + off;
 }
@@ -8626,7 +8626,7 @@ void ImVector_ImU8_push_back(ImVector_ImU8* self, ImU8 v) {
     if self.Size == self.Capacity {
         ImVector_ImU8_reserve(self, ImVector_ImU8__grow_capacity(self, self.Size + 1));
     }
-    memcpy(&self.Data[self.Size], &v, cast(u64, sizeof(v)));
+    *cast(u8*, &self.Data[self.Size]) = v;
     self.Size++;
 }
 
@@ -8679,7 +8679,7 @@ ImU8* ImVector_ImU8_insert(ImVector_ImU8* self, ImU8* it, ImU8 v) {
     if off < self.Size {
         memmove(self.Data + off + 1, self.Data + off, (cast(u64, self.Size) - cast(u64, off)) * cast(u64, sizeof(ImU8)));
     }
-    memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
+    *cast(u8*, &self.Data[off]) = v;
     self.Size++;
     return self.Data + off;
 }
@@ -9766,7 +9766,7 @@ void ImVector_ImU32_push_back(ImVector_ImU32* self, ImU32 v) {
     if self.Size == self.Capacity {
         ImVector_ImU32_reserve(self, ImVector_ImU32__grow_capacity(self, self.Size + 1));
     }
-    memcpy(&self.Data[self.Size], &v, cast(u64, sizeof(v)));
+    *cast(u32*, &self.Data[self.Size]) = v;
     self.Size++;
 }
 
@@ -9819,7 +9819,7 @@ ImU32* ImVector_ImU32_insert(ImVector_ImU32* self, ImU32* it, ImU32 v) {
     if off < self.Size {
         memmove(self.Data + off + 1, self.Data + off, (cast(u64, self.Size) - cast(u64, off)) * cast(u64, sizeof(ImU32)));
     }
-    memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
+    *cast(u32*, &self.Data[off]) = v;
     self.Size++;
     return self.Data + off;
 }
@@ -10906,7 +10906,7 @@ void ImVector_float_push_back(ImVector_float* self, f32 v) {
     if self.Size == self.Capacity {
         ImVector_float_reserve(self, ImVector_float__grow_capacity(self, self.Size + 1));
     }
-    memcpy(&self.Data[self.Size], &v, cast(u64, sizeof(v)));
+    self.Data[self.Size] = v;
     self.Size++;
 }
 
@@ -10959,7 +10959,7 @@ f32* ImVector_float_insert(ImVector_float* self, f32* it, f32 v) {
     if off < self.Size {
         memmove(self.Data + off + 1, self.Data + off, (cast(u64, self.Size) - cast(u64, off)) * cast(u64, sizeof(f32)));
     }
-    memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
+    self.Data[off] = v;
     self.Size++;
     return self.Data + off;
 }
@@ -11204,7 +11204,7 @@ void ImVector_ImU16_push_back(ImVector_ImU16* self, ImU16 v) {
     if self.Size == self.Capacity {
         ImVector_ImU16_reserve(self, ImVector_ImU16__grow_capacity(self, self.Size + 1));
     }
-    memcpy(&self.Data[self.Size], &v, cast(u64, sizeof(v)));
+    *cast(u16*, &self.Data[self.Size]) = v;
     self.Size++;
 }
 
@@ -11257,7 +11257,7 @@ ImU16* ImVector_ImU16_insert(ImVector_ImU16* self, ImU16* it, ImU16 v) {
     if off < self.Size {
         memmove(self.Data + off + 1, self.Data + off, (cast(u64, self.Size) - cast(u64, off)) * cast(u64, sizeof(ImU16)));
     }
-    memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
+    *cast(u16*, &self.Data[off]) = v;
     self.Size++;
     return self.Data + off;
 }
@@ -12590,7 +12590,7 @@ void ImVector_int_push_back(ImVector_int* self, i32 v) {
     if self.Size == self.Capacity {
         ImVector_int_reserve(self, ImVector_int__grow_capacity(self, self.Size + 1));
     }
-    memcpy(&self.Data[self.Size], &v, cast(u64, sizeof(v)));
+    self.Data[self.Size] = v;
     self.Size++;
 }
 
@@ -12643,7 +12643,7 @@ i32* ImVector_int_insert(ImVector_int* self, i32* it, i32 v) {
     if off < self.Size {
         memmove(self.Data + off + 1, self.Data + off, (cast(u64, self.Size) - cast(u64, off)) * cast(u64, sizeof(i32)));
     }
-    memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
+    self.Data[off] = v;
     self.Size++;
     return self.Data + off;
 }
@@ -16436,7 +16436,7 @@ void ImVector_ImGuiItemFlags_push_back(ImVector_ImGuiItemFlags* self, ImGuiItemF
     if self.Size == self.Capacity {
         ImVector_ImGuiItemFlags_reserve(self, ImVector_ImGuiItemFlags__grow_capacity(self, self.Size + 1));
     }
-    memcpy(&self.Data[self.Size], &v, cast(u64, sizeof(v)));
+    *cast(i32*, &self.Data[self.Size]) = v;
     self.Size++;
 }
 
@@ -16489,7 +16489,7 @@ ImGuiItemFlags* ImVector_ImGuiItemFlags_insert(ImVector_ImGuiItemFlags* self, Im
     if off < self.Size {
         memmove(self.Data + off + 1, self.Data + off, (cast(u64, self.Size) - cast(u64, off)) * cast(u64, sizeof(ImGuiItemFlags)));
     }
-    memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
+    *cast(i32*, &self.Data[off]) = v;
     self.Size++;
     return self.Data + off;
 }
@@ -17770,7 +17770,7 @@ void ImVector_unsigned_char_push_back(ImVector_unsigned_char* self, u8 v) {
     if self.Size == self.Capacity {
         ImVector_unsigned_char_reserve(self, ImVector_unsigned_char__grow_capacity(self, self.Size + 1));
     }
-    memcpy(&self.Data[self.Size], &v, cast(u64, sizeof(v)));
+    self.Data[self.Size] = v;
     self.Size++;
 }
 
@@ -17823,7 +17823,7 @@ u8* ImVector_unsigned_char_insert(ImVector_unsigned_char* self, u8* it, u8 v) {
     if off < self.Size {
         memmove(self.Data + off + 1, self.Data + off, (cast(u64, self.Size) - cast(u64, off)) * cast(u64, sizeof(u8)));
     }
-    memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
+    self.Data[off] = v;
     self.Size++;
     return self.Data + off;
 }
@@ -19298,7 +19298,7 @@ void ImVector_ImGuiID_push_back(ImVector_ImGuiID* self, ImGuiID v) {
     if self.Size == self.Capacity {
         ImVector_ImGuiID_reserve(self, ImVector_ImGuiID__grow_capacity(self, self.Size + 1));
     }
-    memcpy(&self.Data[self.Size], &v, cast(u64, sizeof(v)));
+    *cast(u32*, &self.Data[self.Size]) = v;
     self.Size++;
 }
 
@@ -19351,7 +19351,7 @@ ImGuiID* ImVector_ImGuiID_insert(ImVector_ImGuiID* self, ImGuiID* it, ImGuiID v)
     if off < self.Size {
         memmove(self.Data + off + 1, self.Data + off, (cast(u64, self.Size) - cast(u64, off)) * cast(u64, sizeof(ImGuiID)));
     }
-    memcpy(&self.Data[off], &v, cast(u64, sizeof(v)));
+    *cast(u32*, &self.Data[off]) = v;
     self.Size++;
     return self.Data + off;
 }
@@ -23106,8 +23106,6 @@ bool op_ne_ImVec4_ImVec4(ImVec4 lhs, ImVec4 rhs) {
 // Helpers macros to generate 32-bit encoded colors
 // - User can declare their own format by #defining the 5 _SHIFT/_MASK macros in their imconfig file.
 // - Any setting other than the default will need custom backend support. The only standard backend that supports anything else than the default is DirectX9.
-when !(defined(IM_COL32_R_SHIFT)) {
-}
 
 void ImColor_init(ImColor* self) {
     memset(self, 0, cast(u64, sizeof(*self)));
@@ -23656,8 +23654,6 @@ ImGuiPlatformImeData __cxx_make_ImGuiPlatformImeData() {
 // Internal Drag and Drop payload types. String starting with '_' are reserved for Dear ImGui.
 // Debug Printing Into TTY
 // (since IMGUI_VERSION_NUM >= 18729: IMGUI_DEBUG_LOG was reworked into IMGUI_DEBUG_PRINTF (and removed framecount from it). If you were using a #define IMGUI_DEBUG_LOG please rename)
-when !(defined(IMGUI_DEBUG_PRINTF)) {
-}
 // Debug Logging for ShowDebugLogWindow(). This is designed for relatively rare events so please don't spam.
 // Debug options (also see ones on top of imgui.cpp)
 //#define IMGUI_DEBUG_BOXSELECT
@@ -23673,8 +23669,6 @@ when !(defined(IMGUI_DEBUG_PRINTF)) {
 // Debug Tools
 // Use 'Metrics/Debugger->Tools->Item Picker' to break into the call-stack of a specific item.
 // This will call IM_DEBUG_BREAK() which you may redefine yourself. See https://github.com/scottt/debugbreak for more reference.
-when !(defined(IM_DEBUG_BREAK)) {
-}
 // Format specifiers, printing 64-bit hasn't been decently standardized...
 // In a real application you should be using PRId64 and PRIu64 from <inttypes.h> (non-windows) and on Windows define them yourself.
 // Helpers: Sorting
@@ -48333,8 +48327,6 @@ private struct hashed_data_t {
 // Helpers macros to generate 32-bit encoded colors
 // - User can declare their own format by #defining the 5 _SHIFT/_MASK macros in their imconfig file.
 // - Any setting other than the default will need custom backend support. The only standard backend that supports anything else than the default is DirectX9.
-when !(defined(IM_COL32_R_SHIFT)) {
-}
 
 // Called by Renderer backend
 // - Call SetTexID() and SetStatus() after honoring texture requests. Never modify TexID and Status directly!
@@ -48348,8 +48340,6 @@ when !(defined(IM_COL32_R_SHIFT)) {
 // Internal Drag and Drop payload types. String starting with '_' are reserved for Dear ImGui.
 // Debug Printing Into TTY
 // (since IMGUI_VERSION_NUM >= 18729: IMGUI_DEBUG_LOG was reworked into IMGUI_DEBUG_PRINTF (and removed framecount from it). If you were using a #define IMGUI_DEBUG_LOG please rename)
-when !(defined(IMGUI_DEBUG_PRINTF)) {
-}
 // Debug Logging for ShowDebugLogWindow(). This is designed for relatively rare events so please don't spam.
 // Debug options (also see ones on top of imgui.cpp)
 //#define IMGUI_DEBUG_BOXSELECT
@@ -48365,8 +48355,6 @@ when !(defined(IMGUI_DEBUG_PRINTF)) {
 // Debug Tools
 // Use 'Metrics/Debugger->Tools->Item Picker' to break into the call-stack of a specific item.
 // This will call IM_DEBUG_BREAK() which you may redefine yourself. See https://github.com/scottt/debugbreak for more reference.
-when !(defined(IM_DEBUG_BREAK)) {
-}
 // Format specifiers, printing 64-bit hasn't been decently standardized...
 // In a real application you should be using PRId64 and PRIu64 from <inttypes.h> (non-windows) and on Windows define them yourself.
 // Helpers: Sorting
@@ -59223,8 +59211,6 @@ ImGuiID __cxx_lambda_1(ImGuiSelectionBasicStorage* _arg0, i32 idx) {
 // Helpers macros to generate 32-bit encoded colors
 // - User can declare their own format by #defining the 5 _SHIFT/_MASK macros in their imconfig file.
 // - Any setting other than the default will need custom backend support. The only standard backend that supports anything else than the default is DirectX9.
-when !(defined(IM_COL32_R_SHIFT)) {
-}
 
 // Called by Renderer backend
 // - Call SetTexID() and SetStatus() after honoring texture requests. Never modify TexID and Status directly!
@@ -59238,8 +59224,6 @@ when !(defined(IM_COL32_R_SHIFT)) {
 // Internal Drag and Drop payload types. String starting with '_' are reserved for Dear ImGui.
 // Debug Printing Into TTY
 // (since IMGUI_VERSION_NUM >= 18729: IMGUI_DEBUG_LOG was reworked into IMGUI_DEBUG_PRINTF (and removed framecount from it). If you were using a #define IMGUI_DEBUG_LOG please rename)
-when !(defined(IMGUI_DEBUG_PRINTF)) {
-}
 // Debug Logging for ShowDebugLogWindow(). This is designed for relatively rare events so please don't spam.
 // Debug options (also see ones on top of imgui.cpp)
 //#define IMGUI_DEBUG_BOXSELECT
@@ -59255,8 +59239,6 @@ when !(defined(IMGUI_DEBUG_PRINTF)) {
 // Debug Tools
 // Use 'Metrics/Debugger->Tools->Item Picker' to break into the call-stack of a specific item.
 // This will call IM_DEBUG_BREAK() which you may redefine yourself. See https://github.com/scottt/debugbreak for more reference.
-when !(defined(IM_DEBUG_BREAK)) {
-}
 // Format specifiers, printing 64-bit hasn't been decently standardized...
 // In a real application you should be using PRId64 and PRIu64 from <inttypes.h> (non-windows) and on Windows define them yourself.
 // Helpers: Sorting
@@ -72644,8 +72626,6 @@ struct ImGuiTableFixDisplayOrderColumnData {
 // Helpers macros to generate 32-bit encoded colors
 // - User can declare their own format by #defining the 5 _SHIFT/_MASK macros in their imconfig file.
 // - Any setting other than the default will need custom backend support. The only standard backend that supports anything else than the default is DirectX9.
-when !(defined(IM_COL32_R_SHIFT)) {
-}
 
 // Called by Renderer backend
 // - Call SetTexID() and SetStatus() after honoring texture requests. Never modify TexID and Status directly!
@@ -72659,8 +72639,6 @@ when !(defined(IM_COL32_R_SHIFT)) {
 // Internal Drag and Drop payload types. String starting with '_' are reserved for Dear ImGui.
 // Debug Printing Into TTY
 // (since IMGUI_VERSION_NUM >= 18729: IMGUI_DEBUG_LOG was reworked into IMGUI_DEBUG_PRINTF (and removed framecount from it). If you were using a #define IMGUI_DEBUG_LOG please rename)
-when !(defined(IMGUI_DEBUG_PRINTF)) {
-}
 // Debug Logging for ShowDebugLogWindow(). This is designed for relatively rare events so please don't spam.
 // Debug options (also see ones on top of imgui.cpp)
 //#define IMGUI_DEBUG_BOXSELECT
@@ -72676,8 +72654,6 @@ when !(defined(IMGUI_DEBUG_PRINTF)) {
 // Debug Tools
 // Use 'Metrics/Debugger->Tools->Item Picker' to break into the call-stack of a specific item.
 // This will call IM_DEBUG_BREAK() which you may redefine yourself. See https://github.com/scottt/debugbreak for more reference.
-when !(defined(IM_DEBUG_BREAK)) {
-}
 // Format specifiers, printing 64-bit hasn't been decently standardized...
 // In a real application you should be using PRId64 and PRIu64 from <inttypes.h> (non-windows) and on Windows define them yourself.
 // Helpers: Sorting
